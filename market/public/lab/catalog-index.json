@@ -1,0 +1,1608 @@
+{
+  "generatedAt": "2026-09-19T16:50:08.152Z",
+  "assetRoot": "/opt/facksten/lab-assets",
+  "glbConversionAvailable": false,
+  "count": 200,
+  "parts": [
+    {
+      "id": "1048 1.2in 8x8 Matrix Backpack",
+      "name": "1048 1.2in 8x8 Matrix Backpack",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1048 1.2in 8x8 Matrix Backpack",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1054 Laser Diode",
+      "name": "1054 Laser Diode",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1054 Laser Diode",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1085 ADS1115 ADC",
+      "name": "1085 ADS1115 ADC",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1085 ADS1115 ADC",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1092 Tactile On Off Switch",
+      "name": "1092 Tactile On Off Switch",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1092 Tactile On Off Switch",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1119 Tactile Switch 12mm (B3F-40XX)",
+      "name": "1119 Tactile Switch 12mm (B3F-40XX)",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1119 Tactile Switch 12mm (B3F-40XX)",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1143 Micro Servo - High Torque Metal Gear",
+      "name": "1143 Micro Servo - High Torque Metal Gear",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1143 Micro Servo - High Torque Metal Gear",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1145 16mm button",
+      "name": "1145 16mm button",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1145 16mm button",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1185 Massive Arcade Button 100mm",
+      "name": "1185 Massive Arcade Button 100mm",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1185 Massive Arcade Button 100mm",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1214 PermaProto Small Mint",
+      "name": "1214 PermaProto Small Mint",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1214 PermaProto Small Mint",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1221 Adafruit 2020 Extrusion",
+      "name": "1221 Adafruit 2020 Extrusion",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1221 Adafruit 2020 Extrusion",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1253 Aluminum Timing Pulley",
+      "name": "1253 Aluminum Timing Pulley",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1253 Aluminum Timing Pulley",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1264 1.2in 7 Segment Display",
+      "name": "1264 1.2in 7 Segment Display",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1264 1.2in 7 Segment Display",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1271 1.2in 7 Segment Backpack",
+      "name": "1271 1.2in 7 Segment Backpack",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1271 1.2in 7 Segment Backpack",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1304 MicroLipo Charger",
+      "name": "1304 MicroLipo Charger",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1304 MicroLipo Charger",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1313 Speaker 3in 8Ohm 1W",
+      "name": "1313 Speaker 3in 8Ohm 1W",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1313 Speaker 3in 8Ohm 1W",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1317 150mAh Lipo Battery",
+      "name": "1317 150mAh Lipo Battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1317 150mAh Lipo Battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1321 Battery 9V",
+      "name": "1321 Battery 9V",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1321 Battery 9V",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1374 Capacitive Touch Breakout ATA42QT1010",
+      "name": "1374 Capacitive Touch Breakout ATA42QT1010",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1374 Capacitive Touch Breakout ATA42QT1010",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1376 NeoPixel Strip",
+      "name": "1376 NeoPixel Strip",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1376 NeoPixel Strip",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1400 Push Button Power Switch",
+      "name": "1400 Push Button Power Switch",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1400 Push Button Power Switch",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1426 8x NeoPixel Stick",
+      "name": "1426 8x NeoPixel Stick",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1426 8x NeoPixel Stick",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1438 Adafruit MotorShield",
+      "name": "1438 Adafruit MotorShield",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1438 Adafruit MotorShield",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1455 LED driver TLC59711",
+      "name": "1455 LED driver TLC59711",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1455 LED driver TLC59711",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1463 16x NeoPixel Ring",
+      "name": "1463 16x NeoPixel Ring",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1463 16x NeoPixel Ring",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1487 NeoMatrix 8x8",
+      "name": "1487 NeoMatrix 8x8",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1487 NeoMatrix 8x8",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1501 Trinket 5V",
+      "name": "1501 Trinket 5V",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1501 Trinket 5V",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1570 100mAh Lipo Battery",
+      "name": "1570 100mAh Lipo Battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1570 100mAh Lipo Battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1578 500mAh battery",
+      "name": "1578 500mAh battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1578 500mAh battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1586 24x NeoRing",
+      "name": "1586 24x NeoRing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1586 24x NeoRing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1586 NeoPixel Ring 24x",
+      "name": "1586 NeoPixel Ring 24x",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1586 NeoPixel Ring 24x",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1590 Adafruit RA8875 Breakout",
+      "name": "1590 Adafruit RA8875 Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1590 Adafruit RA8875 Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1602 CAP1188",
+      "name": "1602 CAP1188",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1602 CAP1188",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1606 Perma-Proto FullSize",
+      "name": "1606 Perma-Proto FullSize",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1606 Perma-Proto FullSize",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1608 perma-proto quarter",
+      "name": "1608 perma-proto quarter",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1608 perma-proto quarter",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1609 Perma-Proto HalfSize",
+      "name": "1609 Perma-Proto HalfSize",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1609 Perma-Proto HalfSize",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1680 5in TFT Display",
+      "name": "1680 5in TFT Display",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1680 5in TFT Display",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1739 Pizero Large",
+      "name": "1739 Pizero Large",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1739 Pizero Large",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1752 MAX9744",
+      "name": "1752 MAX9744",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1752 MAX9744",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1781 2200mAh Battery",
+      "name": "1781 2200mAh Battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1781 2200mAh Battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1782 MCP9808",
+      "name": "1782 MCP9808",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1782 MCP9808",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1833 micro USB Breakout",
+      "name": "1833 micro USB Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1833 micro USB Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1833 microUSB breakout",
+      "name": "1833 microUSB breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1833 microUSB breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1866 Slide Rail Platform",
+      "name": "1866 Slide Rail Platform",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1866 Slide Rail Platform",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1867 12mm Coincell Switched",
+      "name": "1867 12mm Coincell Switched",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1867 12mm Coincell Switched",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1870 Coin Cell CR2032",
+      "name": "1870 Coin Cell CR2032",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1870 Coin Cell CR2032",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1871 CR2032 Breakout Switch",
+      "name": "1871 CR2032 Breakout Switch",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1871 CR2032 Breakout Switch",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1893 Altimeter MLP3115A2",
+      "name": "1893 Altimeter MLP3115A2",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1893 Altimeter MLP3115A2",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1904 MicroUSB Lipo Charger",
+      "name": "1904 MicroUSB Lipo Charger",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1904 MicroUSB Lipo Charger",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1910 Alphanumeric Backpack STEMMA QT",
+      "name": "1910 Alphanumeric Backpack STEMMA QT",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1910 Alphanumeric Backpack STEMMA QT",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1911 Alphanumberic Display STEMMA QT",
+      "name": "1911 Alphanumberic Display STEMMA QT",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1911 Alphanumberic Display STEMMA QT",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1946 Adafruit FONA",
+      "name": "1946 Adafruit FONA",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1946 Adafruit FONA",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1982 MPR121",
+      "name": "1982 MPR121",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1982 MPR121",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "1982 MPR121 Stemma Breakout",
+      "name": "1982 MPR121 Stemma Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/1982 MPR121 Stemma Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2000 ProTrinket 5V",
+      "name": "2000 ProTrinket 5V",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2000 ProTrinket 5V",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2010 ProTrinket 3V",
+      "name": "2010 ProTrinket 3V",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2010 ProTrinket 3V",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2011 2000mAh Battery",
+      "name": "2011 2000mAh Battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2011 2000mAh Battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2088 1.44in TFT Display",
+      "name": "2088 1.44in TFT Display",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2088 1.44in TFT Display",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2090 2.8in TFT Cap Touch",
+      "name": "2090 2.8in TFT Cap Touch",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2090 2.8in TFT Cap Touch",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2124 Trinket Lipo Backpack",
+      "name": "2124 Trinket Lipo Backpack",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2124 Trinket Lipo Backpack",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2130 PAM8302",
+      "name": "2130 PAM8302",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2130 PAM8302",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2133 Audio FX Soundboard with Headphone",
+      "name": "2133 Audio FX Soundboard with Headphone",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2133 Audio FX Soundboard with Headphone",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2190 Verter 5V USB",
+      "name": "2190 Verter 5V USB",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2190 Verter 5V USB",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2201 Submicro servo",
+      "name": "2201 Submicro servo",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2201 Submicro servo",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2217 Adafruit FX Soundboard with Amp",
+      "name": "2217 Adafruit FX Soundboard with Amp",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2217 Adafruit FX Soundboard with Amp",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2218 HDMI TPF401 Breakout",
+      "name": "2218 HDMI TPF401 Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2218 HDMI TPF401 Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2219 TFP401 HDMI Breakout",
+      "name": "2219 TFP401 HDMI Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2219 TFP401 HDMI Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2226 NeoPixel Jewel",
+      "name": "2226 NeoPixel Jewel",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2226 NeoPixel Jewel",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2230 Extruded aluminum box 94mm",
+      "name": "2230 Extruded aluminum box 94mm",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2230 Extruded aluminum box 94mm",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2232 5in HDMI Backpack",
+      "name": "2232 5in HDMI Backpack",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2232 5in HDMI Backpack",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2277 RGB Matrix 5mm",
+      "name": "2277 RGB Matrix 5mm",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2277 RGB Matrix 5mm",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2278 RGB Matrix 4mm",
+      "name": "2278 RGB Matrix 4mm",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2278 RGB Matrix 4mm",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2305 DRV2605L",
+      "name": "2305 DRV2605L",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2305 DRV2605L",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2307 MicroServo MG923B",
+      "name": "2307 MicroServo MG923B",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2307 MicroServo MG923B",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2315 PiTFT 2.2",
+      "name": "2315 PiTFT 2.2",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2315 PiTFT 2.2",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2341 Adafruit EZ-SFX Mini",
+      "name": "2341 Adafruit EZ-SFX Mini",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2341 Adafruit EZ-SFX Mini",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2348 Adafruit Motor HAT",
+      "name": "2348 Adafruit Motor HAT",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2348 Adafruit Motor HAT",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2354 7in TFT Touchscreen",
+      "name": "2354 7in TFT Touchscreen",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2354 7in TFT Touchscreen",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2423 PiTFT 2.8",
+      "name": "2423 PiTFT 2.8",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2423 PiTFT 2.8",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2441 PiTFT 3.5",
+      "name": "2441 PiTFT 3.5",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2441 PiTFT 3.5",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2465 Powerboost 1000C",
+      "name": "2465 Powerboost 1000C",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2465 Powerboost 1000C",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2471 HUZZAH ESP8266 Breakout",
+      "name": "2471 HUZZAH ESP8266 Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2471 HUZZAH ESP8266 Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2472 BNO055 Breakout",
+      "name": "2472 BNO055 Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2472 BNO055 Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2488 Adafruit Metro 328",
+      "name": "2488 Adafruit Metro 328",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2488 Adafruit Metro 328",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2530 3W RGB LED",
+      "name": "2530 3W RGB LED",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2530 3W RGB LED",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "258 1200mAh lipo",
+      "name": "258 1200mAh lipo",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/258 1200mAh lipo",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "259 USB Lilon Lipoly Charger",
+      "name": "259 USB Lilon Lipoly Charger",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/259 USB Lilon Lipoly Charger",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2590 Metro Mini",
+      "name": "2590 Metro Mini",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2590 Metro Mini",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2590 Metro Mini V2",
+      "name": "2590 Metro Mini V2",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2590 Metro Mini V2",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2629 Quarter Inch D-Ring Tripod Mount",
+      "name": "2629 Quarter Inch D-Ring Tripod Mount",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2629 Quarter Inch D-Ring Tripod Mount",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2643 NeoPixel Ring 12",
+      "name": "2643 NeoPixel Ring 12",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2643 NeoPixel Ring 12",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2652 Adafruit BME280",
+      "name": "2652 Adafruit BME280",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2652 Adafruit BME280",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2687 Adafruit FONA 3G",
+      "name": "2687 Adafruit FONA 3G",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2687 Adafruit FONA 3G",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2719 OLED 2.4in",
+      "name": "2719 OLED 2.4in",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2719 OLED 2.4in",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2756 Teensy 3.2",
+      "name": "2756 Teensy 3.2",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2756 Teensy 3.2",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2795 Feather 32u4 Adalogger",
+      "name": "2795 Feather 32u4 Adalogger",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2795 Feather 32u4 Adalogger",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2809 LIS3DH",
+      "name": "2809 LIS3DH",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2809 LIS3DH",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2821 Feather HUZZAH ESP8266",
+      "name": "2821 Feather HUZZAH ESP8266",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2821 Feather HUZZAH ESP8266",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2829 Adafruit Feather Bluefruit 32u4",
+      "name": "2829 Adafruit Feather Bluefruit 32u4",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2829 Adafruit Feather Bluefruit 32u4",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2831 Photo Transistor Light Sensor",
+      "name": "2831 Photo Transistor Light Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2831 Photo Transistor Light Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2857 SHT31-D",
+      "name": "2857 SHT31-D",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2857 SHT31-D",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2884 Proto FeatherWing",
+      "name": "2884 Proto FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2884 Proto FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2890 Doubler FeatherWing",
+      "name": "2890 Doubler FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2890 Doubler FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2895 Relay Feather Wing",
+      "name": "2895 Relay Feather Wing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2895 Relay Feather Wing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2900 Feather OLED Wing",
+      "name": "2900 Feather OLED Wing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2900 Feather OLED Wing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "292 LCD Backpack I2C SPI",
+      "name": "292 LCD Backpack I2C SPI",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/292 LCD Backpack I2C SPI",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2922 FeatherWing Adalogger",
+      "name": "2922 FeatherWing Adalogger",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2922 FeatherWing Adalogger",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2925 8-Way Switch",
+      "name": "2925 8-Way Switch",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2925 8-Way Switch",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2926 Terminal Block FeatherWing",
+      "name": "2926 Terminal Block FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2926 Terminal Block FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2927 Motor FeatherWing",
+      "name": "2927 Motor FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2927 Motor FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2928 Servo PWM FeatherWing",
+      "name": "2928 Servo PWM FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2928 Servo PWM FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2941 DC Motor in Servo Body",
+      "name": "2941 DC Motor in Servo Body",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2941 DC Motor in Servo Body",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "2995 Feather M0 Bluefruit LE",
+      "name": "2995 Feather M0 Bluefruit LE",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/2995 Feather M0 Bluefruit LE",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3000 Circuit Playground Classic",
+      "name": "3000 Circuit Playground Classic",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3000 Circuit Playground Classic",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3006 MAX98357",
+      "name": "3006 MAX98357",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3006 MAX98357",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3010 Adafruit Feather M0 WiFi",
+      "name": "3010 Adafruit Feather M0 WiFi",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3010 Adafruit Feather M0 WiFi",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3010 Feather M0 Wifi",
+      "name": "3010 Feather M0 Wifi",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3010 Feather M0 Wifi",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3013 DS3231 RTC",
+      "name": "3013 DS3231 RTC",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3013 DS3231 RTC",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3027 Adafruit FONA Feather 32u4",
+      "name": "3027 Adafruit FONA Feather 32u4",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3027 Adafruit FONA Feather 32u4",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3093 Crickit CPX",
+      "name": "3093 Crickit CPX",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3093 Crickit CPX",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3101 8mm soft button",
+      "name": "3101 8mm soft button",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3101 8mm soft button",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3102 Mini Joystick",
+      "name": "3102 Mini Joystick",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3102 Mini Joystick",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3104 3105 Mini Illuminated Momentary Pushbutton",
+      "name": "3104 3105 Mini Illuminated Momentary Pushbutton",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3104 3105 Mini Illuminated Momentary Pushbutton",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3133 Ultimate GPS FeatherWing",
+      "name": "3133 Ultimate GPS FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3133 Ultimate GPS FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3178 Feather M0 RFM95",
+      "name": "3178 Feather M0 RFM95",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3178 Feather M0 RFM95",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3190 DRV8871 Breakout",
+      "name": "3190 DRV8871 Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3190 DRV8871 Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3191 Power Relay FeatherWing",
+      "name": "3191 Power Relay FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3191 Power Relay FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3200 Teensy Feather Adapter",
+      "name": "3200 Teensy Feather Adapter",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3200 Teensy Feather Adapter",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3201 Ethernet FeatherWing",
+      "name": "3201 Ethernet FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3201 Ethernet FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3202 Spy Camera",
+      "name": "3202 Spy Camera",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3202 Spy Camera",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3211 RGB Matrix Bonnet",
+      "name": "3211 RGB Matrix Bonnet",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3211 RGB Matrix Bonnet",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3221 Toggle Switch",
+      "name": "3221 Toggle Switch",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3221 Toggle Switch",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3229 Radio FeatherWing",
+      "name": "3229 Radio FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3229 Radio FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "324 NEMA-17 Stepper Motor",
+      "name": "324 NEMA-17 Stepper Motor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/324 NEMA-17 Stepper Motor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3258 USB Panel Mout Cable",
+      "name": "3258 USB Panel Mout Cable",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3258 USB Panel Mout Cable",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "328 2500mAh battery",
+      "name": "328 2500mAh battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/328 2500mAh battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3315 2.4 TFT FeatherWing",
+      "name": "3315 2.4 TFT FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3315 2.4 TFT FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3316 VL6180 ToF Sensor",
+      "name": "3316 VL6180 ToF Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3316 VL6180 ToF Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3321 Mini TFT Wing",
+      "name": "3321 Mini TFT Wing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3321 Mini TFT Wing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3333 Circuit Playground Express",
+      "name": "3333 Circuit Playground Express",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3333 Circuit Playground Express",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3346 Adafruit Speaker Bonnet for Pi",
+      "name": "3346 Adafruit Speaker Bonnet for Pi",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3346 Adafruit Speaker Bonnet for Pi",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3347 Metal Ball Tactile Button 6mm",
+      "name": "3347 Metal Ball Tactile Button 6mm",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3347 Metal Ball Tactile Button 6mm",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3350 RGB button",
+      "name": "3350 RGB button",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3350 RGB button",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3351 Enclosed Speaker 3W 4Ohm",
+      "name": "3351 Enclosed Speaker 3W 4Ohm",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3351 Enclosed Speaker 3W 4Ohm",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3382 Metro M4",
+      "name": "3382 Metro M4",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3382 Metro M4",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3386 PiRTC PCF8523",
+      "name": "3386 PiRTC PCF8523",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3386 PiRTC PCF8523",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3403 Feather M0 Express",
+      "name": "3403 Feather M0 Express",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3403 Feather M0 Express",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3405 ESP32 Feather HUZZAH",
+      "name": "3405 ESP32 Feather HUZZAH",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3405 ESP32 Feather HUZZAH",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3417 Tripler FeatherWing",
+      "name": "3417 Tripler FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3417 Tripler FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3422 Adafruit Arcade Bonnet",
+      "name": "3422 Adafruit Arcade Bonnet",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3422 Adafruit Arcade Bonnet",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3429 Mini Arcade Button",
+      "name": "3429 Mini Arcade Button",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3429 Mini Arcade Button",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3436 Adafruit Music Maker Amp Feather Wing",
+      "name": "3436 Adafruit Music Maker Amp Feather Wing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3436 Adafruit Music Maker Amp Feather Wing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3464 Joy Bonnet",
+      "name": "3464 Joy Bonnet",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3464 Joy Bonnet",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3500 Trinket M0",
+      "name": "3500 Trinket M0",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3500 Trinket M0",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3501 GEMMA M0",
+      "name": "3501 GEMMA M0",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3501 GEMMA M0",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3502 Sharp Memory Display Breakout",
+      "name": "3502 Sharp Memory Display Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3502 Sharp Memory Display Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "353 6600mAh Battery",
+      "name": "353 6600mAh Battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/353 6600mAh Battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3538 AMG8833 IR Thermal Camera",
+      "name": "3538 AMG8833 IR Thermal Camera",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3538 AMG8833 IR Thermal Camera",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "354 4400mah battery",
+      "name": "354 4400mah battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/354 4400mah battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "355 MOSFET P-channel",
+      "name": "355 MOSFET P-channel",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/355 MOSFET P-channel",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3577 PICO Hat",
+      "name": "3577 PICO Hat",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3577 PICO Hat",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3595 APDS9960 Sensor",
+      "name": "3595 APDS9960 Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3595 APDS9960 Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3632 Joy FeatherWing",
+      "name": "3632 Joy FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3632 Joy FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "364 NFC Breakout",
+      "name": "364 NFC Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/364 NFC Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3651 3.5in TFT FeatherWing",
+      "name": "3651 3.5in TFT FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3651 3.5in TFT FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3660 BME680",
+      "name": "3660 BME680",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3660 BME680",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3692 TRS Jack",
+      "name": "3692 TRS Jack",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3692 TRS Jack",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3722 Snowglobe",
+      "name": "3722 Snowglobe",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3722 Snowglobe",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3727 ItsyBitsy M0",
+      "name": "3727 ItsyBitsy M0",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3727 ItsyBitsy M0",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3777 TT Motor",
+      "name": "3777 TT Motor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3777 TT Motor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3787 1.5in TFT Display",
+      "name": "3787 1.5in TFT Display",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3787 1.5in TFT Display",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3800 ItsyBitsy M4",
+      "name": "3800 ItsyBitsy M4",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3800 ItsyBitsy M4",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3802 TT Motor Metal Gear",
+      "name": "3802 TT Motor Metal Gear",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3802 TT Motor Metal Gear",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3842 3xAA Battery",
+      "name": "3842 3xAA Battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3842 3xAA Battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3857 Feather M4 Express",
+      "name": "3857 Feather M4 Express",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3857 Feather M4 Express",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3885 STEMMA Speaker",
+      "name": "3885 STEMMA Speaker",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3885 STEMMA Speaker",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3898 400mah Battery",
+      "name": "3898 400mah Battery",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3898 400mah Battery",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3900 Hallowing",
+      "name": "3900 Hallowing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3900 Hallowing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3923 Mini Oval Speaker",
+      "name": "3923 Mini Oval Speaker",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3923 Mini Oval Speaker",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3954 Adafruit NeoTrellis",
+      "name": "3954 Adafruit NeoTrellis",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3954 Adafruit NeoTrellis",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3957 CRICKIT Hat",
+      "name": "3957 CRICKIT Hat",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3957 CRICKIT Hat",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3965 MPRLS Pressure Sensor",
+      "name": "3965 MPRLS Pressure Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3965 MPRLS Pressure Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3966 BMP388 QT",
+      "name": "3966 BMP388 QT",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3966 BMP388 QT",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3967 VL5SL1X TOF Sensor",
+      "name": "3967 VL5SL1X TOF Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3967 VL5SL1X TOF Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3968 Speaker 40mm",
+      "name": "3968 Speaker 40mm",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3968 Speaker 40mm",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "3988 Prop-Maker FeatherWing",
+      "name": "3988 Prop-Maker FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/3988 Prop-Maker FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4022 Wide-Range Triple-axis Magnetometer MLX90393",
+      "name": "4022 Wide-Range Triple-axis Magnetometer MLX90393",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4022 Wide-Range Triple-axis Magnetometer MLX90393",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4026 STEMMA Soil Sensor",
+      "name": "4026 STEMMA Soil Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4026 STEMMA Soil Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4056 USBC-to-microB-cable",
+      "name": "4056 USBC-to-microB-cable",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4056 USBC-to-microB-cable",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4062 nRF52840 Feather",
+      "name": "4062 nRF52840 Feather",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4062 nRF52840 Feather",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4064 Grand Central M4",
+      "name": "4064 Grand Central M4",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4064 Grand Central M4",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4074 LoRa Radio Bonnet",
+      "name": "4074 LoRa Radio Bonnet",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4074 LoRa Radio Bonnet",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4086 TriColor ePaper Display",
+      "name": "4086 TriColor ePaper Display",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4086 TriColor ePaper Display",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4089 ADT7410 Sensor",
+      "name": "4089 ADT7410 Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4089 ADT7410 Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4090 USB C Breakout",
+      "name": "4090 USB C Breakout",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4090 USB C Breakout",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4097 ADXL343 Accelerometer",
+      "name": "4097 ADXL343 Accelerometer",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4097 ADXL343 Accelerometer",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4116 PyPortal",
+      "name": "4116 PyPortal",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4116 PyPortal",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4128 eInk FeatherWing",
+      "name": "4128 eInk FeatherWing",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4128 eInk FeatherWing",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "413 Large Solenoid",
+      "name": "413 Large Solenoid",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/413 Large Solenoid",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4132 GPIO Expander Bonnet",
+      "name": "4132 GPIO Expander Bonnet",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4132 GPIO Expander Bonnet",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    },
+    {
+      "id": "4161 VCNL4040 Sensor",
+      "name": "4161 VCNL4040 Sensor",
+      "sourceUrl": "https://github.com/adafruit/Adafruit_CAD_Parts/tree/main/4161 VCNL4040 Sensor",
+      "modelUrl": null,
+      "simulationStatus": "3d-only",
+      "note": "STEP/STL outside Next bundle; convert with gltf-pipeline/assimp when available"
+    }
+  ]
+}

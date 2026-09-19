@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Service {
+  id        String        @id @default(cuid())
+  slug      String        @unique
+  titleFa   String
+  titleEn   String
+  summaryFa String        @default("")
+  summaryEn String        @default("")
+  bodyFa    String        @default("")
+  bodyEn    String        @default("")
+  status    ContentStatus @default(DRAFT)
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Project {
+  id            String                @id @default(cuid())
+  slug          String                @unique
+  titleFa       String
+  titleEn       String
+  summaryFa     String                @default("")
+  summaryEn     String                @default("")
+  bodyFa        String                @default("")
+  bodyEn        String                @default("")
+  challengeFa   String                @default("")
+  challengeEn   String                @default("")
+  solutionFa    String                @default("")
+  solutionEn    String                @default("")
+  outcomeFa     String                @default("")
+  outcomeEn     String                @default("")
+  tagsFa        String                @default("")
+  tagsEn        String                @default("")
+  stack         String                @default("")
+  coverUrl      String                @default("")
+  status        ContentStatus         @default(DRAFT)
+  featured      Boolean               @default(false)
+  sortOrder     Int                   @default(0)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  media         ProjectMedia[]
+  collaborators ProjectCollaborator[]
+}
+
+model ProjectMedia {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url       String
+  altFa     String  @default("")
+  altEn     String  @default("")
+  kind      String  @default("image")
+  sortOrder Int     @default(0)
+}
+
+model ProjectCollaborator {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  nameFa    String
+  nameEn    String
+  roleFa    String  @default("")
+  roleEn    String  @default("")
+  sortOrder Int     @default(0)
+}
+
+model TeamMember {
+  id        String        @id @default(cuid())
+  nameFa    String
+  nameEn    String
+  roleFa    String        @default("")
+  roleEn    String        @default("")
+  bioFa     String        @default("")
+  bioEn     String        @default("")
+  photoUrl  String        @default("")
+  status    ContentStatus @default(DRAFT)
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model SiteSetting {
+  key       String   @id
+  valueJson String
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  locale    String   @default("fa")
+  createdAt DateTime @default(now())
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+:root {
+  --font-vazirmatn: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-brand: "Oxanium", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+
+  --background: #0a0a0f;
+  --foreground: #e0e0e0;
+  --primary: #ff9a40;
+  --primary-container: #ff7a00;
+  --cta-hover: #e66e00;
+  --on-primary: #0a0a0f;
+  --surface: #0a0a0f;
+  --surface-container-lowest: #12121a;
+  --surface-container-low: #16161f;
+  --surface-container: #1c1c2e;
+  --surface-container-high: #222233;
+  --surface-container-highest: #2a2a3a;
+  --on-surface: #e0e0e0;
+  --on-surface-variant: #9ca3af;
+  --outline: #2a2a3a;
+  --outline-variant: #3a3a4a;
+  --error: #ff3366;
+  --error-container: #3a1020;
+  --accent-secondary: #ff00ff;
+  --accent-tertiary: #00d4ff;
+  --published: #00ff88;
+
+  --box-shadow-neon: 0 0 5px #ff7a00, 0 0 10px #ff7a0040;
+  --box-shadow-neon-sm: 0 0 3px #ff7a00, 0 0 6px #ff7a0030;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary: var(--on-primary);
+  --color-surface: var(--surface);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-error: var(--error);
+  --color-error-container: var(--error-container);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-tertiary: var(--accent-tertiary);
+  --color-published: var(--published);
+  --font-sans: var(--font-vazirmatn);
+  --font-mono: var(--font-mono);
+}
+
+html {
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: var(--font-vazirmatn), sans-serif;
+  position: relative;
+  overflow-x: clip;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+img,
+video,
+svg,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.22) 2px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  opacity: 0.28;
+}
+
+.font-brand {
+  font-family: var(--font-brand), var(--font-vazirmatn), sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.text-cta {
+  color: var(--primary-container);
+}
+
+.bg-cta {
+  background-color: var(--primary-container);
+  color: var(--on-primary);
+}
+
+.bg-cta:hover:not(:disabled) {
+  background-color: var(--cta-hover);
+}
+
+.shadow-neon {
+  box-shadow: var(--box-shadow-neon);
+}
+
+.shadow-neon-sm {
+  box-shadow: var(--box-shadow-neon-sm);
+}
+
+.border-cta {
+  border-color: color-mix(in srgb, var(--primary-container) 70%, transparent);
+}
+
+.focus-cta:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--primary-container),
+    var(--box-shadow-neon-sm);
+}
+
+.cyber-chamfer-sm {
+  clip-path: polygon(
+    0 6px,
+    6px 0,
+    calc(100% - 6px) 0,
+    100% 6px,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    6px 100%,
+    0 calc(100% - 6px)
+  );
+}
+
+.hero-circuit {
+  background-color: #0a0a0f;
+  background-image:
+    radial-gradient(circle at 18% 20%, rgba(255, 122, 0, 0.18), transparent 42%),
+    radial-gradient(circle at 82% 80%, rgba(0, 212, 255, 0.1), transparent 48%),
+    linear-gradient(rgba(255, 122, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 122, 0, 0.05) 1px, transparent 1px);
+  background-size: auto, auto, 40px 40px, 40px 40px;
+}
+
+.panel-card {
+  background-color: var(--surface-container-lowest);
+  border: 1px solid var(--outline);
+  box-shadow: var(--box-shadow-neon-sm);
+}
+
+@keyframes auth-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-enter {
+  animation: auth-enter 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    opacity: 0.12;
+  }
+  .auth-enter {
+    animation: none;
+  }
+}

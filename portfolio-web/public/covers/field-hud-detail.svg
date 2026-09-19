@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#12121a"/>
+  <text x="48" y="60" fill="#ff7a00" font-family="monospace" font-size="16">FAULT LOG</text>
+  <text x="48" y="120" fill="#e0e0e0" font-family="monospace" font-size="18">E-12  radio drop   14:02</text>
+  <text x="48" y="160" fill="#9ca3af" font-family="monospace" font-size="18">E-07  battery low  13:41</text>
+  <text x="48" y="200" fill="#9ca3af" font-family="monospace" font-size="18">OK    sync          13:10</text>
+</svg>

@@ -1,0 +1,4 @@
+# Local/future Netlify config. Do not deploy this Phase 1 skeleton.
+[build]
+  command = "npm run build"
+  publish = ".next"

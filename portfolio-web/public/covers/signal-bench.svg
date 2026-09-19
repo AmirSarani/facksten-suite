@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#0a0a0f"/>
+  <rect x="80" y="140" width="800" height="260" stroke="#2a2a3a"/>
+  <path d="M100 360 L180 220 L260 300 L340 180 L420 280 L500 200 L580 310 L660 190 L740 270 L840 160" stroke="#ff7a00"/>
+  <text x="80" y="80" fill="#ff7a00" font-family="monospace" font-size="18">SIGNAL BENCH // DRAFT</text>
+</svg>

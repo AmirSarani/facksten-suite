@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#0a0a0f"/>
+  <circle cx="480" cy="270" r="160" stroke="#ff7a00" stroke-opacity="0.5"/>
+  <circle cx="480" cy="270" r="110" stroke="#ff7a00"/>
+  <path d="M480 140 V400 M340 270 H620" stroke="#ff7a00" stroke-opacity="0.4"/>
+  <text x="80" y="80" fill="#ff7a00" font-family="monospace" font-size="18">KILN LINK // THERMAL</text>
+  <rect x="700" y="180" width="160" height="12" fill="#ff7a00"/>
+  <rect x="700" y="210" width="110" height="12" fill="#ff7a00" opacity="0.5"/>
+</svg>

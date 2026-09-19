@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#12121a"/>
+  <text x="48" y="64" fill="#ff7a00" font-family="monospace" font-size="16">HUD / LINE-01</text>
+  <polyline points="48,420 160,300 240,340 360,180 480,260 600,140 720,220 900,120" stroke="#ff7a00" stroke-width="2"/>
+  <polyline points="48,440 180,380 300,400 420,280 560,320 700,240 900,260" stroke="#00d4ff" stroke-width="1.5" opacity="0.7"/>
+</svg>

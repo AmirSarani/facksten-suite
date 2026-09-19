@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#0a0a0f"/>
+  <rect x="0" y="0" width="960" height="540" fill="url(#g)"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="960" y2="540">
+      <stop stop-color="#ff7a00" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#00d4ff" stop-opacity="0.08"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#ff7a00" stroke-opacity="0.35">
+    <path d="M40 80H920M40 460H920"/>
+    <rect x="80" y="120" width="800" height="300" />
+    <rect x="110" y="150" width="180" height="240"/>
+    <rect x="310" y="150" width="180" height="240"/>
+    <rect x="510" y="150" width="180" height="240"/>
+    <rect x="710" y="150" width="140" height="240"/>
+  </g>
+  <text x="110" y="92" fill="#ff7a00" font-family="monospace" font-size="18">PULSE RACK // 19IN</text>
+  <rect x="130" y="180" width="140" height="8" fill="#ff7a00"/>
+  <rect x="130" y="200" width="90" height="8" fill="#00d4ff" opacity="0.7"/>
+  <rect x="330" y="180" width="140" height="8" fill="#ff7a00" opacity="0.7"/>
+  <rect x="530" y="220" width="140" height="80" fill="#ff7a00" opacity="0.2"/>
+</svg>

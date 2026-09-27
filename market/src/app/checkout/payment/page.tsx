@@ -61,13 +61,14 @@ export default function PaymentPage() {
       return;
     }
     const shippingData = JSON.parse(raw);
-    const label = methods.find((m) => m.id === method)?.title ?? method;
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...shippingData,
-        paymentMethod: label,
+        // send the id, not the display title — the server maps it to a label itself
+        // (see src/lib/payment-methods.ts) and only accepts known ids.
+        paymentMethod: method,
         coupon: couponApplied ? coupon : undefined,
       }),
     });

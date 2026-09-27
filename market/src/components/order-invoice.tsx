@@ -2,6 +2,7 @@
 
 import { ORDER_STATUS_FA } from "@/lib/panel";
 import { formatToman } from "@/lib/format";
+import { paymentMethodLabel } from "@/lib/payment-methods";
 
 export type InvoiceOrder = {
   code: string;
@@ -44,7 +45,7 @@ export function OrderInvoice({ order }: { order: InvoiceOrder }) {
         <div>
           <p className="font-semibold">آدرس ارسال</p>
           <p className="text-on-surface-variant">{order.shippingAddr || "—"}</p>
-          <p className="mt-1 text-on-surface-variant">پرداخت: {order.paymentMethod || "—"}</p>
+          <p className="mt-1 text-on-surface-variant">پرداخت: {paymentMethodLabel(order.paymentMethod)}</p>
         </div>
       </div>
 

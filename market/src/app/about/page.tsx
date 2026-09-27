@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Icon } from "@/components/icon";
 import { UI_IMAGES } from "@/lib/media";
 import { SITE } from "@/lib/site";
+import { assetUrl } from "@/lib/asset-url";
 
 export const metadata = { title: "درباره ما" };
 
@@ -51,10 +52,10 @@ export default function AboutPage() {
         </div>
         <div className="relative h-[400px] w-full flex-1 overflow-hidden cyber-chamfer border border-outline shadow-[var(--box-shadow-neon-sm)]">
           <picture>
-            <source srcSet="/images/ui/about-hero.webp" type="image/webp" />
+            <source srcSet={assetUrl("/images/ui/about-hero.webp")} type="image/webp" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={UI_IMAGES.aboutHero}
+              src={assetUrl(UI_IMAGES.aboutHero)}
               alt="آزمایشگاه مهندسی Facksten"
               width={2400}
               height={1309}
@@ -70,10 +71,10 @@ export default function AboutPage() {
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div className="order-2 h-[350px] overflow-hidden cyber-chamfer-sm border border-outline md:order-1">
             <picture>
-              <source srcSet="/images/ui/about-story.webp" type="image/webp" />
+              <source srcSet={assetUrl("/images/ui/about-story.webp")} type="image/webp" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={UI_IMAGES.aboutStory}
+                src={assetUrl(UI_IMAGES.aboutStory)}
                 alt="داستان شکل‌گیری Facksten"
                 width={2000}
                 height={1090}
@@ -131,10 +132,10 @@ export default function AboutPage() {
             <div key={t.name} className="group">
               <div className="relative mb-4 aspect-[4/5] overflow-hidden cyber-chamfer border border-outline bg-surface-container-high">
                 <picture>
-                  <source srcSet={t.image.replace(/\.jpg$/, ".webp")} type="image/webp" />
+                  <source srcSet={assetUrl(t.image.replace(/\.jpg$/, ".webp"))} type="image/webp" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={t.image}
+                    src={assetUrl(t.image)}
                     alt={t.name}
                     width={966}
                     height={1200}
@@ -152,10 +153,10 @@ export default function AboutPage() {
 
       <section className="relative flex h-[500px] items-center overflow-hidden cyber-chamfer border border-outline shadow-[var(--box-shadow-neon-sm)] md:h-[540px]">
         <picture>
-          <source srcSet="/images/ui/about-lab.webp" type="image/webp" />
+          <source srcSet={assetUrl("/images/ui/about-lab.webp")} type="image/webp" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={UI_IMAGES.aboutLab}
+            src={assetUrl(UI_IMAGES.aboutLab)}
             alt="آزمایشگاه تخصصی Facksten"
             width={2800}
             height={1562}

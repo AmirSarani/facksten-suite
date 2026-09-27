@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Icon, type IconName } from "@/components/icon";
 import { MediaPickerField } from "@/components/media-picker-field";
 import { formatToman, unitPrice } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 export type ProductEditorCategory = { id: string; name: string; slug: string; parentId?: string | null };
 export type ProductEditorSeller = { id: string; name: string; email: string };
@@ -1007,7 +1008,7 @@ export function ProductEditorForm({
               <div className="aspect-square bg-surface-container-low">
                 {image && image !== "/placeholder.svg" ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={image} alt="" className="h-full w-full object-cover" />
+                  <img src={assetUrl(image)} alt="" className="h-full w-full object-cover" />
                 ) : (
                   <div className="flex h-full flex-col items-center justify-center gap-2 px-4 text-center text-sm text-on-surface-variant">
                     {type === "DIGITAL" ? (

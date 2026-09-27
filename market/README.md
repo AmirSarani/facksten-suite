@@ -23,9 +23,9 @@ npm run dev
 
 | نقش | ایمیل | رمز |
 |-----|--------|-----|
-| ادمین | admin@facksten.com | Pass123! |
-| همکار | partner@facksten.com | Pass123! |
-| مشتری | user@facksten.com | Pass123! |
+| ادمین | admin@facksten.com | <SEED_PASSWORD> |
+| همکار | partner@facksten.com | <SEED_PASSWORD> |
+| مشتری | user@facksten.com | <SEED_PASSWORD> |
 
 ## مسیرها
 

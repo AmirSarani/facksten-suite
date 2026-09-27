@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/components/icon";
+import { assetUrl } from "@/lib/asset-url";
 
 export function AccountReviewCard({
   review,
@@ -73,7 +74,7 @@ export function AccountReviewCard({
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={review.product.image || "/placeholder.svg"}
+            src={assetUrl(review.product.image || "/placeholder.svg")}
             alt={review.product.title}
             className="max-h-full max-w-full object-contain p-2"
             loading="lazy"

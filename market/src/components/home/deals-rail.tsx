@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 export type DealItem = {
   id: string;
@@ -45,7 +46,7 @@ export function DealsRail({ items }: { items: DealItem[] }) {
             >
               <div className="relative h-16 w-16 shrink-0 overflow-hidden border border-outline-variant bg-surface-container-low cyber-chamfer-sm">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.image || "/placeholder.svg"} alt="" className="h-full w-full object-cover p-1" />
+                <img src={assetUrl(item.image || "/placeholder.svg")} alt="" className="h-full w-full object-cover p-1" />
               </div>
               <div className="min-w-0 flex-1">
                 {item.badge && (

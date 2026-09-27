@@ -8,6 +8,7 @@ import { UI_IMAGES } from "@/lib/media";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { ORDER_STATUS_FA, TICKET_STATUS_BADGE, TICKET_STATUS_FA } from "@/lib/panel";
+import { assetUrl } from "@/lib/asset-url";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -105,7 +106,7 @@ export default async function TicketDetailPage({ params }: Props) {
                 {!mine ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={UI_IMAGES.author}
+                    src={assetUrl(UI_IMAGES.author)}
                     alt=""
                     className="order-2 mb-1 h-8 w-8 rounded-full object-cover"
                   />

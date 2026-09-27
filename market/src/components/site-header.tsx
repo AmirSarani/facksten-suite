@@ -151,7 +151,7 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
     <>
       <header
         ref={headerRef}
-        className="site-header fixed inset-x-0 top-0 z-50 max-w-[100vw] overflow-x-hidden border-b border-outline bg-surface-container-lowest/95 shadow-[var(--box-shadow-neon-sm)] backdrop-blur-xl supports-[backdrop-filter]:bg-surface-container-lowest/90"
+        className="site-header fixed inset-x-0 top-0 z-50 max-w-[100vw] overflow-x-clip border-b border-outline bg-surface-container-lowest/95 shadow-[var(--box-shadow-neon-sm)] backdrop-blur-xl supports-[backdrop-filter]:bg-surface-container-lowest/90"
       >
       <div className="site-header-collapse border-b border-outline bg-surface-container" data-compact-hide>
         <div className="site-header-collapse__inner">
@@ -191,7 +191,6 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
 
           <form
             onSubmit={onSearch}
-            data-compact-hide
             className="site-header-search-desktop relative mx-auto hidden w-full max-w-xl lg:block"
           >
             <input
@@ -234,7 +233,10 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
           </div>
         </div>
 
-        <div className="site-header-collapse border-t border-surface-variant/70 lg:hidden" data-compact-hide>
+        {/* Mobile-only search. `.site-header-collapse` sets display:grid, which beats a
+            Tailwind `lg:hidden` on the same element, so the hide lives on a plain wrapper. */}
+        <div className="lg:hidden">
+        <div className="site-header-collapse border-t border-surface-variant/70" data-compact-hide>
           <div className="site-header-collapse__inner">
           <div className="px-page py-2.5">
           <form onSubmit={onSearch} className="relative">
@@ -252,12 +254,13 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
           </div>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Secondary nav: desktop only — lives inside sticky header */}
       <div
         data-site-nav-sticky
-        className="hidden overflow-x-hidden border-t border-outline lg:block"
+        className="hidden overflow-x-clip border-t border-outline lg:block"
       >
         <nav className="mx-auto flex max-w-[1280px] items-center gap-1 px-page py-2">
           <div className="relative shrink-0" ref={catsRef}>

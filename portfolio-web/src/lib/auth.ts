@@ -1,5 +1,6 @@
 import { getIronSession, type SessionOptions } from "iron-session";
 import { cookies, headers } from "next/headers";
+import { resolveSessionSecret } from "./session-secret";
 
 export type SessionUser = {
   id: string;
@@ -26,8 +27,6 @@ export type SessionCookieEnv = {
   COOKIE_SECURE?: string;
   SESSION_SAMESITE?: string;
 };
-
-const secret = process.env.SESSION_SECRET ?? "facksten-portfolio-dev-secret-change-me-32";
 
 export const ADMIN_SESSION_COOKIE = "facksten_portfolio_admin";
 
@@ -68,7 +67,7 @@ export function resolveSessionCookieOptions(
   const explicitSameSite = parseSameSite(env.SESSION_SAMESITE);
   const explicitSecure = parseBool(env.COOKIE_SECURE);
 
-  let secure = explicitSecure ?? (proto === "https" || (production && proto !== "http"));
+  const secure = explicitSecure ?? (proto === "https" || (production && proto !== "http"));
   let sameSite = explicitSameSite ?? (production && proto !== "http" ? "none" : "lax");
 
   // Never emit the combo Chrome rejects on http://localhost.
@@ -87,13 +86,11 @@ export function resolveSessionCookieOptions(
 
 export function getSessionOptions(protocol?: string): SessionOptions {
   return {
-    password: secret,
+    password: resolveSessionSecret(),
     cookieName: ADMIN_SESSION_COOKIE,
     cookieOptions: resolveSessionCookieOptions(process.env, protocol),
   };
 }
-
-export const sessionOptions: SessionOptions = getSessionOptions();
 
 async function forwardedProtocol(): Promise<string | undefined> {
   try {

@@ -129,8 +129,8 @@ nginx -t && nginx -s reload
 
 | سیستم | ایمیل | رمز (seed) |
 |--------|--------|------------|
-| فروشگاه | `user@facksten.com` | `Pass123!` |
-| ادمین پورتفولیو | `admin@facksten.local` | `ChangeMe123!` |
+| فروشگاه | `user@facksten.com` | `<SEED_PASSWORD>` |
+| ادمین پورتفولیو | `admin@facksten.local` | `<SEED_ADMIN_PASSWORD>` |
 
 در پروداکشن رمزها را عوض کنید. **رمز root سرور قبلاً در چت آمده — باید rotate شود.**
 

@@ -14,6 +14,7 @@ import { estimateReadMinutes, parseArticleBody } from "@/lib/article-content";
 import { ARTICLE_BODIES } from "@/lib/article-bodies";
 import { getArticleBySlug, getArticles } from "@/lib/catalog";
 import { UI_IMAGES } from "@/lib/media";
+import { assetUrl } from "@/lib/asset-url";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -105,7 +106,7 @@ export default async function ArticlePage({ params }: Props) {
         <div className="mb-8 aspect-[16/9] w-full overflow-hidden cyber-chamfer border border-outline bg-surface-container-low shadow-[var(--box-shadow-neon-sm)] sm:mb-10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={article.image || "/placeholder.svg"}
+            src={assetUrl(article.image || "/placeholder.svg")}
             alt={article.title}
             className="h-full w-full object-cover"
           />

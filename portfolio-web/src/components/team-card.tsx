@@ -1,3 +1,4 @@
+import { assetUrl } from "@/lib/asset-url";
 export function TeamCard({
   name,
   role,
@@ -16,7 +17,7 @@ export function TeamCard({
       <div className="flex min-w-0 items-center gap-3 sm:gap-4">
         {photoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={photoUrl} alt="" className="h-16 w-16 shrink-0 border border-outline object-cover" />
+          <img src={assetUrl(photoUrl)} alt="" className="h-16 w-16 shrink-0 border border-outline object-cover" />
         ) : (
           <div className="grid h-16 w-16 shrink-0 place-items-center border border-outline font-brand text-cta">
             {name.slice(0, 1)}

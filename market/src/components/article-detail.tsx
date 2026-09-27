@@ -1,4 +1,5 @@
 import type { ArticleBlock, TocItem } from "@/lib/article-content";
+import { assetUrl } from "@/lib/asset-url";
 
 function IconSchedule({ className }: { className?: string }) {
   return (
@@ -70,7 +71,7 @@ export function ArticleAuthor({
       <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border border-outline-variant bg-gradient-to-br from-primary-container/30 to-surface-container text-sm font-bold text-primary">
         {avatar ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={avatar} alt="" className="h-full w-full object-cover" />
+          <img src={assetUrl(avatar)} alt="" className="h-full w-full object-cover" />
         ) : (
           initials || "ف"
         )}
@@ -176,7 +177,7 @@ export function ArticleBlocks({ blocks }: { blocks: ArticleBlock[] }) {
             <figure key={i} className="my-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={block.src}
+                src={assetUrl(block.src)}
                 alt={block.caption || ""}
                 className="w-full cyber-chamfer-sm border border-outline shadow-[var(--box-shadow-neon-sm)]"
               />

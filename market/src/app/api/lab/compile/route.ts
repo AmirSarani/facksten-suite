@@ -5,6 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { requireUser } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 
 const execFileAsync = promisify(execFile);
 
@@ -22,13 +24,53 @@ const SHIM_DIR = join(process.cwd(), "scripts", "lab-shim");
  * Compile Arduino-like sketch with avr-gcc (server-side).
  * Unsupported libraries return a clear Persian error — never fake success.
  */
+const COMPILE_RULE = { limit: 10, windowMs: 60_000 };
+const MAX_CONCURRENT_COMPILES = 2;
+let activeCompiles = 0;
+
+/** Only bare header names (e.g. <avr/io.h>, "Arduino.h"); no traversal or absolute paths. */
+function hasUnsafeInclude(code: string): boolean {
+  const includes = code.matchAll(/^\s*#\s*(?:include|include_next|import)\s*[<"]([^>"\n]*)[>"]?/gm);
+  for (const match of includes) {
+    const target = match[1].trim();
+    if (target.includes("..") || target.startsWith("/") || target.includes("\\") || /^[a-zA-Z]:/.test(target)) {
+      return true;
+    }
+  }
+  return /^\s*#\s*(?:include|include_next|import)\s+(?![<"])/m.test(code);
+}
+
 export async function POST(req: Request) {
+  const user = await requireUser();
+  if (!user) {
+    return NextResponse.json({ error: "برای کامپایل باید وارد حساب شوید" }, { status: 401 });
+  }
+
+  const limited = rateLimit(`compile:${user.id}`, COMPILE_RULE);
+  if (!limited.ok) {
+    return NextResponse.json(
+      { error: "درخواست کامپایل بیش از حد مجاز است. کمی صبر کنید." },
+      { status: 429, headers: { "Retry-After": String(limited.retryAfterSec) } },
+    );
+  }
+
+  if (activeCompiles >= MAX_CONCURRENT_COMPILES) {
+    return NextResponse.json(
+      { error: "سرور در حال کامپایل است. چند ثانیه بعد دوباره امتحان کنید." },
+      { status: 503, headers: { "Retry-After": "5" } },
+    );
+  }
+
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: "درخواست نامعتبر" }, { status: 400 });
   }
 
   const { code, board } = parsed.data;
+
+  if (hasUnsafeInclude(code)) {
+    return NextResponse.json({ error: "مسیر #include نامعتبر است" }, { status: 422 });
+  }
 
   // Reject known-unsupported heavy libs early with honesty
   if (/#\s*include\s*<Wire\.h>/.test(code) || /#\s*include\s*<LiquidCrystal/.test(code)) {
@@ -41,7 +83,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const dir = await mkdtemp(join(tmpdir(), "facksten-lab-"));
+  activeCompiles += 1;
+  const dir = await mkdtemp(join(tmpdir(), "facksten-lab-")).catch((e) => {
+    activeCompiles -= 1;
+    throw e;
+  });
   try {
     let sketch = code;
     // Wrap Arduino-style sketch into main() if needed
@@ -102,6 +148,7 @@ export async function POST(req: Request) {
       note: "کامپایل با avr-gcc روی سرور — خروجی واقعی برای avr8js",
     });
   } finally {
+    activeCompiles -= 1;
     await rm(dir, { recursive: true, force: true }).catch(() => undefined);
   }
 }

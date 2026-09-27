@@ -152,7 +152,7 @@ async function main() {
 
   const login = await req("/api/admin/auth/login", {
     method: "POST",
-    json: { email: "admin@facksten.local", password: "ChangeMe123!" },
+    json: { email: "admin@facksten.local", password: process.env.SMOKE_ADMIN_PASSWORD ?? "" },
   });
   const cookie = cookieHeader(login.res.headers.getSetCookie?.() ?? []);
   record(

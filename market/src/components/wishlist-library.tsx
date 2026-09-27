@@ -7,6 +7,7 @@ import { AddToCartButton } from "@/components/add-to-cart-button";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
 import { PRODUCT_TYPE_FA } from "@/lib/panel";
+import { assetUrl } from "@/lib/asset-url";
 
 export type WishlistItemView = {
   id: string;
@@ -168,7 +169,7 @@ export function WishlistLibrary({ items }: { items: WishlistItemView[] }) {
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={item.image || "/placeholder.svg"}
+                    src={assetUrl(item.image || "/placeholder.svg")}
                     alt={item.title}
                     className={`max-h-full max-w-full object-contain p-2 ${available ? "" : "opacity-50"}`}
                     loading="lazy"

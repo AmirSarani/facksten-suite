@@ -47,7 +47,7 @@ After login from `http://localhost:5174` (credentials included), Chrome should s
 | Field    | Value                   |
 |----------|-------------------------|
 | Email    | `admin@facksten.local`  |
-| Password | `ChangeMe123!`          |
+| Password | `<SEED_ADMIN_PASSWORD>`          |
 
 Change this before any non-local use.
 

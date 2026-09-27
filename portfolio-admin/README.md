@@ -21,7 +21,7 @@ The public site / CMS API must be running separately with a seeded admin:
 npm run dev   # expected on :3020
 ```
 
-Seed admin (portfolio-web): `admin@facksten.local` / `ChangeMe123!`
+Seed admin (portfolio-web): `admin@facksten.local` / `<SEED_ADMIN_PASSWORD>`
 
 If the API is down, the UI still loads. Lists and login show a clear unreachable/empty/error state. Upload and legal save require a live session.
 

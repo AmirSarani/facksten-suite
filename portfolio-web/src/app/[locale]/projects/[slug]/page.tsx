@@ -5,6 +5,7 @@ import { localizeProject, publishedProjectBySlug } from "@/lib/content";
 import { t } from "@/lib/i18n";
 import { isLocale } from "@/lib/locale";
 import { localePath } from "@/lib/paths";
+import { assetUrl } from "@/lib/asset-url";
 
 export async function generateMetadata({
   params,
@@ -59,7 +60,7 @@ export default async function ProjectDetailPage({
             <div className="grid gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={gallery[0].url}
+                src={assetUrl(gallery[0].url)}
                 alt={gallery[0].alt}
                 className="h-auto w-full max-w-full border border-outline object-cover"
               />
@@ -69,7 +70,7 @@ export default async function ProjectDetailPage({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       key={media.url}
-                      src={media.url}
+                      src={assetUrl(media.url)}
                       alt={media.alt}
                       className="h-auto w-full max-w-full border border-outline object-cover"
                     />

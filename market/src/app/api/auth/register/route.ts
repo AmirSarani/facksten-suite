@@ -3,6 +3,7 @@ import { hash } from "bcryptjs";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -11,7 +12,17 @@ const schema = z.object({
   password: z.string().min(6),
 });
 
+const REGISTER_IP_RULE = { limit: 10, windowMs: 60 * 60_000 };
+
 export async function POST(req: Request) {
+  const ipCheck = rateLimit(`register:ip:${clientIp(req)}`, REGISTER_IP_RULE);
+  if (!ipCheck.ok) {
+    return NextResponse.json(
+      { error: "تعداد ثبت‌نام از این آدرس بیش از حد مجاز است. بعداً تلاش کنید." },
+      { status: 429, headers: { "Retry-After": String(ipCheck.retryAfterSec) } },
+    );
+  }
+
   const body = await req.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) {

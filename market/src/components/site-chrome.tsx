@@ -12,7 +12,10 @@ function isBareChromePath(pathname: string) {
     pathname.startsWith("/login/") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/partner") ||
-    pathname.startsWith("/account")
+    pathname.startsWith("/account") ||
+    // The lab workspace is a full-screen tool with its own top bar.
+    pathname === "/lab/workspace" ||
+    pathname.startsWith("/lab/workspace/")
   );
 }
 

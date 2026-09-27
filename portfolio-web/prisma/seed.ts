@@ -1,5 +1,6 @@
 import "dotenv/config";
 import path from "path";
+import { randomBytes } from "node:crypto";
 import { hash } from "bcryptjs";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../src/generated/prisma/client";
@@ -11,6 +12,11 @@ const prisma = new PrismaClient({
 });
 
 async function main() {
+  // This seed deletes every table first; never run it against live data by accident.
+  if (process.env.NODE_ENV === "production" && process.env.SEED_ALLOW_WIPE !== "1") {
+    throw new Error("Refusing to seed (wipes all data) with NODE_ENV=production. Set SEED_ALLOW_WIPE=1 to override.");
+  }
+
   await prisma.lead.deleteMany();
   await prisma.projectMedia.deleteMany();
   await prisma.projectCollaborator.deleteMany();
@@ -20,7 +26,8 @@ async function main() {
   await prisma.siteSetting.deleteMany();
   await prisma.adminUser.deleteMany();
 
-  const passwordHash = await hash("ChangeMe123!", 10);
+  const seedPassword = process.env.SEED_ADMIN_PASSWORD?.trim() || randomBytes(9).toString("base64url");
+  const passwordHash = await hash(seedPassword, 10);
   await prisma.adminUser.create({
     data: {
       email: "admin@facksten.local",
@@ -366,7 +373,7 @@ async function main() {
     },
   });
 
-  console.log("Seeded portfolio CMS (admin@facksten.local / ChangeMe123!)");
+  console.log(`Seeded portfolio CMS (admin@facksten.local / ${seedPassword})`);
 }
 
 main()

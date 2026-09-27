@@ -1,5 +1,6 @@
 import "dotenv/config";
 import path from "path";
+import { randomBytes } from "node:crypto";
 import { hash } from "bcryptjs";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import {
@@ -21,6 +22,11 @@ const prisma = new PrismaClient({ adapter });
 const daysAgo = (n: number) => new Date(Date.now() - n * 86400000);
 
 async function main() {
+  // This seed deletes every table first; never run it against live data by accident.
+  if (process.env.NODE_ENV === "production" && process.env.SEED_ALLOW_WIPE !== "1") {
+    throw new Error("Refusing to seed (wipes all data) with NODE_ENV=production. Set SEED_ALLOW_WIPE=1 to override.");
+  }
+
   await prisma.ticketMessage.deleteMany();
   await prisma.ticket.deleteMany();
   await prisma.orderItem.deleteMany();
@@ -36,7 +42,8 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.siteSetting.deleteMany();
 
-  const passwordHash = await hash("Pass123!", 10);
+  const seedPassword = process.env.SEED_PASSWORD?.trim() || randomBytes(9).toString("base64url");
+  const passwordHash = await hash(seedPassword, 10);
 
   const admin = await prisma.user.create({
     data: {
@@ -780,7 +787,7 @@ async function main() {
       admin: "admin@facksten.com",
       partner: "partner@facksten.com",
       customer: "user@facksten.com",
-      password: "Pass123!",
+      password: seedPassword,
     },
     counts: {
       categories: categoryBySlug.size,

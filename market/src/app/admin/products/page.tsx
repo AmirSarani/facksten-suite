@@ -8,6 +8,7 @@ import { prisma } from "@/lib/db";
 import { formatToman } from "@/lib/format";
 import { PRODUCT_TYPE_FA } from "@/lib/panel";
 import type { Prisma } from "@/generated/prisma/client";
+import { assetUrl } from "@/lib/asset-url";
 
 export const metadata = { title: "محصولات ادمین" };
 
@@ -381,7 +382,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                         <div className="h-12 w-12 shrink-0 overflow-hidden cyber-chamfer-sm border border-outline bg-surface-container-lowest-container-low">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={p.image || "/placeholder.svg"}
+                            src={assetUrl(p.image || "/placeholder.svg")}
                             alt=""
                             className="h-full w-full object-cover"
                           />
@@ -469,7 +470,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                 <div className="flex gap-3">
                   <div className="h-14 w-14 shrink-0 overflow-hidden cyber-chamfer-sm border border-outline bg-surface-container-lowest-container-low">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.image || "/placeholder.svg"} alt="" className="h-full w-full object-cover" />
+                    <img src={assetUrl(p.image || "/placeholder.svg")} alt="" className="h-full w-full object-cover" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <Link href={`/admin/products/${p.id}`} className="font-semibold leading-6 hover:text-primary-container">

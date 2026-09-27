@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ArticleCard } from "@/components/article-card";
 import { Icon } from "@/components/icon";
+import { assetUrl } from "@/lib/asset-url";
 
 export type ArticlesIndexItem = {
   id: string;
@@ -86,7 +87,7 @@ export function ArticlesIndex({ articles }: { articles: ArticlesIndexItem[] }) {
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={featured.image}
+                    src={assetUrl(featured.image)}
                     alt=""
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   />

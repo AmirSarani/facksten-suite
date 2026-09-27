@@ -8,6 +8,7 @@ import { Icon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { UI_IMAGES } from "@/lib/media";
+import { assetUrl } from "@/lib/asset-url";
 
 const DEMO_ACCOUNTS = [
   { label: "ادمین", email: "admin@facksten.com", hint: "کنسول مدیریت" },
@@ -15,7 +16,9 @@ const DEMO_ACCOUNTS = [
   { label: "مشتری", email: "user@facksten.com", hint: "خریدار" },
 ] as const;
 
-const DEMO_PASSWORD = "Pass123!";
+// Demo quick-login is opt-in (build-time env); the password is never hard-coded in the bundle.
+const DEMO_ENABLED = process.env.NEXT_PUBLIC_DEMO_LOGIN === "1";
+const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "";
 
 const fieldClass =
   "cyber-chamfer-sm w-full min-h-11 border border-outline bg-surface-container-lowest px-4 py-3 font-mono text-sm text-primary-container outline-none transition focus:border-primary-container focus:shadow-[var(--box-shadow-neon)]";
@@ -69,7 +72,7 @@ export function LoginForm() {
         <aside className="auth-visual relative hidden min-h-dvh overflow-hidden lg:block">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={UI_IMAGES.aboutLab}
+            src={assetUrl(UI_IMAGES.aboutLab)}
             alt=""
             className="absolute inset-0 h-full w-full object-cover object-center"
           />
@@ -153,7 +156,7 @@ export function LoginForm() {
                 : "در کمتر از یک دقیقه به‌عنوان مشتری ثبت‌نام کنید."}
             </p>
 
-            {mode === "login" && (
+            {mode === "login" && DEMO_ENABLED && (
               <div className="mt-5">
                 <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-on-surface-variant">
                   &gt; ورود سریع نمونه

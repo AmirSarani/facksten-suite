@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/icon";
 import { galleryFor } from "@/lib/media";
+import { assetUrl } from "@/lib/asset-url";
 
 const AUTO_MS = 4000;
 
@@ -71,7 +72,7 @@ export function ProductGallery({ title, image, slug, badge, isDigital, digitalIc
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={thumbs[active]?.src || active}
-            src={thumbs[active]?.src || "/placeholder.svg"}
+            src={assetUrl(thumbs[active]?.src || "/placeholder.svg")}
             alt={title}
             className="h-full w-full object-contain object-center transition-opacity duration-500 group-hover:scale-105"
           />
@@ -107,7 +108,7 @@ export function ProductGallery({ title, image, slug, badge, isDigital, digitalIc
             }`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={t.src} alt="" className="h-full w-full rounded object-contain" />
+            <img src={assetUrl(t.src)} alt="" className="h-full w-full rounded object-contain" />
             {t.video && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-on-primary">
                 <Icon name="play_circle" className="h-8 w-8" />

@@ -7,6 +7,7 @@ import { AddToCartButton } from "@/components/add-to-cart-button";
 import { useCompare } from "@/components/compare-provider";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 type Product = {
   id: string;
@@ -123,7 +124,7 @@ export function CompareClient({ catalog }: { catalog: Product[] }) {
                     className="flex w-full items-center gap-3 px-3 py-2 text-right text-sm hover:bg-surface-container-low"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.image || "/placeholder.svg"} alt="" className="h-10 w-10 object-contain" />
+                    <img src={assetUrl(p.image || "/placeholder.svg")} alt="" className="h-10 w-10 object-contain" />
                     <span className="line-clamp-1">{p.title}</span>
                   </button>
                 </li>
@@ -162,7 +163,7 @@ export function CompareClient({ catalog }: { catalog: Product[] }) {
                         </button>
                         <div className="mb-3 flex h-32 w-32 items-center justify-center overflow-hidden cyber-chamfer-sm bg-surface-container-low">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={p.image || "/placeholder.svg"} alt="" className="h-full w-full object-contain p-2" />
+                          <img src={assetUrl(p.image || "/placeholder.svg")} alt="" className="h-full w-full object-contain p-2" />
                         </div>
                         <Link href={`/product/${p.slug}`} className="mb-2 line-clamp-2 text-sm font-semibold hover:text-primary">
                           {p.title}

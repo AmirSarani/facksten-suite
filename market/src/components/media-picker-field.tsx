@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
+import { assetUrl } from "@/lib/asset-url";
 
 type MediaItem = { url: string; name: string };
 
@@ -123,7 +124,7 @@ export function MediaPickerField({
         {value ? (
           <div className="relative aspect-[16/10] w-full bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={value} alt="" className="h-full w-full object-cover" />
+            <img src={assetUrl(value)} alt="" className="h-full w-full object-cover" />
             <div className="absolute inset-x-0 bottom-0 flex flex-wrap gap-2 bg-gradient-to-t from-black/55 to-transparent p-3">
               <button
                 type="button"
@@ -222,7 +223,7 @@ export function MediaPickerField({
                     }`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.url} alt="" className="aspect-square w-full object-cover" />
+                    <img src={assetUrl(item.url)} alt="" className="aspect-square w-full object-cover" />
                     <p className="truncate px-2 py-1 text-[10px] text-on-surface-variant" dir="ltr">
                       {item.name}
                     </p>

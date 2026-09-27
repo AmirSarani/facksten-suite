@@ -1,6 +1,7 @@
 import { getIronSession, SessionOptions } from "iron-session";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import type { Role } from "@/generated/prisma/client";
+import { resolveSessionSecret } from "@/lib/session-secret";
 
 export type SessionUser = {
   id: string;
@@ -19,19 +20,39 @@ export type SessionData = {
   guestCart?: GuestCartLine[];
 };
 
-export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET ?? "complex_password_at_least_32_characters_long",
-  cookieName: "facksten_market_session",
-  cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-  },
-};
+function resolveCookieSecure(protocol?: string): boolean {
+  const explicit = process.env.COOKIE_SECURE?.trim().toLowerCase();
+  if (explicit && ["1", "true", "yes", "on"].includes(explicit)) return true;
+  if (explicit && ["0", "false", "no", "off"].includes(explicit)) return false;
+
+  const proto = protocol?.split(",")[0]?.trim().toLowerCase();
+  if (proto === "https") return true;
+  if (proto === "http") return false;
+  return process.env.NODE_ENV === "production";
+}
+
+/** Built per request so a missing SESSION_SECRET fails at runtime, never at import/build. */
+export function buildSessionOptions(protocol?: string): SessionOptions {
+  return {
+    password: resolveSessionSecret(),
+    cookieName: "facksten_market_session",
+    cookieOptions: {
+      secure: resolveCookieSecure(protocol),
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+    },
+  };
+}
 
 export async function getSession() {
-  return getIronSession<SessionData>(await cookies(), sessionOptions);
+  let protocol: string | undefined;
+  try {
+    protocol = (await headers()).get("x-forwarded-proto") ?? undefined;
+  } catch {
+    protocol = undefined;
+  }
+  return getIronSession<SessionData>(await cookies(), buildSessionOptions(protocol));
 }
 
 export async function requireUser(roles?: Role[]) {

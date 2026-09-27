@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
-import { sessionOptions, type SessionData } from "@/lib/auth";
+import { buildSessionOptions, type SessionData } from "@/lib/auth";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -17,7 +17,11 @@ export async function middleware(req: NextRequest) {
     request: { headers: requestHeaders },
   });
 
-  const session = await getIronSession<SessionData>(req, res, sessionOptions);
+  const session = await getIronSession<SessionData>(
+    req,
+    res,
+    buildSessionOptions(req.headers.get("x-forwarded-proto") ?? undefined),
+  );
   const user = session.user;
 
   const needAuth =

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MediaPickerField } from "@/components/media-picker-field";
 import { estimateReadMinutes, parseArticleBody } from "@/lib/article-content";
+import { assetUrl } from "@/lib/asset-url";
 
 export type ArticleEditorValues = {
   id?: string;
@@ -149,7 +150,7 @@ function BodyPreview({ body }: { body: string }) {
           return (
             <figure key={i} className="overflow-hidden cyber-chamfer-sm border border-outline">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={b.src} alt={b.caption} className="max-h-40 w-full object-cover" />
+              <img src={assetUrl(b.src)} alt={b.caption} className="max-h-40 w-full object-cover" />
               {b.caption ? <figcaption className="px-2 py-1 text-[11px] text-on-surface-variant">{b.caption}</figcaption> : null}
             </figure>
           );
@@ -519,7 +520,7 @@ export function ArticleEditorForm({
               <div className="aspect-[16/10] bg-surface-container-low">
                 {image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={image} alt="" className="h-full w-full object-cover" />
+                  <img src={assetUrl(image)} alt="" className="h-full w-full object-cover" />
                 ) : (
                   <div className="flex h-full flex-col items-center justify-center gap-1 text-sm text-on-surface-variant">
                     <span>بدون کاور</span>

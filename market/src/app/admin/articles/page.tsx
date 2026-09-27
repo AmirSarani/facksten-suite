@@ -4,6 +4,7 @@ import { Icon } from "@/components/icon";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { estimateReadMinutes } from "@/lib/article-content";
+import { assetUrl } from "@/lib/asset-url";
 
 export const metadata = { title: "مقالات ادمین" };
 
@@ -271,7 +272,7 @@ export default async function AdminArticlesPage({ searchParams }: Props) {
                           <div className="h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-surface-container-low">
                             {a.image ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={a.image} alt="" className="h-full w-full object-cover" />
+                              <img src={assetUrl(a.image)} alt="" className="h-full w-full object-cover" />
                             ) : (
                               <div className="flex h-full items-center justify-center text-[9px] text-on-surface-variant">
                                 بدون کاور
@@ -340,7 +341,7 @@ export default async function AdminArticlesPage({ searchParams }: Props) {
                   <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-container-low">
                     {a.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={a.image} alt="" className="h-full w-full object-cover" />
+                      <img src={assetUrl(a.image)} alt="" className="h-full w-full object-cover" />
                     ) : (
                       <div className="flex h-full items-center justify-center text-[10px] text-on-surface-variant">
                         بدون کاور

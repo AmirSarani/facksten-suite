@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { formatToman } from "@/lib/format";
 import { UI_IMAGES } from "@/lib/media";
 import { ORDER_STATUS_BADGE, ORDER_STATUS_FA } from "@/lib/panel";
+import { assetUrl } from "@/lib/asset-url";
 
 export const metadata = { title: "پنل همکار" };
 
@@ -343,7 +344,7 @@ export default async function PartnerDashboard() {
             <p className="text-[11px] font-bold text-on-surface-variant">مدیر حساب شما</p>
             <div className="mt-3 flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={UI_IMAGES.partnerManager} alt="" className="h-11 w-11 rounded-full object-cover" />
+              <img src={assetUrl(UI_IMAGES.partnerManager)} alt="" className="h-11 w-11 rounded-full object-cover" />
               <div className="min-w-0">
                 <p className="font-bold text-on-surface">سارا محمدی</p>
                 <a

@@ -5,6 +5,7 @@ import { AddToCartButton } from "@/components/add-to-cart-button";
 import { useCompare } from "@/components/compare-provider";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 export type SearchProduct = {
   id: string;
@@ -100,7 +101,7 @@ export function SearchResultsClient({
               <Link href={`/product/${p.slug}`} className="relative block bg-surface-container-low pt-[100%]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={p.image || "/placeholder.svg"}
+                  src={assetUrl(p.image || "/placeholder.svg")}
                   alt={p.title}
                   className="absolute inset-0 h-full w-full object-contain p-4"
                 />

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCompare } from "@/components/compare-provider";
 import { Icon } from "@/components/icon";
+import { assetUrl } from "@/lib/asset-url";
 
 export function CompareBar() {
   const { items, clear, remove, ready } = useCompare();
@@ -21,7 +22,7 @@ export function CompareBar() {
                 className="cyber-chamfer-sm relative h-10 w-10 overflow-hidden border-2 border-outline bg-surface-container-low"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={it.image || "/placeholder.svg"} alt="" className="h-full w-full object-contain p-0.5" />
+                <img src={assetUrl(it.image || "/placeholder.svg")} alt="" className="h-full w-full object-contain p-0.5" />
                 <button
                   type="button"
                   aria-label="حذف"

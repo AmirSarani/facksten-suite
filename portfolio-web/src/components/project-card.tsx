@@ -2,6 +2,7 @@ import Link from "next/link";
 import { t } from "@/lib/i18n";
 import type { Locale } from "@/lib/locale";
 import { localePath } from "@/lib/paths";
+import { assetUrl } from "@/lib/asset-url";
 
 export function ProjectCard({
   locale,
@@ -28,7 +29,7 @@ export function ProjectCard({
       <div className="relative aspect-[16/10] bg-surface-container">
         {coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={coverUrl} alt="" className="h-full w-full max-w-full object-cover" />
+          <img src={assetUrl(coverUrl)} alt="" className="h-full w-full max-w-full object-cover" />
         ) : null}
         {featured ? (
           <span className="absolute top-3 start-3 bg-cta px-2 py-1 font-mono text-[10px] tracking-wider">

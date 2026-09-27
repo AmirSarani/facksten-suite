@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 
-const DEFAULT_ORIGINS = ["http://localhost:5174"];
+const DEV_ORIGINS = ["http://localhost:5174"];
 
 function allowedOrigins() {
   const extra = process.env.ADMIN_ORIGIN?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
-  return new Set([...DEFAULT_ORIGINS, ...extra]);
+  // localhost is only trusted outside production; production uses ADMIN_ORIGIN alone.
+  const base = process.env.NODE_ENV === "production" ? [] : DEV_ORIGINS;
+  return new Set([...base, ...extra]);
 }
 
 export function applyCors(req: Request, res: NextResponse) {

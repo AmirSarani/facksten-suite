@@ -11,6 +11,7 @@ import {
   mockReviewsForProduct,
   ratingSummary,
 } from "@/lib/product-mock";
+import { assetUrl } from "@/lib/asset-url";
 
 function siteNavOffset() {
   if (typeof document === "undefined") return 48;
@@ -324,7 +325,7 @@ export function ProductDetailSections({
                       <div className="h-16 w-16 shrink-0 overflow-hidden rounded bg-surface-container">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={a.image || "/placeholder.svg"}
+                          src={assetUrl(a.image || "/placeholder.svg")}
                           alt=""
                           className="h-full w-full object-cover transition-transform group-hover:scale-110"
                         />

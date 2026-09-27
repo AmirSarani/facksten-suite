@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { formatToman, discountPercent } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 export type CarouselDeal = {
   id: string;
@@ -94,7 +95,7 @@ export function DealsCarousel({ items }: { items: CarouselDeal[] }) {
                     <div className="relative aspect-[16/10] overflow-hidden bg-surface-container-low sm:aspect-auto sm:min-h-[240px]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={item.image || "/placeholder.svg"}
+                        src={assetUrl(item.image || "/placeholder.svg")}
                         alt=""
                         className="h-full w-full object-cover object-center"
                       />
@@ -191,7 +192,7 @@ export function DealsCarousel({ items }: { items: CarouselDeal[] }) {
                 >
                   <div className="relative h-12 w-12 shrink-0 overflow-hidden border border-outline-variant bg-surface-container-low cyber-chamfer-sm">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.image || "/placeholder.svg"} alt="" className="h-full w-full object-cover p-0.5" />
+                    <img src={assetUrl(item.image || "/placeholder.svg")} alt="" className="h-full w-full object-cover p-0.5" />
                   </div>
                   <div className="min-w-0 flex-1">
                     {(d > 0 || item.badge) && (

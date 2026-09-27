@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 type Line = {
   qty: number;
@@ -192,7 +193,7 @@ export default function PaymentPage() {
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden cyber-chamfer-sm bg-surface-container-low">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={l.product.image || "/placeholder.svg"}
+                        src={assetUrl(l.product.image || "/placeholder.svg")}
                         alt=""
                         className="h-full w-full object-contain p-1"
                       />

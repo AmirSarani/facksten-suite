@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/icon";
 import type { Article } from "@/lib/data";
+import { assetUrl } from "@/lib/asset-url";
 
 export function ArticleCard({
   article,
@@ -18,7 +19,7 @@ export function ArticleCard({
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={article.image}
+          src={assetUrl(article.image)}
           alt={article.title}
           width={640}
           height={360}

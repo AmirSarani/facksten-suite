@@ -6,6 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { formatToman } from "@/lib/format";
 import { PRODUCT_TYPE_FA } from "@/lib/panel";
+import { assetUrl } from "@/lib/asset-url";
 
 export const metadata = { title: "موجودی همکار" };
 
@@ -239,7 +240,7 @@ export default async function PartnerInventoryPage({ searchParams }: Props) {
                   <div className="h-20 w-20 shrink-0 overflow-hidden cyber-chamfer-sm border border-outline bg-surface-container-lowest-container-low sm:h-24 sm:w-24">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={p.image || "/placeholder.svg"}
+                      src={assetUrl(p.image || "/placeholder.svg")}
                       alt=""
                       className="h-full w-full object-cover"
                     />

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "@/components/icon";
 import { useCart } from "@/components/cart-provider";
 import { formatToman } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 type Line = {
   qty: number;
@@ -91,7 +92,7 @@ export default function CartPage() {
             <div className="h-32 w-full shrink-0 overflow-hidden cyber-chamfer-sm bg-surface-container-low sm:w-32">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={line.product.image || "/placeholder.svg"}
+                src={assetUrl(line.product.image || "/placeholder.svg")}
                 alt={line.product.title}
                 className="h-full w-full object-contain p-2"
               />

@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { getSiteSettings } from "@/lib/catalog";
 import { UI_IMAGES } from "@/lib/media";
 import { SITE } from "@/lib/site";
+import { assetUrl } from "@/lib/asset-url";
 
 export const metadata = { title: "تماس با ما" };
 
@@ -172,10 +173,10 @@ export default async function ContactPage() {
       <section className="relative h-[420px] w-full overflow-hidden cyber-chamfer border border-outline shadow-[var(--box-shadow-neon-sm)] md:h-[480px]">
         <div className="absolute inset-0 bg-surface-container-low">
           <picture>
-            <source srcSet="/images/ui/contact-map.webp" type="image/webp" />
+            <source srcSet={assetUrl("/images/ui/contact-map.webp")} type="image/webp" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={UI_IMAGES.contactMap}
+              src={assetUrl(UI_IMAGES.contactMap)}
               alt="نقشه دفتر مرکزی پارک فناوری"
               width={2816}
               height={1536}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
+import { assetUrl } from "@/lib/asset-url";
 
 export type CardProduct = {
   id: string;
@@ -56,7 +57,7 @@ export function HomeFeaturedCard({
           ) : null}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={product.image || "/placeholder.svg"}
+            src={assetUrl(product.image || "/placeholder.svg")}
             alt={product.title}
             className={`relative z-[1] max-h-[148px] w-auto max-w-[88%] object-contain p-2 transition-transform duration-300 group-hover:scale-[1.04] sm:max-h-[180px] lg:max-h-[192px] ${
               product.inStock ? "" : "opacity-50"
@@ -138,7 +139,7 @@ export function HardwareProductCard({
           )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={product.image || "/placeholder.svg"}
+            src={assetUrl(product.image || "/placeholder.svg")}
             alt={product.title}
             className={`h-full w-full object-contain p-3 transition-transform duration-300 group-hover:scale-[1.03] ${
               product.inStock ? "" : "opacity-50"
@@ -183,7 +184,7 @@ export function HardwareProductCard({
         )}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={product.image || "/placeholder.svg"}
+          src={assetUrl(product.image || "/placeholder.svg")}
           alt={product.title}
           className={`absolute inset-0 h-full w-full object-cover p-3 ${product.inStock ? "" : "opacity-50"}`}
           loading="lazy"
@@ -241,7 +242,7 @@ export function DigitalProductCard({
       ) : null}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={product.image || "/placeholder.svg"}
+        src={assetUrl(product.image || "/placeholder.svg")}
         alt={product.title}
         className={
           variant === "home"

@@ -72,19 +72,44 @@ export function ModelViewer({ def, lit = false }: { def: ComponentDef; lit?: boo
     rim.position.set(-radius * 1.5, radius, -radius * 1.5);
     scene.add(rim);
 
-    const camera = new THREE.PerspectiveCamera(35, 1, 0.05, 500);
-    const dist = radius * 2.1 + 1;
-    camera.position.set(dist * 0.75, dist * 0.8, dist);
-    const target = new THREE.Vector3(0, size.y * 0.35, 0);
-    camera.lookAt(target);
-
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.05, 500);
+    const target = new THREE.Vector3(0, size.y * 0.45, 0);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.copy(target);
     controls.enableDamping = true;
     controls.enablePan = false;
-    controls.minDistance = radius * 0.8;
-    controls.maxDistance = radius * 5;
     controls.maxPolarAngle = Math.PI / 2.05;
+
+    // Corners of the (now centred) model, used to frame it tightly.
+    const half = size.clone().multiplyScalar(0.5);
+    const corners: THREE.Vector3[] = [];
+    for (const sx of [-1, 1]) for (const sy of [0, 2]) for (const sz of [-1, 1]) {
+      corners.push(new THREE.Vector3(sx * half.x, sy * half.y, sz * half.z));
+    }
+    /** Distance at which the model fills ~80% of the view at every auto-rotation angle. */
+    const frame = () => {
+      const base = new THREE.Vector3(0.7, 0.85, 1).normalize();
+      let dist = radius * 2;
+      for (let iter = 0; iter < 4; iter++) {
+        let worst = 0;
+        for (let a = 0; a < 8; a++) {
+          const dir = base.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), (a * Math.PI) / 4);
+          camera.position.copy(target).addScaledVector(dir, dist);
+          camera.lookAt(target);
+          camera.updateMatrixWorld();
+          for (const c of corners) {
+            const p = c.clone().project(camera);
+            worst = Math.max(worst, Math.abs(p.x), Math.abs(p.y));
+          }
+        }
+        dist *= worst / 0.8;
+      }
+      camera.position.copy(target).addScaledVector(base, dist);
+      camera.lookAt(target);
+      controls.minDistance = dist * 0.45;
+      controls.maxDistance = dist * 2.5;
+      controls.update();
+    };
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     controls.autoRotate = !reduced;
     controls.autoRotateSpeed = 1.6;
@@ -98,6 +123,7 @@ export function ModelViewer({ def, lit = false }: { def: ComponentDef; lit?: boo
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+      frame();
     };
     resize();
     const ro = new ResizeObserver(resize);

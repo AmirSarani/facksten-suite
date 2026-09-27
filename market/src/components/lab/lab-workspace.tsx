@@ -465,7 +465,7 @@ export function LabWorkspace({
   const keys = useRef<(e: KeyboardEvent) => void>(() => undefined);
   useEffect(() => {
     keys.current = (e: KeyboardEvent) => {
-      const el = e.target as HTMLElement | null;
+      const el = e.target instanceof Element ? e.target : null;
       const typing = !!el?.closest("input, textarea, select, [contenteditable=true], .monaco-editor");
       const mod = e.ctrlKey || e.metaKey;
       if (mod && e.key === "Enter") {

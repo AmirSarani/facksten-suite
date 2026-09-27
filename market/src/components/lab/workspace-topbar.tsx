@@ -159,7 +159,7 @@ export function WorkspaceTopbar(p: TopbarProps) {
         )}
         <button
           type="button"
-          className={`${ghostBtn} hidden sm:inline-flex`}
+          className={`${ghostBtn} max-sm:hidden`}
           onClick={paused ? p.onResume : p.onPause}
           disabled={!running && !paused}
           title={paused ? "ادامه" : "مکث"}
@@ -167,7 +167,7 @@ export function WorkspaceTopbar(p: TopbarProps) {
         >
           <Glyph d={paused ? G.play : G.pause} />
         </button>
-        <button type="button" className={`${ghostBtn} hidden sm:inline-flex`} onClick={p.onReset} title="ریست میکروکنترلر" aria-label="ریست">
+        <button type="button" className={`${ghostBtn} max-sm:hidden`} onClick={p.onReset} title="ریست میکروکنترلر" aria-label="ریست">
           <Glyph d={G.reset} />
         </button>
         <label className="hidden items-center gap-1 text-[11px] text-on-surface-variant md:flex" title="سرعت شبیه‌سازی">
@@ -202,10 +202,10 @@ export function WorkspaceTopbar(p: TopbarProps) {
           <Icon name={p.errors ? "close" : "verified_user"} className="h-4 w-4" />
           <span className="font-mono">{p.errors || p.warnings ? (p.errors + p.warnings).toLocaleString("fa-IR") : "✓"}</span>
         </button>
-        <button type="button" className={`${ghostBtn} hidden md:inline-flex`} onClick={p.onUndo} disabled={!p.canUndo} title="واگرد (Ctrl+Z)" aria-label="واگرد">
+        <button type="button" className={`${ghostBtn} max-md:hidden`} onClick={p.onUndo} disabled={!p.canUndo} title="واگرد (Ctrl+Z)" aria-label="واگرد">
           <Glyph d={G.undo} />
         </button>
-        <button type="button" className={`${ghostBtn} hidden md:inline-flex`} onClick={p.onRedo} disabled={!p.canRedo} title="ازنو (Ctrl+Shift+Z)" aria-label="ازنو">
+        <button type="button" className={`${ghostBtn} max-md:hidden`} onClick={p.onRedo} disabled={!p.canRedo} title="ازنو (Ctrl+Shift+Z)" aria-label="ازنو">
           <Glyph d={G.redo} />
         </button>
 

@@ -1,7 +1,16 @@
 import type { ComponentDef, PinDef } from "./types";
+import { withBasePath } from "./base-path";
 
 const MIT = "MIT (Adafruit CAD Parts / Facksten Lab)";
 const ADAFRUIT = "https://github.com/adafruit/Adafruit_CAD_Parts";
+
+// 3D preview models converted from real CAD by scripts/lab-models/build.mjs.
+// See src/lab/licenses/ for full license text and public/lab/models/CREDITS.md for per-part credit.
+const CC_BY_3 = "CC-BY-3.0 (FreeCAD-library)";
+const FREECAD_LIB = "https://github.com/FreeCAD/FreeCAD-library";
+const CC_BY_SA_4 = "CC-BY-SA-4.0 (KiCad libraries)";
+const KICAD_3D = "https://gitlab.com/kicad/libraries/kicad-packages3D";
+const modelPath = (id: string) => withBasePath(`/lab/models/${id}.glb`);
 
 function unoPins(): PinDef[] {
   const left: PinDef[] = [
@@ -79,9 +88,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "board",
     description: "برد آردوینو Uno با ATmega328P — شبیه‌سازی کامل Blink با avr8js",
     thumbnail: "/lab/thumbs/arduino-uno.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("arduino-uno"),
+    sourceUrl: `${FREECAD_LIB}/tree/master/Electronics%20Parts/Boards/Arduino/Arduino%20UNO`,
+    license: CC_BY_3,
     simulationStatus: "simulated",
     protocols: ["gpio", "i2c", "spi", "uart", "pwm", "analog"],
     pins: unoPins(),
@@ -104,9 +113,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "board",
     description: "برد فشرده Nano — همان هسته ATmega328P، مسیر شبیه‌سازی Uno",
     thumbnail: "/lab/thumbs/arduino-nano.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("arduino-nano"),
+    sourceUrl: `${FREECAD_LIB}/blob/master/Electronics%20Parts/Boards/Arduino/Nano-Rev3_0.fcstd`,
+    license: CC_BY_3,
     simulationStatus: "simulated",
     protocols: ["gpio", "i2c", "spi", "uart", "pwm", "analog"],
     pins: nanoPins(),
@@ -157,9 +166,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "led",
     description: "ال‌ای‌دی قرمز — در شبیه‌سازی با پایه ۱۳ یا خروجی دیجیتال روشن می‌شود",
     thumbnail: "/lab/thumbs/led-red.svg",
-    modelUrl: "/lab/models/led-placeholder.json",
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("led-red"),
+    sourceUrl: `${KICAD_3D}/-/blob/master/LED_THT.3dshapes/LED_D5.0mm.step`,
+    license: CC_BY_SA_4,
     simulationStatus: "simulated",
     protocols: ["gpio"],
     pins: [
@@ -185,9 +194,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "led",
     description: "ال‌ای‌دی RGB — در MVP قابل سیم‌کشی؛ شبیه‌سازی رنگی کامل به‌زودی",
     thumbnail: "/lab/thumbs/led-rgb.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("led-rgb"),
+    sourceUrl: `${KICAD_3D}/-/blob/master/LED_THT.3dshapes/LED_D5.0mm-4_RGB.step`,
+    license: CC_BY_SA_4,
     simulationStatus: "wireable",
     protocols: ["gpio", "pwm"],
     pins: [
@@ -271,9 +280,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "input",
     description: "کلید فشاری — در شبیه‌سازی ورودی دیجیتال (حالت wireable تا اتصال کامل به MCU)",
     thumbnail: "/lab/thumbs/button.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("button"),
+    sourceUrl: `${KICAD_3D}/-/blob/master/Button_Switch_THT.3dshapes/SW_PUSH_6mm.step`,
+    license: CC_BY_SA_4,
     simulationStatus: "simulated",
     protocols: ["gpio"],
     pins: [
@@ -301,8 +310,8 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "input",
     description: "ولوم آنالوگ — قابل سیم‌کشی به A0؛ شبیه‌سازی مقدار در فاز بعد",
     thumbnail: "/lab/thumbs/pot.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
+    modelUrl: modelPath("potentiometer"),
+    sourceUrl: `${ADAFRUIT}/tree/main/562%2010K%20Potentiometer`,
     license: MIT,
     simulationStatus: "wireable",
     protocols: ["analog", "power"],
@@ -330,9 +339,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "actuator",
     description: "بازر پسیو — قابل سیم‌کشی؛ تولید صدا در شبیه‌سازی به‌زودی",
     thumbnail: "/lab/thumbs/buzzer.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("buzzer"),
+    sourceUrl: `${KICAD_3D}/-/blob/master/Buzzer_Beeper.3dshapes/Buzzer_12x9.5RM7.6.step`,
+    license: CC_BY_SA_4,
     simulationStatus: "wireable",
     protocols: ["gpio", "pwm"],
     pins: [
@@ -358,9 +367,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "actuator",
     description: "سروموتور میکرو — قالب آماده با کد PWM؛ مدل رفتاری زاویه در worker",
     thumbnail: "/lab/thumbs/servo.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("servo-sg90"),
+    sourceUrl: `${FREECAD_LIB}/tree/master/Electrical%20Parts/Servos/SG-90`,
+    license: CC_BY_3,
     simulationStatus: "simulated",
     protocols: ["pwm", "power"],
     pins: [
@@ -417,9 +426,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "sensor",
     description: "سنسور فاصله — قالب آماده با Trig/Echo؛ شبیه‌سازی فاصله ثابت برچسب‌خورده در سریال",
     thumbnail: "/lab/thumbs/hcsr04.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("hc-sr04"),
+    sourceUrl: `${FREECAD_LIB}/tree/master/Electronics%20Parts/Ultrasonic%20Sensors`,
+    license: CC_BY_3,
     simulationStatus: "wireable",
     protocols: ["gpio", "power"],
     pins: [
@@ -476,9 +485,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "display",
     description: "نمایشگر کاراکتری ۲×۱۶ — مدل سه‌بعدی/سیم‌کشی؛ شبیه‌سازی متن به‌زودی",
     thumbnail: "/lab/thumbs/lcd1602.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("lcd-1602"),
+    sourceUrl: `${KICAD_3D}/-/blob/master/Display.3dshapes/WC1602A.step`,
+    license: CC_BY_SA_4,
     simulationStatus: "3d-only",
     protocols: ["gpio", "i2c", "power"],
     pins: [
@@ -506,9 +515,9 @@ export const LAB_COMPONENTS_SEED: ComponentDef[] = [
     category: "display",
     description: "نمایشگر OLED — فقط مدل/کاتالوگ در MVP (۳d-only)",
     thumbnail: "/lab/thumbs/oled.svg",
-    modelUrl: null,
-    sourceUrl: ADAFRUIT,
-    license: MIT,
+    modelUrl: modelPath("oled-128x64"),
+    sourceUrl: `${KICAD_3D}/-/blob/master/Display.3dshapes/Adafruit_SSD1306.step`,
+    license: CC_BY_SA_4,
     simulationStatus: "3d-only",
     protocols: ["i2c", "power"],
     pins: [

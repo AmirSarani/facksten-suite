@@ -98,7 +98,7 @@ export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, o
       <div className="cyber-chamfer relative h-52 overflow-hidden border border-outline bg-[radial-gradient(ellipse_at_center,var(--surface-container)_0%,var(--background)_75%)]">
         <ModelViewer def={def} lit={lit} />
         <span className="pointer-events-none absolute bottom-2 left-2 font-mono text-[10px] text-on-surface-variant/80">
-          مدل ساده‌شده · بکشید تا بچرخد
+          بکشید تا بچرخد
         </span>
       </div>
 
@@ -145,8 +145,20 @@ export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, o
         <dt className="text-on-surface-variant">موجودی</dt>
         <dd>{STOCK_LABEL[def.stockStatus]}</dd>
         <dt className="text-on-surface-variant">مجوز مدل</dt>
-        <dd className="truncate" title={def.license}>{def.license}</dd>
+        <dd className="leading-5">{def.license}</dd>
       </dl>
+
+      {def.sourceUrl && (
+        <a
+          href={def.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-[11px] text-on-surface-variant underline hover:text-primary-container"
+        >
+          <Icon name="link" className="h-3.5 w-3.5" />
+          منبع مدل سه‌بعدی
+        </a>
+      )}
 
       {shopHref ? (
         <Link href={shopHref} className="bg-cta focus-cta cyber-chamfer-sm flex min-h-10 items-center justify-center gap-2 text-xs font-bold">

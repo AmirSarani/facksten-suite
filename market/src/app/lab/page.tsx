@@ -280,18 +280,34 @@ export default function LabIntroPage() {
 
       {/* 7 — License */}
       <details className="border-t border-outline pt-4 text-xs leading-7 text-on-surface-variant">
-        <summary className="cursor-pointer font-semibold text-on-surface">مجوز و انتساب</summary>
+        <summary className="cursor-pointer font-semibold text-on-surface">مجوز و انتساب مدل‌های سه‌بعدی</summary>
         <p className="mt-2">
-          مدل‌های CAD و منابع قطعات از{" "}
-          <a
-            href="https://github.com/adafruit/Adafruit_CAD_Parts"
-            className="text-primary-container underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Adafruit_CAD_Parts
-          </a>{" "}
-          تحت مجوز MIT استفاده می‌شوند. جزئیات در <code className="font-mono">src/lab/licenses/</code> و{" "}
+          مدل‌های سه‌بعدی قطعات از سه منبع باز گرفته و به GLB ساده‌سازی شده‌اند:
+        </p>
+        <ul className="mt-2 list-inside list-disc space-y-1">
+          <li>
+            <a href="https://github.com/adafruit/Adafruit_CAD_Parts" className="text-primary-container underline" target="_blank" rel="noopener noreferrer">
+              Adafruit_CAD_Parts
+            </a>{" "}
+            (مجوز MIT) — پتانسیومتر
+          </li>
+          <li>
+            <a href="https://github.com/FreeCAD/FreeCAD-library" className="text-primary-container underline" target="_blank" rel="noopener noreferrer">
+              FreeCAD-library
+            </a>{" "}
+            (مجوز CC-BY 3.0) — Arduino Uno، Arduino Nano، سروو SG90، HC-SR04
+          </li>
+          <li>
+            <a href="https://gitlab.com/kicad/libraries/kicad-packages3D" className="text-primary-container underline" target="_blank" rel="noopener noreferrer">
+              kicad-packages3D
+            </a>{" "}
+            (مجوز CC-BY-SA 4.0) — LED، LED RGB، دکمه، بازر، LCD 1602، OLED
+          </li>
+        </ul>
+        <p className="mt-2">
+          بقیه‌ی قطعات (بردبورد، مقاومت‌ها، DHT22، PIR) مدل ساده‌شده‌ی داخلی دارند، نه CAD واقعی.
+          متن کامل مجوزها در <code className="font-mono">src/lab/licenses/</code>، فهرست انتساب هر قطعه در{" "}
+          <code className="font-mono">public/lab/models/CREDITS.md</code> و مستندات فنی در{" "}
           <code className="font-mono">docs/lab/README.md</code>.
         </p>
       </details>

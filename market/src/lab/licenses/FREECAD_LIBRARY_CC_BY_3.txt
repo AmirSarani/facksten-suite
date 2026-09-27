@@ -1,0 +1,21 @@
+FreeCAD Parts Library License
+==============================
+
+Source: FreeCAD-library — https://github.com/FreeCAD/FreeCAD-library
+
+All parts in this repository are licensed under Creative Commons
+Attribution 3.0 Unported (CC-BY-3.0):
+https://creativecommons.org/licenses/by/3.0/legalcode
+
+Each part is copyrighted by and should be attributed to its respective
+author(s); see the repository's commit history for individual authorship.
+Facksten attributes the library as a whole ("FreeCAD-library contributors")
+per part in public/lab/models/CREDITS.md, alongside a link to that part's
+page in the source repository.
+
+Parts used by Facksten's lab 3D preview: Arduino UNO, Arduino Nano
+(Nano-Rev3_0), SG-90 servo, and HC-SR04 ultrasonic sensor — converted and
+simplified to GLB; geometry only, no textures.
+
+CC-BY-3.0 requires attribution but does not require share-alike: Facksten's
+own code and content are not affected by this license.

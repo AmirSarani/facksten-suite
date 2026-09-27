@@ -14,6 +14,7 @@ export default async function LabWorkspacePage({ searchParams }: Props) {
     <WorkspaceLoader
       initialPartSlug={sp.part ?? null}
       initialTemplateId={sp.template ?? null}
+      initialShareToken={sp.share ?? null}
     />
   );
 }

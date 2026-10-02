@@ -117,7 +117,7 @@ export function newEmptyProject(name = "پروژه بدون نام"): LabProject
     name,
     parts: [],
     wires: [],
-    code: `// آزمایشگاه مجازی فکستن\nvoid setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(500);\n  digitalWrite(13, LOW);\n  delay(500);\n}\n`,
+    code: `// آزمایشگاه مجازی PushRSP\nvoid setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(500);\n  digitalWrite(13, LOW);\n  delay(500);\n}\n`,
     boardId: "arduino-uno",
     mode: "simple",
     createdAt: now,

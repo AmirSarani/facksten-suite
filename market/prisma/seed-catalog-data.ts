@@ -1,4 +1,4 @@
-/** Curated electronics parts catalog for Facksten seed (~100–120 SKUs). */
+/** Curated electronics parts catalog for PushRSP seed (~100–120 SKUs). */
 
 export type CategorySeed = {
   slug: string;
@@ -352,7 +352,7 @@ export function buildProductSeeds(): ProductSeed[] {
       title: "کیت مقاومت E12 رنج پرکاربرد ۰٫۲۵ وات (بسته ۵۰ مقدار)",
       price: 750000,
       compareAtPrice: 890000,
-      brand: "Facksten",
+      brand: "PushRSP",
       sku: "RES-KIT-E12",
       packQty: 1,
       categorySlug: "resistors",
@@ -807,7 +807,7 @@ export function buildProductSeeds(): ProductSeed[] {
       title: "پک ۳۷ عددی ماژول و سنسور آموزشی آردوینو",
       price: 890000,
       compareAtPrice: 1050000,
-      brand: "Facksten",
+      brand: "PushRSP",
       sku: "ARD-KIT-37",
       categorySlug: "arduino",
       stock: 55,
@@ -1122,7 +1122,7 @@ export function buildProductSeeds(): ProductSeed[] {
       slug: "adapter-12v-1a",
       title: "آداپتور ۱۲ ولت ۱ آمپر دیواری",
       price: 145000,
-      brand: "Facksten",
+      brand: "PushRSP",
       sku: "PWR-ADP-12V1A",
       categorySlug: "power",
       stock: 80,
@@ -1136,7 +1136,7 @@ export function buildProductSeeds(): ProductSeed[] {
       slug: "adapter-5v-2a",
       title: "آداپتور ۵ ولت ۲ آمپر USB",
       price: 98000,
-      brand: "Facksten",
+      brand: "PushRSP",
       sku: "PWR-ADP-5V2A",
       categorySlug: "power",
       stock: 120,
@@ -1270,7 +1270,7 @@ export function buildProductSeeds(): ProductSeed[] {
       slug: "soldering-iron-60w",
       title: "هویه ۶۰ وات قابل تنظیم دما",
       price: 320000,
-      brand: "Facksten Tools",
+      brand: "PushRSP Tools",
       sku: "TOL-IRON60",
       categorySlug: "tools",
       stock: 40,
@@ -1481,7 +1481,7 @@ export function buildProductSeeds(): ProductSeed[] {
       slug: "helping-hands",
       title: "پایه کمکی لحیم‌کاری ذره‌بین‌دار",
       price: 165000,
-      brand: "Facksten Tools",
+      brand: "PushRSP Tools",
       sku: "TOL-HELP-HANDS",
       categorySlug: "tools",
       stock: 45,

@@ -35,7 +35,7 @@ export function LoginPage() {
   return (
     <div className="hero-circuit flex min-h-screen overflow-x-clip items-center justify-center px-4 py-10">
       <div className="auth-enter panel-card w-full max-w-md p-8">
-        <p className="font-mono text-[10px] tracking-[0.28em] text-cta">FACKSTEN // ADMIN</p>
+        <p className="font-mono text-[10px] tracking-[0.28em] text-cta">PUSHRSP // ADMIN</p>
         <h1 className="font-brand mt-2 text-3xl text-on-surface">Sign in</h1>
         <p className="mt-2 text-sm text-on-surface-variant" dir="rtl" lang="fa">
           ورود به پنل مدیریت پورتفولیو

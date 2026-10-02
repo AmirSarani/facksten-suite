@@ -1,8 +1,8 @@
-# Facksten Design System — MASTER
+# PushRSP Design System — MASTER
 
 > Source of truth for storefront + panel visual work. Overrides generic ui-ux-pro-max suggestions.
 
-## Direction: Facksten Cyber (High-Tech, Low-Life)
+## Direction: PushRSP Cyber (High-Tech, Low-Life)
 
 Persian RTL electronics store rendered as a rogue terminal — void black, orange neon brand energy, magenta/cyan signal noise. Signature: scanlines + chamfered panels + chromatic glitch on hero + real product photography against HUD chrome.
 

@@ -1,6 +1,6 @@
-# Facksten Suite
+# PushRSP Suite
 
-Monorepo for the live Facksten product suite (synced from server `77.221.156.164` / `/opt/facksten`).
+Monorepo for the live PushRSP product suite (synced from server `77.221.156.164` / `/opt/facksten`).
 
 ## Packages
 

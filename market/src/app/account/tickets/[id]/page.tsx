@@ -123,7 +123,7 @@ export default async function TicketDetailPage({ params }: Props) {
                   }`}
                 >
                   <p className={`mb-1 text-xs font-semibold ${m.isStaff ? "text-on-primary/90" : "text-on-surface-variant"}`}>
-                    {m.isStaff ? "پشتیبانی فکستن" : m.user.name}
+                    {m.isStaff ? "پشتیبانی PushRSP" : m.user.name}
                     <span className="me-2 font-normal opacity-80">
                       {" "}
                       {new Date(m.createdAt).toLocaleString("fa-IR")}

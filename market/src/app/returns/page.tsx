@@ -3,7 +3,7 @@ import { Icon } from "@/components/icon";
 
 export const metadata: Metadata = {
   title: "مرجوعی کالا",
-  description: "شرایط مرجوعی و تعویض کالای فکستن",
+  description: "شرایط مرجوعی و تعویض کالای PushRSP",
 };
 
 export default function ReturnsPage() {

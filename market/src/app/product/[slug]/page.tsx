@@ -65,7 +65,7 @@ export default async function ProductPage({ params }: Props) {
       ? specsFromDb.slice(0, 4).map((s) => `${s.k}: ${s.v}`)
       : product.type === "DIGITAL"
         ? ["دانلود آنی پس از پرداخت", "مستندات فارسی", "پشتیبانی تیکت"]
-        : ["قطعات اورجینال", "پشتیبانی تخصصی Facksten", "ارسال از انبار تهران"];
+        : ["قطعات اورجینال", "پشتیبانی تخصصی PushRSP", "ارسال از انبار تهران"];
 
   const tags = [
     product.category?.name,

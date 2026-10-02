@@ -176,7 +176,7 @@ export default function ShippingPage() {
           </button>
           <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-on-surface-variant">
             <Icon name="lock" className="h-3.5 w-3.5" />
-            پرداخت امن Facksten
+            پرداخت امن PushRSP
           </p>
         </aside>
       </form>

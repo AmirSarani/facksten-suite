@@ -50,7 +50,7 @@ const REVIEW_BODIES = [
   "با برد دیگری که قبلاً داشتم مقایسه کردم؛ این نسخه پایدارتر کار می‌کند.",
   "برای کارگاه آموزشی تهیه کردیم. همه نمونه‌ها سالم و یکدست بودند.",
   "اتصال و پین‌ها استاندارد است. با کتابخانه رایج بدون دردسر راه افتاد.",
-  "تجربه خرید از Facksten خوب بود؛ رهگیری سفارش شفاف و به‌موقع بود.",
+  "تجربه خرید از PushRSP خوب بود؛ رهگیری سفارش شفاف و به‌موقع بود.",
 ];
 
 /** Deterministic pseudo-random from slug */
@@ -83,12 +83,12 @@ export function mockReviewsForProduct(
 }
 
 export function mockQaForProduct(slug: string, title: string, brand?: string | null): MockQa[] {
-  const b = brand || "Facksten";
+  const b = brand || "PushRSP";
   return [
     {
       id: "qa1",
       question: `آیا «${title}» گارانتی اصالت دارد؟`,
-      answer: "بله؛ تمام کالاهای سخت‌افزاری با گارانتی اصالت و سلامت فیزیکی Facksten عرضه می‌شوند.",
+      answer: "بله؛ تمام کالاهای سخت‌افزاری با گارانتی اصالت و سلامت فیزیکی PushRSP عرضه می‌شوند.",
       asker: "کاربر مهمان",
       daysAgo: 12,
     },
@@ -186,9 +186,9 @@ export function mockDownloadsForProduct(
 }
 
 export function enrichDescription(description: string, title: string, brand?: string | null) {
-  const base = description?.trim() || `${title} یکی از محصولات منتخب فروشگاه Facksten است.`;
+  const base = description?.trim() || `${title} یکی از محصولات منتخب فروشگاه PushRSP است.`;
   const extras = [
-    `نسخه عرضه‌شده در Facksten با کنترل کیفیت ورودی بررسی می‌شود و برای استفاده در محیط آموزشی و نمونه‌سازی صنعتی سبک مناسب است.`,
+    `نسخه عرضه‌شده در PushRSP با کنترل کیفیت ورودی بررسی می‌شود و برای استفاده در محیط آموزشی و نمونه‌سازی صنعتی سبک مناسب است.`,
     brand
       ? `برند ${brand} در بازار ایران شناخته‌شده است و مستندات رسمی آن در بخش دانلودها در دسترس قرار گرفته است.`
       : `مستندات راهنما، دیتاشیت و فایل‌های نمونه در بخش دانلودها قرار دارد.`,

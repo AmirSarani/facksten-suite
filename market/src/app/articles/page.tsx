@@ -5,7 +5,7 @@ import { getArticles } from "@/lib/catalog";
 
 export const metadata = {
   title: "مقالات آموزشی",
-  description: "راهنماهای عملی الکترونیک، آردوینو، IoT و ابزار در فکستن",
+  description: "راهنماهای عملی الکترونیک، آردوینو، IoT و ابزار در PushRSP",
 };
 
 export default async function ArticlesPage() {

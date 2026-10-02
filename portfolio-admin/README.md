@@ -1,6 +1,6 @@
 # portfolio-admin
 
-Facksten portfolio admin panel — local CMS UI against **portfolio-web**.
+PushRSP portfolio admin panel — local CMS UI against **portfolio-web**.
 
 A React SPA for CMS CRUD against **portfolio-web** (Next.js) at `http://localhost:3020`. Session cookies are issued by portfolio-web admin auth, not facksten-market.
 

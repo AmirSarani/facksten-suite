@@ -5,7 +5,7 @@
  * free model exists (dht22, pir), or the real model is worse for teaching purposes
  * (breadboard: a featureless box; resistor: no colour bands to read the value from).
  *
- * License terms (apply to the converted model file only, not to Facksten's own code):
+ * License terms (apply to the converted model file only, not to PushRSP's own code):
  *   - MIT        — Adafruit_CAD_Parts, https://github.com/adafruit/Adafruit_CAD_Parts
  *   - CC-BY-3.0  — FreeCAD-library, https://github.com/FreeCAD/FreeCAD-library
  *   - CC-BY-SA-4.0 — kicad-packages3D, https://gitlab.com/kicad/libraries/kicad-packages3D

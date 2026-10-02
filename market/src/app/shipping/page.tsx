@@ -3,7 +3,7 @@ import { Icon } from "@/components/icon";
 
 export const metadata: Metadata = {
   title: "ارسال و تحویل",
-  description: "شرایط ارسال سفارش‌های فکستن از انبار تهران",
+  description: "شرایط ارسال سفارش‌های PushRSP از انبار تهران",
 };
 
 export default function ShippingPage() {

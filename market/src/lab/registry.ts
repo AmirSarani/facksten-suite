@@ -1,7 +1,7 @@
 import type { ComponentDef, PinDef } from "./types";
 import { withBasePath } from "./base-path";
 
-const MIT = "MIT (Adafruit CAD Parts / Facksten Lab)";
+const MIT = "MIT (Adafruit CAD Parts / PushRSP Lab)";
 const ADAFRUIT = "https://github.com/adafruit/Adafruit_CAD_Parts";
 
 // 3D preview models converted from real CAD by scripts/lab-models/build.mjs.

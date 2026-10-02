@@ -30,7 +30,7 @@ export function SocialProof() {
               // SOCIAL::PROOF
             </p>
             <h2 className="mt-1 text-fluid-title font-bold text-on-surface text-balance">
-              مهندسان و سازندگان به Facksten اعتماد می‌کنند
+              مهندسان و سازندگان به PushRSP اعتماد می‌کنند
             </h2>
             <p className="mt-2 text-sm text-on-surface-variant">بازخورد کوتاه از کاربران واقعی فروشگاه</p>
           </div>

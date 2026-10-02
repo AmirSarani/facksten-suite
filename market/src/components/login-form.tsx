@@ -88,7 +88,7 @@ export function LoginForm() {
                 خرید مطمئن.
               </p>
               <p className="cyber-cursor text-sm leading-7 text-on-surface-variant xl:text-base">
-                به حساب فکستن وارد شوید تا سفارش‌ها، دانلودها و پنل فروش را در یک جا مدیریت کنید.
+                به حساب PushRSP وارد شوید تا سفارش‌ها، دانلودها و پنل فروش را در یک جا مدیریت کنید.
               </p>
               <ul className="space-y-2 pt-2 font-mono text-xs uppercase tracking-wider text-on-surface-variant">
                 <li className="flex items-center gap-2">

@@ -1,6 +1,6 @@
 # portfolio-web
 
-Facksten portfolio public site — Cyber DS, Persian-first (`fa` / RTL) + English (`en` / LTR). This repo owns the shared CMS (Prisma + SQLite locally) and the public storefront. `portfolio-admin` (separate Vite SPA on port 5174) calls the admin APIs.
+PushRSP portfolio public site — Cyber DS, Persian-first (`fa` / RTL) + English (`en` / LTR). This repo owns the shared CMS (Prisma + SQLite locally) and the public storefront. `portfolio-admin` (separate Vite SPA on port 5174) calls the admin APIs.
 
 Phase 1 is **local only**. Do not deploy. Do not make the repo public. No shared schema, session, or auth with `facksten-market`.
 

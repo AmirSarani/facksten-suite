@@ -110,7 +110,7 @@ export function SiteFooter({
             </Link>
           </div>
           <div className="mt-6">
-            <p className="mb-2 text-xs font-semibold text-on-surface-variant">اکوسیستم فکستن</p>
+            <p className="mb-2 text-xs font-semibold text-on-surface-variant">اکوسیستم PushRSP</p>
             <div className="flex flex-wrap gap-2">
               {ECOSYSTEM.map((item) => (
                 <a

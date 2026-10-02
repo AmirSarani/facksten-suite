@@ -70,9 +70,9 @@ async function main() {
         summaryFa: "هدآپ، پنل و ترمینال — خوانا زیر نور بد و دستکش.",
         summaryEn: "HUDs, panels, and terminals — readable under bad light and gloves.",
         bodyFa:
-          "طراحی رابط برای اپراتور، نه دمو. کنتراست بالا، حالت‌های خطا، و جریان کار کوتاه. Cyber DS فکستن برای محصول و پنل داخلی.",
+          "طراحی رابط برای اپراتور، نه دمو. کنتراست بالا، حالت‌های خطا، و جریان کار کوتاه. Cyber DS PushRSP برای محصول و پنل داخلی.",
         bodyEn:
-          "UI for operators, not demos. High contrast, explicit error states, short task flows. Facksten Cyber DS for product and internal panels.",
+          "UI for operators, not demos. High contrast, explicit error states, short task flows. PushRSP Cyber DS for product and internal panels.",
         status: "PUBLISHED",
         sortOrder: 3,
       },
@@ -270,8 +270,8 @@ async function main() {
         nameEn: "Fatemeh Sarani",
         roleFa: "سیستم و طراحی",
         roleEn: "Systems & design",
-        bioFa: "زبان بصری Cyber DS، جریان کار اپراتور، و یکپارچگی محصول با بازار فکستن.",
-        bioEn: "Cyber DS language, operator flows, and product coherence with the Facksten market.",
+        bioFa: "زبان بصری Cyber DS، جریان کار اپراتور، و یکپارچگی محصول با بازار PushRSP.",
+        bioEn: "Cyber DS language, operator flows, and product coherence with the PushRSP market.",
         photoUrl: "/avatars/fatemeh.svg",
         status: "PUBLISHED",
         sortOrder: 2,
@@ -292,21 +292,21 @@ async function main() {
 
   const settings: Record<string, unknown> = {
     chrome: {
-      brand: "Facksten",
+      brand: "PushRSP",
       tagline: {
         fa: "استودیو سیستم‌های الکترونیک",
         en: "Electronics systems studio",
       },
     },
     hero: {
-      kicker: { fa: "FACKSTEN // STUDIO", en: "FACKSTEN // STUDIO" },
+      kicker: { fa: "PUSHRSP // STUDIO", en: "PUSHRSP // STUDIO" },
       title: {
         fa: "سیستم می‌سازیم؛ ویترین نمی‌چینیم.",
         en: "We ship systems, not vitrines.",
       },
       lead: {
-        fa: "فکستن استودیوی سخت‌افزار، میان‌افزار و رابط صنعتی است. بازار قطعات جداست — اینجا کار ساخته‌شده را می‌بینید.",
-        en: "Facksten is a hardware, firmware, and industrial UI studio. The parts market is separate — this site is the built work.",
+        fa: "PushRSP استودیوی سخت‌افزار، میان‌افزار و رابط صنعتی است. بازار قطعات جداست — اینجا کار ساخته‌شده را می‌بینید.",
+        en: "PushRSP is a hardware, firmware, and industrial UI studio. The parts market is separate — this site is the built work.",
       },
       ctaPrimary: { fa: "پروژه‌ها", en: "Projects" },
       ctaSecondary: { fa: "درخواست مشاوره", en: "Request a consult" },
@@ -332,16 +332,16 @@ async function main() {
       hours: { fa: "شنبه تا چهارشنبه، ۱۰ تا ۱۸", en: "Sat–Wed, 10:00–18:00" },
     },
     about: {
-      title: { fa: "استودیو فکستن", en: "Facksten studio" },
+      title: { fa: "استودیو PushRSP", en: "PushRSP studio" },
       body: {
-        fa: "فکستن دو سطح دارد: بازار قطعات الکترونیک، و استودیوی ساخت سیستم. این سایت متعلق به استودیوست — بدون سبد خرید، بدون حساب بازار. کار ما طراحی برد، میان‌افزار پایدار، و رابط‌هایی است که زیر نور بد خوانده شوند.\n\nفاز اول همین اسکلت است: محتوا از CMS می‌آید، زبان فارسی پیش‌فرض است، انگلیسی موازی است.",
-        en: "Facksten has two surfaces: an electronics parts market, and a systems studio. This site is the studio — no cart, no market session. We design boards, stable firmware, and interfaces that stay readable in bad light.\n\nPhase 1 is this skeleton: CMS-driven copy, Persian first, English in parallel.",
+        fa: "PushRSP دو سطح دارد: بازار قطعات الکترونیک، و استودیوی ساخت سیستم. این سایت متعلق به استودیوست — بدون سبد خرید، بدون حساب بازار. کار ما طراحی برد، میان‌افزار پایدار، و رابط‌هایی است که زیر نور بد خوانده شوند.\n\nفاز اول همین اسکلت است: محتوا از CMS می‌آید، زبان فارسی پیش‌فرض است، انگلیسی موازی است.",
+        en: "PushRSP has two surfaces: an electronics parts market, and a systems studio. This site is the studio — no cart, no market session. We design boards, stable firmware, and interfaces that stay readable in bad light.\n\nPhase 1 is this skeleton: CMS-driven copy, Persian first, English in parallel.",
       },
     },
     legal: {
       privacy: {
-        fa: "فرم تماس نام، ایمیل و متن پیام را ذخیره می‌کند تا استودیو پاسخ دهد. داده را به بازار فکستن وصل نمی‌کنیم و در این فاز عمومی منتشر نمی‌شود.",
-        en: "The contact form stores name, email, and message so the studio can reply. We do not share it with the Facksten market. This phase is local-only.",
+        fa: "فرم تماس نام، ایمیل و متن پیام را ذخیره می‌کند تا استودیو پاسخ دهد. داده را به بازار PushRSP وصل نمی‌کنیم و در این فاز عمومی منتشر نمی‌شود.",
+        en: "The contact form stores name, email, and message so the studio can reply. We do not share it with the PushRSP market. This phase is local-only.",
       },
       terms: {
         fa: "محتوای این سایت نمونهٔ فاز ۱ است. خدمات و پروژه‌ها ممکن است پیش‌نویس باشند. برای کار واقعی از فرم تماس استفاده کنید.",
@@ -350,11 +350,11 @@ async function main() {
     },
     footer: {
       blurb: {
-        fa: "استودیو فکستن — ساخت سیستم، جدا از فروشگاه.",
-        en: "Facksten studio — systems, separate from the shop.",
+        fa: "استودیو PushRSP — ساخت سیستم، جدا از فروشگاه.",
+        en: "PushRSP studio — systems, separate from the shop.",
       },
       marketUrl: "https://facksten.com",
-      marketLabel: { fa: "بازار فکستن", en: "Facksten market" },
+      marketLabel: { fa: "بازار PushRSP", en: "PushRSP market" },
     },
   };
 

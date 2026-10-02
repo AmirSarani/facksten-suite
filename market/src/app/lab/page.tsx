@@ -38,7 +38,7 @@ const REAL: { icon: IconName; title: string; text: string }[] = [
   { icon: "memory", title: "میکروکنترلر واقعی", text: "ATmega328P با avr8js در مرورگر اجرا می‌شود؛ خروجی از رجیستر واقعی خوانده می‌شود." },
   { icon: "verified_user", title: "اعتبارسنجی سیم‌کشی", text: "اتصال کوتاه، GND مشترک و LED بدون مقاومت را پیش از اجرا پیدا می‌کند." },
   { icon: "settings_ethernet", title: "Serial Monitor", text: "خروجی Serial.print را با بایت‌های واقعی USART می‌بینید." },
-  { icon: "add_shopping_cart", title: "BOM به سبد خرید", text: "قطعات پروژه‌تان را با یک کلیک از فروشگاه فکستن سفارش دهید." },
+  { icon: "add_shopping_cart", title: "BOM به سبد خرید", text: "قطعات پروژه‌تان را با یک کلیک از فروشگاه PushRSP سفارش دهید." },
 ];
 
 const catalogParts: CatalogPart[] = LAB_COMPONENTS_SEED.map((c) => ({
@@ -89,7 +89,7 @@ function CircuitPreview() {
         </svg>
 
         <div className="mt-2 border border-outline bg-background p-3 font-mono text-[11px] leading-5 text-on-surface-variant">
-          <p><span className="text-primary-container">&gt;</span> Facksten Lab Blink</p>
+          <p><span className="text-primary-container">&gt;</span> PushRSP Lab Blink</p>
           <p><span className="text-accent-tertiary">PORTB.5</span> = HIGH · 500ms</p>
           <p className="text-on-surface"><span className="text-primary-container">&gt;</span> در حال اجرا…</p>
         </div>

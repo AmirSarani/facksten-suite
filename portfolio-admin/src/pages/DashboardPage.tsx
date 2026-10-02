@@ -16,7 +16,7 @@ export function DashboardPage() {
         <p className="mt-1 text-lg">{user?.name ?? user?.email}</p>
         <p className="font-mono text-xs text-on-surface-variant">{user?.email}</p>
         <p className="mt-3 font-mono text-[11px] text-on-surface-variant">
-          cookie session against {getApiBase()} · auth is not facksten-market
+          cookie session against {getApiBase()} · auth is not pushrsp-market
         </p>
         {error ? <p className="mt-3 text-sm text-error">{error}</p> : null}
       </div>

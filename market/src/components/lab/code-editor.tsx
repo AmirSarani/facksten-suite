@@ -17,12 +17,12 @@ export function CodeEditor({ value, onChange }: { value: string; onChange: (v: s
       <Monaco
         height="100%"
         defaultLanguage="cpp"
-        theme="facksten"
+        theme="pushrsp"
         value={value}
         onChange={(v) => onChange(v ?? "")}
         beforeMount={(monaco) => {
           // Brand theme: void background, orange keywords, cyan types
-          monaco.editor.defineTheme("facksten", {
+          monaco.editor.defineTheme("pushrsp", {
             base: "vs-dark",
             inherit: true,
             rules: [

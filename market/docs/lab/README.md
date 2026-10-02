@@ -5,15 +5,15 @@
 وابستگی‌ها: `avr8js`, `@monaco-editor/react` (+ monaco). روی سرور برای کامپایل: `gcc-avr`, `binutils-avr`, `avr-libc`.
 
 ```bash
-cd /opt/facksten/app
+cd /opt/pushrsp/app
 npm install
 npm run lab:sync   # اختیاری — همگام‌سازی Adafruit CAD
 npm run test:lab
 npm run build
-systemctl restart facksten-market
+systemctl restart pushrsp-market
 ```
 
-مسیر عمومی: `/facksten/lab` (basePath).
+مسیر عمومی: `/pushrsp/lab` (basePath).
 
 ## افزودن قطعه
 
@@ -39,7 +39,7 @@ systemctl restart facksten-market
 
 ## همگام‌سازی Adafruit (قدیمی)
 
-`npm run lab:sync` → `/opt/facksten/lab-assets` + `public/lab/catalog-index.json`. فایل‌های STEP خام داخل باندل JS کلاینت نمی‌روند. برای پیش‌نمایش سه‌بعدی جایگزینش شده با `lab:models` زیر.
+`npm run lab:sync` → `/opt/pushrsp/lab-assets` + `public/lab/catalog-index.json`. فایل‌های STEP خام داخل باندل JS کلاینت نمی‌روند. برای پیش‌نمایش سه‌بعدی جایگزینش شده با `lab:models` زیر.
 
 ## مدل‌های سه‌بعدی واقعی (`npm run lab:models`)
 

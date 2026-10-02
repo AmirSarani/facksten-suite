@@ -4,7 +4,7 @@ import type { Locale } from "@/lib/locale";
 import { localePath } from "@/lib/paths";
 import { navCopy, pickCopy, type SettingsMap } from "@/lib/settings";
 
-const MARKET_URL = (process.env.NEXT_PUBLIC_MARKET_URL || "http://77.221.156.164/facksten").replace(/\/$/, "");
+const MARKET_URL = (process.env.NEXT_PUBLIC_MARKET_URL || "http://77.221.156.164/pushrsp").replace(/\/$/, "");
 
 export function SiteHeader({ locale, settings }: { locale: Locale; settings: SettingsMap }) {
   const dict = t(locale);

@@ -2,7 +2,7 @@
 
 PushRSP portfolio admin panel — local CMS UI against **portfolio-web**.
 
-A React SPA for CMS CRUD against **portfolio-web** (Next.js) at `http://localhost:3020`. Session cookies are issued by portfolio-web admin auth, not facksten-market.
+A React SPA for CMS CRUD against **portfolio-web** (Next.js) at `http://localhost:3020`. Session cookies are issued by portfolio-web admin auth, not pushrsp-market.
 
 ## Local run
 
@@ -21,7 +21,7 @@ The public site / CMS API must be running separately with a seeded admin:
 npm run dev   # expected on :3020
 ```
 
-Seed admin (portfolio-web): `admin@facksten.local` / `<SEED_ADMIN_PASSWORD>`
+Seed admin (portfolio-web): `admin@pushrsp.local` / `<SEED_ADMIN_PASSWORD>`
 
 If the API is down, the UI still loads. Lists and login show a clear unreachable/empty/error state. Upload and legal save require a live session.
 

@@ -47,7 +47,7 @@ export default function ShippingPage() {
       delivery,
       paymentMethod: "mock",
     };
-    sessionStorage.setItem("facksten_checkout", JSON.stringify(payload));
+    sessionStorage.setItem("pushrsp_checkout", JSON.stringify(payload));
     setLoading(false);
     router.push("/checkout/payment");
   }

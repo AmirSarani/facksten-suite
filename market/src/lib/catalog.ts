@@ -292,7 +292,7 @@ export async function getSiteSettings() {
     (await prisma.siteSetting.findUnique({ where: { id: "main" } })) ?? {
       id: "main",
       phone: "۰۲۱-۱۲۳۴۵۶۷۸",
-      email: "info@facksten.com",
+      email: "info@pushrsp.com",
       address: "تهران، خیابان جمهوری",
       faqJson: "[]",
       homeJson: "{}",

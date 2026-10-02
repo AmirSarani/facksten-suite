@@ -28,7 +28,7 @@ export type SessionCookieEnv = {
   SESSION_SAMESITE?: string;
 };
 
-export const ADMIN_SESSION_COOKIE = "facksten_portfolio_admin";
+export const ADMIN_SESSION_COOKIE = "pushrsp_portfolio_admin";
 
 function parseBool(value: string | undefined): boolean | undefined {
   if (value == null || value.trim() === "") return undefined;

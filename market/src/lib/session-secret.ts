@@ -1,5 +1,5 @@
 const MIN_SECRET_LENGTH = 32;
-const DEV_FALLBACK_SECRET = "facksten-market-dev-only-secret-not-for-production";
+const DEV_FALLBACK_SECRET = "pushrsp-market-dev-only-secret-not-for-production";
 
 type SecretEnv = {
   NODE_ENV?: string;

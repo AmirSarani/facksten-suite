@@ -24,7 +24,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const dict = t(locale);
   const settings = await getSettingsMap();
   const contact = settings.contact;
-  const email = contact?.email ?? "studio@facksten.com";
+  const email = contact?.email ?? "studio@pushrsp.com";
   const phone = contact?.phone ?? "۰۲۱-۱۲۳۴۵۶۷۸";
   const mailto = toMailtoHref(email);
   const tel = toTelHref(phone);

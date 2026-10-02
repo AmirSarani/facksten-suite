@@ -240,7 +240,7 @@ export function SiteSettingsForm({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   dir="ltr"
-                  placeholder="info@facksten.com"
+                  placeholder="info@pushrsp.com"
                   className={`${field} mt-0 pr-10 text-left`}
                   required
                 />

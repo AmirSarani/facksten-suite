@@ -11,9 +11,9 @@ import { UI_IMAGES } from "@/lib/media";
 import { assetUrl } from "@/lib/asset-url";
 
 const DEMO_ACCOUNTS = [
-  { label: "ادمین", email: "admin@facksten.com", hint: "کنسول مدیریت" },
-  { label: "همکار", email: "partner@facksten.com", hint: "فروشنده" },
-  { label: "مشتری", email: "user@facksten.com", hint: "خریدار" },
+  { label: "ادمین", email: "admin@pushrsp.com", hint: "کنسول مدیریت" },
+  { label: "همکار", email: "partner@pushrsp.com", hint: "فروشنده" },
+  { label: "مشتری", email: "user@pushrsp.com", hint: "خریدار" },
 ] as const;
 
 // Demo quick-login is opt-in (build-time env); the password is never hard-coded in the bundle.

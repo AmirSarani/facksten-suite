@@ -5,7 +5,7 @@ const LOCAL_ASSET = /^\/(images|uploads|downloads|placeholder\.svg)(\/|$|\.)/;
 
 /**
  * Plain <img>/<source> tags do not get Next's basePath. DB/seed values are stored as
- * "/images/...", which 404s when the app is served under /facksten without nginx mapping
+ * "/images/...", which 404s when the app is served under /pushrsp without nginx mapping
  * them. Prefix local assets only; external, data: and already-prefixed URLs pass through.
  */
 export function assetUrl<T extends string | null | undefined>(src: T): T {

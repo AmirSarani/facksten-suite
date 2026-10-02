@@ -2,8 +2,8 @@ import { z } from "zod";
 import type { LabProject } from "../types";
 
 export const LAB_PROJECT_VERSION = 1;
-export const LAB_STORAGE_KEY = "facksten-lab-project-v1";
-export const LAB_SHARE_PREFIX = "facksten-lab-share:";
+export const LAB_STORAGE_KEY = "pushrsp-lab-project-v1";
+export const LAB_SHARE_PREFIX = "pushrsp-lab-share:";
 
 const wireEndpointSchema = z.object({
   instanceId: z.string().min(1),

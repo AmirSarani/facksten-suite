@@ -1,12 +1,12 @@
 # PushRSP Suite
 
-Monorepo for the live PushRSP product suite (synced from server `77.221.156.164` / `/opt/facksten`).
+Monorepo for the live PushRSP product suite (synced from server `77.221.156.164` / `/opt/pushrsp`).
 
 ## Packages
 
 | Folder | Product | Upstream repo | Live URL |
 |--------|---------|---------------|----------|
-| `market/` | فروشگاه + آزمایشگاه مجازی | [facksten-market](https://github.com/AmirSarani/facksten-market) | http://77.221.156.164/facksten |
+| `market/` | فروشگاه + آزمایشگاه مجازی | [pushrsp-market](https://github.com/AmirSarani/pushrsp-market) | http://77.221.156.164/pushrsp |
 | `portfolio-web/` | سایت پورتفولیو | [portfolio-web](https://github.com/AmirSarani/portfolio-web) | http://77.221.156.164/portfolio |
 | `portfolio-admin/` | ادمین پورتفولیو | [portfolio-admin](https://github.com/AmirSarani/portfolio-admin) | http://77.221.156.164/portfolio-admin/ |
 
@@ -15,7 +15,7 @@ Monorepo for the live PushRSP product suite (synced from server `77.221.156.164`
 - **[docs/SERVER_HANDOFF.md](docs/SERVER_HANDOFF.md)** — paths, nginx, systemd, env keys, lab, seeds, security notes  
 - **[docs/SUITE_GIT_SYNC.md](docs/SUITE_GIT_SYNC.md)** — git sync commit SHAs from 2026-09-19  
 
-Also on server: `/opt/facksten/HANDOFF.md`
+Also on server: `/opt/pushrsp/HANDOFF.md`
 
 ## Quick start (local)
 
@@ -34,7 +34,7 @@ Use each package’s `.env.example` — never commit real `.env` or `*.db`.
 
 ## Lab
 
-See `market/docs/lab/README.md`. Adafruit CAD raw assets stay on server (`/opt/facksten/lab-assets`); run `npm run lab:sync` there.
+See `market/docs/lab/README.md`. Adafruit CAD raw assets stay on server (`/opt/pushrsp/lab-assets`); run `npm run lab:sync` there.
 
 ## License notes
 

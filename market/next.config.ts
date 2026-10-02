@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: "/facksten",
-  assetPrefix: "/facksten",
+  basePath: "/pushrsp",
+  assetPrefix: "/pushrsp",
   skipTrailingSlashRedirect: true,
   onDemandEntries: {
     maxInactiveAge: 60 * 60 * 1000,

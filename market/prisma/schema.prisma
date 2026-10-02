@@ -241,7 +241,7 @@ model WishlistItem {
 model SiteSetting {
   id       String @id @default("main")
   phone    String @default("۰۲۱-۱۲۳۴۵۶۷۸")
-  email    String @default("info@facksten.com")
+  email    String @default("info@pushrsp.com")
   address  String @default("تهران، خیابان جمهوری")
   faqJson  String @default("[]")
   homeJson String @default("{}")

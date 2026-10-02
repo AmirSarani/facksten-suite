@@ -35,7 +35,7 @@ function resolveCookieSecure(protocol?: string): boolean {
 export function buildSessionOptions(protocol?: string): SessionOptions {
   return {
     password: resolveSessionSecret(),
-    cookieName: "facksten_market_session",
+    cookieName: "pushrsp_market_session",
     cookieOptions: {
       secure: resolveCookieSecure(protocol),
       httpOnly: true,

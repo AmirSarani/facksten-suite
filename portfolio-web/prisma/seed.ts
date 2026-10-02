@@ -30,7 +30,7 @@ async function main() {
   const passwordHash = await hash(seedPassword, 10);
   await prisma.adminUser.create({
     data: {
-      email: "admin@facksten.local",
+      email: "admin@pushrsp.local",
       passwordHash,
     },
   });
@@ -325,7 +325,7 @@ async function main() {
       ],
     },
     contact: {
-      email: "studio@facksten.com",
+      email: "studio@pushrsp.com",
       phone: "۰۲۱-۱۲۳۴۵۶۷۸",
       whatsapp: "+989121234567",
       address: { fa: "تهران، خیابان جمهوری", en: "Jomhuri St., Tehran" },
@@ -353,7 +353,7 @@ async function main() {
         fa: "استودیو PushRSP — ساخت سیستم، جدا از فروشگاه.",
         en: "PushRSP studio — systems, separate from the shop.",
       },
-      marketUrl: "https://facksten.com",
+      marketUrl: "https://pushrsp.com",
       marketLabel: { fa: "بازار PushRSP", en: "PushRSP market" },
     },
   };
@@ -373,7 +373,7 @@ async function main() {
     },
   });
 
-  console.log(`Seeded portfolio CMS (admin@facksten.local / ${seedPassword})`);
+  console.log(`Seeded portfolio CMS (admin@pushrsp.local / ${seedPassword})`);
 }
 
 main()

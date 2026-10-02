@@ -23,7 +23,7 @@ export const dictionary = {
     home: {
       featured: "پروژه‌های منتخب",
       services: "خدمات استودیو",
-      team: "تیم فکستن",
+      team: "تیم PushRSP",
       trust: "سیگنال استودیو",
     },
     project: {
@@ -38,7 +38,7 @@ export const dictionary = {
       servicesLead: "از سخت‌افزار تا میان‌افزار و رابط صنعتی — یک خط تولید برای ساخت سیستم.",
       projectsTitle: "پروژه‌ها",
       projectsLead: "کارهای منتشرشده استودیو؛ از رک پایش تا هدآپ میدان.",
-      aboutTitle: "درباره فکستن",
+      aboutTitle: "درباره PushRSP",
       contactTitle: "تماس",
       contactLead: "برای همکاری، مشاوره یا سفارش پروژه پیام بگذارید.",
       privacyTitle: "حریم خصوصی",
@@ -68,7 +68,7 @@ export const dictionary = {
       legal: "حقوقی",
       privacy: "حریم خصوصی",
       terms: "شرایط استفاده",
-      market: "بازار فکستن",
+      market: "بازار PushRSP",
     },
     lang: { fa: "فا", en: "EN" },
   },
@@ -94,7 +94,7 @@ export const dictionary = {
     home: {
       featured: "Featured work",
       services: "Studio services",
-      team: "The Facksten team",
+      team: "The PushRSP team",
       trust: "Studio signal",
     },
     project: {
@@ -109,7 +109,7 @@ export const dictionary = {
       servicesLead: "Hardware, firmware, and industrial UI — one production line for systems.",
       projectsTitle: "Projects",
       projectsLead: "Published studio work: monitoring racks, kiln links, field HUDs.",
-      aboutTitle: "About Facksten",
+      aboutTitle: "About PushRSP",
       contactTitle: "Contact",
       contactLead: "For collaboration, consulting, or a build brief.",
       privacyTitle: "Privacy",
@@ -139,7 +139,7 @@ export const dictionary = {
       legal: "Legal",
       privacy: "Privacy",
       terms: "Terms",
-      market: "Facksten market",
+      market: "PushRSP market",
     },
     lang: { fa: "فا", en: "EN" },
   },

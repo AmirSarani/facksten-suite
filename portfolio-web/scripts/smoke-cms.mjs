@@ -146,18 +146,18 @@ async function main() {
 
   const badLogin = await req("/api/admin/auth/login", {
     method: "POST",
-    json: { email: "admin@facksten.local", password: "wrong-password" },
+    json: { email: "admin@pushrsp.local", password: "wrong-password" },
   });
   record("POST /api/admin/auth/login (bad password)", badLogin.res.status === 401, `status=${badLogin.res.status}`);
 
   const login = await req("/api/admin/auth/login", {
     method: "POST",
-    json: { email: "admin@facksten.local", password: process.env.SMOKE_ADMIN_PASSWORD ?? "" },
+    json: { email: "admin@pushrsp.local", password: process.env.SMOKE_ADMIN_PASSWORD ?? "" },
   });
   const cookie = cookieHeader(login.res.headers.getSetCookie?.() ?? []);
   record(
     "POST /api/admin/auth/login",
-    login.res.ok && login.body?.user?.email === "admin@facksten.local" && cookie.includes("facksten_portfolio_admin"),
+    login.res.ok && login.body?.user?.email === "admin@pushrsp.local" && cookie.includes("pushrsp_portfolio_admin"),
     `status=${login.res.status}`,
   );
 
@@ -166,7 +166,7 @@ async function main() {
   const me = await req("/api/admin/auth/me", auth);
   record(
     "GET /api/admin/auth/me (session)",
-    me.res.ok && me.body?.user?.email === "admin@facksten.local",
+    me.res.ok && me.body?.user?.email === "admin@pushrsp.local",
     `status=${me.res.status}`,
   );
 

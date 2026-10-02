@@ -555,7 +555,7 @@ export function ProductEditorForm({
                 ) : null}
               </Field>
               {isAdmin ? (
-                <Field label="فروشنده (همکار)" hint="خالی = فروشگاه مرکزی Facksten" className="sm:col-span-2">
+                <Field label="فروشنده (همکار)" hint="خالی = فروشگاه مرکزی PushRSP" className="sm:col-span-2">
                   <select name="sellerId" defaultValue={initial?.sellerId ?? ""} className={inputClass()}>
                     <option value="">فروشگاه مرکزی</option>
                     {(sellers ?? []).map((s) => (

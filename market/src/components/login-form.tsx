@@ -11,9 +11,9 @@ import { UI_IMAGES } from "@/lib/media";
 import { assetUrl } from "@/lib/asset-url";
 
 const DEMO_ACCOUNTS = [
-  { label: "ادمین", email: "admin@facksten.com", hint: "کنسول مدیریت" },
-  { label: "همکار", email: "partner@facksten.com", hint: "فروشنده" },
-  { label: "مشتری", email: "user@facksten.com", hint: "خریدار" },
+  { label: "ادمین", email: "admin@pushrsp.com", hint: "کنسول مدیریت" },
+  { label: "همکار", email: "partner@pushrsp.com", hint: "فروشنده" },
+  { label: "مشتری", email: "user@pushrsp.com", hint: "خریدار" },
 ] as const;
 
 // Demo quick-login is opt-in (build-time env); the password is never hard-coded in the bundle.
@@ -88,7 +88,7 @@ export function LoginForm() {
                 خرید مطمئن.
               </p>
               <p className="cyber-cursor text-sm leading-7 text-on-surface-variant xl:text-base">
-                به حساب فکستن وارد شوید تا سفارش‌ها، دانلودها و پنل فروش را در یک جا مدیریت کنید.
+                به حساب PushRSP وارد شوید تا سفارش‌ها، دانلودها و پنل فروش را در یک جا مدیریت کنید.
               </p>
               <ul className="space-y-2 pt-2 font-mono text-xs uppercase tracking-wider text-on-surface-variant">
                 <li className="flex items-center gap-2">

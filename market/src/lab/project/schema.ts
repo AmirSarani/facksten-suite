@@ -2,8 +2,8 @@ import { z } from "zod";
 import type { LabProject } from "../types";
 
 export const LAB_PROJECT_VERSION = 1;
-export const LAB_STORAGE_KEY = "facksten-lab-project-v1";
-export const LAB_SHARE_PREFIX = "facksten-lab-share:";
+export const LAB_STORAGE_KEY = "pushrsp-lab-project-v1";
+export const LAB_SHARE_PREFIX = "pushrsp-lab-share:";
 
 const wireEndpointSchema = z.object({
   instanceId: z.string().min(1),
@@ -117,7 +117,7 @@ export function newEmptyProject(name = "پروژه بدون نام"): LabProject
     name,
     parts: [],
     wires: [],
-    code: `// آزمایشگاه مجازی فکستن\nvoid setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(500);\n  digitalWrite(13, LOW);\n  delay(500);\n}\n`,
+    code: `// آزمایشگاه مجازی PushRSP\nvoid setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(500);\n  digitalWrite(13, LOW);\n  delay(500);\n}\n`,
     boardId: "arduino-uno",
     mode: "simple",
     createdAt: now,

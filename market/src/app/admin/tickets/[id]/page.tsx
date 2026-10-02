@@ -91,7 +91,7 @@ export default async function AdminTicketDetailPage({ params }: Props) {
               }`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-semibold">{m.isStaff ? "پشتیبانی فکستن" : m.user.name}</p>
+                <p className="text-sm font-semibold">{m.isStaff ? "پشتیبانی PushRSP" : m.user.name}</p>
                 <time className="text-[11px] tabular-nums text-on-surface-variant">
                   {new Date(m.createdAt).toLocaleString("fa-IR")}
                 </time>

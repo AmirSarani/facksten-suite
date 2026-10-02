@@ -17,8 +17,8 @@ const sizes = {
 /** Industrial wordmark — sharp monogram + tracked Latin name */
 export function BrandLogo({ href = "/", size = "md", className = "", tone = "dark" }: Props) {
   const s = sizes[size];
-  const fack = tone === "light" ? "text-on-surface" : "text-on-surface";
-  const sten = "text-primary-container";
+  const push = tone === "light" ? "text-on-surface" : "text-on-surface";
+  const rsp = "text-primary-container";
 
   const inner = (
     <span className={`brand-logo inline-flex max-w-full items-center ${s.wrap} ${className}`}>
@@ -27,11 +27,11 @@ export function BrandLogo({ href = "/", size = "md", className = "", tone = "dar
         className={`brand-logo__mark relative inline-flex shrink-0 items-center justify-center ${s.mark}`}
       >
         <span className="brand-logo__mark-face absolute inset-0" />
-        <span className="brand-logo__glyph relative font-bold leading-none text-on-surface">F</span>
+        <span className="brand-logo__glyph relative font-bold leading-none text-on-surface">P</span>
       </span>
       <span className={`brand-logo__word truncate font-semibold uppercase leading-none ${s.word}`}>
-        <span className={fack}>Fack</span>
-        <span className={sten}>sten</span>
+        <span className={push}>Push</span>
+        <span className={rsp}>RSP</span>
       </span>
       <span className="sr-only">{SITE.name}</span>
     </span>

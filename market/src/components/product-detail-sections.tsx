@@ -304,7 +304,7 @@ export function ProductDetailSections({
                   </div>
                   <p className="text-sm font-bold text-on-surface">س: {item.question}</p>
                   <div className="mt-3 cyber-chamfer-sm bg-surface-container-low p-3 text-sm leading-7 text-on-surface-variant">
-                    <span className="font-bold text-primary">پاسخ Facksten: </span>
+                    <span className="font-bold text-primary">پاسخ PushRSP: </span>
                     {item.answer}
                   </div>
                 </div>
@@ -317,7 +317,7 @@ export function ProductDetailSections({
           <div className="ambient-card sticky top-28 space-y-8 cyber-chamfer border border-outline p-6">
             <div>
               <h3 className="mb-1 text-sm font-semibold text-on-surface">مقالات مرتبط</h3>
-              <p className="mb-4 text-xs text-on-surface-variant">مجله Facksten</p>
+              <p className="mb-4 text-xs text-on-surface-variant">مجله PushRSP</p>
               <ul className="space-y-4">
                 {articles.slice(0, 4).map((a) => (
                   <li key={a.id}>

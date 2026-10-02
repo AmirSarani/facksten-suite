@@ -23,4 +23,4 @@ Sync script: `scripts/lab-sync-adafruit.mjs` (legacy — populates
 ## Other
 
 - **avr8js** (MIT) — AVR CPU simulation used for Blink / Uno path.
-- Facksten Lab UI and wiring logic — Facksten / shop codebase.
+- PushRSP Lab UI and wiring logic — PushRSP / shop codebase.

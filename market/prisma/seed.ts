@@ -47,8 +47,8 @@ async function main() {
 
   const admin = await prisma.user.create({
     data: {
-      name: "ادمین فکستن",
-      email: "admin@facksten.com",
+      name: "ادمین PushRSP",
+      email: "admin@pushrsp.com",
       phone: "09120000001",
       passwordHash,
       role: Role.ADMIN,
@@ -58,7 +58,7 @@ async function main() {
   const partner = await prisma.user.create({
     data: {
       name: "مریم شریفی",
-      email: "partner@facksten.com",
+      email: "partner@pushrsp.com",
       phone: "09120000002",
       passwordHash,
       role: Role.PARTNER,
@@ -68,7 +68,7 @@ async function main() {
   const partner2 = await prisma.user.create({
     data: {
       name: "نماینده اصفهان",
-      email: "partner2@facksten.com",
+      email: "partner2@pushrsp.com",
       phone: "09131112233",
       passwordHash,
       role: Role.PARTNER,
@@ -78,7 +78,7 @@ async function main() {
   const customer = await prisma.user.create({
     data: {
       name: "علی احمدی",
-      email: "user@facksten.com",
+      email: "user@pushrsp.com",
       phone: "09123456789",
       passwordHash,
       role: Role.CUSTOMER,
@@ -103,7 +103,7 @@ async function main() {
   const customer2 = await prisma.user.create({
     data: {
       name: "سارا رضایی",
-      email: "sara@facksten.com",
+      email: "sara@pushrsp.com",
       phone: "09121234567",
       passwordHash,
       role: Role.CUSTOMER,
@@ -123,7 +123,7 @@ async function main() {
   const customer3 = await prisma.user.create({
     data: {
       name: "رضا محمدی",
-      email: "reza@facksten.com",
+      email: "reza@pushrsp.com",
       phone: "09351234567",
       passwordHash,
       role: Role.CUSTOMER,
@@ -278,7 +278,7 @@ async function main() {
     data: {
       id: "main",
       phone: "۰۲۱-۱۲۳۴۵۶۷۸",
-      email: "info@facksten.com",
+      email: "info@pushrsp.com",
       address: "تهران، خیابان جمهوری، پلاک ۲۱۰",
       faqJson: JSON.stringify([
         {
@@ -303,7 +303,7 @@ async function main() {
         },
         {
           q: "نماینده فروش چگونه ثبت‌نام کند؟",
-          a: "از طریق فرم تماس یا ایمیل partner@facksten.com درخواست همکاری ارسال کنید تا اکانت PARTNER ساخته شود.",
+          a: "از طریق فرم تماس یا ایمیل partner@pushrsp.com درخواست همکاری ارسال کنید تا اکانت PARTNER ساخته شود.",
         },
         {
           q: "مهلت مرجوعی چقدر است؟",
@@ -334,7 +334,7 @@ async function main() {
             "پارسا محمدی",
             "الهام صادقی",
           ][i],
-          email: `buyer${i + 1}@facksten.com`,
+          email: `buyer${i + 1}@pushrsp.com`,
           phone: `0912${String(1000000 + i).slice(1)}`,
           passwordHash,
           role: Role.CUSTOMER,
@@ -784,9 +784,9 @@ async function main() {
   console.log("Seed OK — curated parts catalog loaded");
   console.log({
     accounts: {
-      admin: "admin@facksten.com",
-      partner: "partner@facksten.com",
-      customer: "user@facksten.com",
+      admin: "admin@pushrsp.com",
+      partner: "partner@pushrsp.com",
+      customer: "user@pushrsp.com",
       password: seedPassword,
     },
     counts: {

@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const ASSETS = process.env.LAB_ASSETS_DIR || "/opt/facksten/lab-assets";
+const ASSETS = process.env.LAB_ASSETS_DIR || "/opt/pushrsp/lab-assets";
 const REPO = join(ASSETS, "Adafruit_CAD_Parts");
 const PUBLIC_LAB = join(ROOT, "public", "lab");
 const LICENSE_SRC = join(ROOT, "src", "lab", "licenses", "ADAFRUIT_CAD_PARTS_MIT.txt");

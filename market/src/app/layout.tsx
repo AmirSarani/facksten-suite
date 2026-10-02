@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE.name}`,
   },
   description:
-    "فروشگاه تخصصی قطعات الکترونیک فکستن — مقاومت، خازن، آردوینو، ESP، سنسور و ابزار با ارسال سریع.",
+    "فروشگاه تخصصی قطعات الکترونیک PushRSP — مقاومت، خازن، آردوینو، ESP، سنسور و ابزار با ارسال سریع.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://127.0.0.1:3100"),
 };
 

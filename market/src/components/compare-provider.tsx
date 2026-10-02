@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 
-const STORAGE_KEY = "facksten_compare_items";
+const STORAGE_KEY = "pushrsp_compare_items";
 const MAX = 4;
 
 export type CompareItem = { slug: string; title?: string; image?: string };
@@ -46,7 +46,7 @@ export function CompareProvider({ children }: { children: ReactNode }) {
           );
         }
       } else {
-        const legacy = localStorage.getItem("facksten_compare_slugs");
+        const legacy = localStorage.getItem("pushrsp_compare_slugs");
         if (legacy) {
           const slugs = JSON.parse(legacy) as string[];
           setItems(slugs.map((slug) => ({ slug })));

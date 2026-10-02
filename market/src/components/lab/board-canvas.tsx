@@ -8,7 +8,7 @@ import { PartArt } from "@/lab/visuals/part-art";
 import { newId } from "@/lab/ids";
 import { Icon } from "@/components/icon";
 
-export const PART_DRAG_MIME = "application/x-facksten-lab-part";
+export const PART_DRAG_MIME = "application/x-pushrsp-lab-part";
 
 export type CanvasApi = {
   fitTo: (parts: PlacedPart[]) => void;

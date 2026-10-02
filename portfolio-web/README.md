@@ -1,8 +1,8 @@
 # portfolio-web
 
-Facksten portfolio public site — Cyber DS, Persian-first (`fa` / RTL) + English (`en` / LTR). This repo owns the shared CMS (Prisma + SQLite locally) and the public storefront. `portfolio-admin` (separate Vite SPA on port 5174) calls the admin APIs.
+PushRSP portfolio public site — Cyber DS, Persian-first (`fa` / RTL) + English (`en` / LTR). This repo owns the shared CMS (Prisma + SQLite locally) and the public storefront. `portfolio-admin` (separate Vite SPA on port 5174) calls the admin APIs.
 
-Phase 1 is **local only**. Do not deploy. Do not make the repo public. No shared schema, session, or auth with `facksten-market`.
+Phase 1 is **local only**. Do not deploy. Do not make the repo public. No shared schema, session, or auth with `pushrsp-market`.
 
 ## Local run
 
@@ -27,12 +27,12 @@ See `.env.example`:
 
 ```
 DATABASE_URL="file:./dev.db"
-SESSION_SECRET="facksten-portfolio-dev-secret-change-me-32"
+SESSION_SECRET="pushrsp-portfolio-dev-secret-change-me-32"
 NEXT_PUBLIC_SITE_URL="http://localhost:3020"
 ADMIN_ORIGIN="http://localhost:5174"
 ```
 
-`SESSION_SECRET` must be at least 32 characters (iron-session). Admin cookie name is `facksten_portfolio_admin` — separate from the market cookie.
+`SESSION_SECRET` must be at least 32 characters (iron-session). Admin cookie name is `pushrsp_portfolio_admin` — separate from the market cookie.
 
 Session cookie flags are env/protocol-driven so Chrome accepts them on `http://localhost`:
 
@@ -40,13 +40,13 @@ Session cookie flags are env/protocol-driven so Chrome accepts them on `http://l
 - Production HTTPS: `SameSite=None`, `Secure=true` (true cross-origin admin).
 - Overrides: `COOKIE_SECURE=true|false`, `SESSION_SAMESITE=lax|strict|none`. Invalid `None` without `Secure` is downgraded to `Lax`.
 
-After login from `http://localhost:5174` (credentials included), Chrome should store `facksten_portfolio_admin` and `GET /api/admin/auth/me` should return the user. Logout clears the cookie with the same `sameSite` / `secure` / `path`.
+After login from `http://localhost:5174` (credentials included), Chrome should store `pushrsp_portfolio_admin` and `GET /api/admin/auth/me` should return the user. Logout clears the cookie with the same `sameSite` / `secure` / `path`.
 
 ## Seed admin
 
 | Field    | Value                   |
 |----------|-------------------------|
-| Email    | `admin@facksten.local`  |
+| Email    | `admin@pushrsp.local`  |
 | Password | `<SEED_ADMIN_PASSWORD>`          |
 
 Change this before any non-local use.
@@ -81,4 +81,4 @@ Call admin routes with `credentials: "include"` from the Vite app.
 
 Next.js App Router, TypeScript, Tailwind 4, Prisma 7 + SQLite, iron-session, Zod.
 
-Design tokens match facksten-market Cyber DS: void `#0a0a0f`, accent `#FF7A00`, Vazirmatn (FA), Oxanium / JetBrains Mono (EN / HUD).
+Design tokens match pushrsp-market Cyber DS: void `#0a0a0f`, accent `#FF7A00`, Vazirmatn (FA), Oxanium / JetBrains Mono (EN / HUD).

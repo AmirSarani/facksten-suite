@@ -1,7 +1,7 @@
-/** Shop is mounted at /facksten — prefix absolute fetch URLs for nginx. */
+/** Shop is mounted at /pushrsp — prefix absolute fetch URLs for nginx. */
 export const LAB_BASE_PATH =
   (typeof process !== "undefined" && process.env.NEXT_PUBLIC_BASE_PATH?.trim()) ||
-  "/facksten";
+  "/pushrsp";
 
 export function withBasePath(path: string): string {
   if (!path.startsWith("/")) return path;

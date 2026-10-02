@@ -31,7 +31,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   ]);
 
   const hero = settings.hero;
-  const kicker = pickCopy(hero?.kicker, locale, "FACKSTEN // STUDIO");
+  const kicker = pickCopy(hero?.kicker, locale, "PUSHRSP // STUDIO");
   const title = pickCopy(
     hero?.title,
     locale,

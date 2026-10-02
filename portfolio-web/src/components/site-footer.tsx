@@ -11,7 +11,7 @@ export function SiteFooter({ locale, settings }: { locale: Locale; settings: Set
   const blurb = pickCopy(
     settings.footer?.blurb,
     locale,
-    locale === "fa" ? "استودیو فکستن" : "Facksten studio",
+    locale === "fa" ? "استودیو PushRSP" : "PushRSP studio",
   );
   const year = new Date().getFullYear();
   const phone = settings.contact?.phone;
@@ -23,7 +23,7 @@ export function SiteFooter({ locale, settings }: { locale: Locale; settings: Set
     <footer className="mt-auto border-t border-outline bg-surface-container-lowest">
       <div className="px-page mx-auto grid max-w-6xl grid-cols-1 gap-8 py-10 sm:grid-cols-2 md:grid-cols-3">
         <div>
-          <p className="brand-logo__word text-cta">Facksten</p>
+          <p className="brand-logo__word text-cta">PushRSP</p>
           <p className="mt-2 break-words text-sm text-on-surface-variant">{blurb}</p>
           {tel && phone ? (
             <a href={tel} className="focus-cta mt-3 inline-flex min-h-11 items-center font-mono text-sm text-cta">
@@ -68,7 +68,7 @@ export function SiteFooter({ locale, settings }: { locale: Locale; settings: Set
         </div>
       </div>
       <p className="px-page mx-auto max-w-6xl border-t border-outline py-4 font-mono text-[11px] text-on-surface-variant">
-        © {year} Facksten
+        © {year} PushRSP
       </p>
     </footer>
   );

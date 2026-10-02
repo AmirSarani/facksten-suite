@@ -35,7 +35,7 @@ export function ArticlesIndex({ articles }: { articles: ArticlesIndexItem[] }) {
   return (
     <div className="mx-auto max-w-[1280px] px-page py-10 sm:py-12">
       <header className="mb-8 max-w-3xl sm:mb-10">
-        <p className="mb-2 text-xs font-bold tracking-wide text-primary-container">دانش فنی فکستن</p>
+        <p className="mb-2 text-xs font-bold tracking-wide text-primary-container">دانش فنی PushRSP</p>
         <h1 className="text-fluid-hero font-extrabold text-on-surface text-balance">مقالات آموزشی</h1>
         <p className="mt-3 text-sm leading-7 text-on-surface-variant sm:text-base">
           راهنماهای عملی الکترونیک، آردوینو، IoT و ابزار — برای مهندسان، دانشجویان و سازندگان.

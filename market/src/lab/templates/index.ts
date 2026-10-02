@@ -2,12 +2,12 @@ import type { TemplateDef } from "../types";
 
 const BLINK_CODE = `/*
   چشمک LED روی پایه ۱۳ (Blink)
-  آزمایشگاه مجازی فکستن — واقعاً با avr8js اجرا می‌شود
+  آزمایشگاه مجازی PushRSP — واقعاً با avr8js اجرا می‌شود
 */
 void setup() {
   pinMode(13, OUTPUT);
   Serial.begin(9600);
-  Serial.println("Facksten Lab Blink");
+  Serial.println("PushRSP Lab Blink");
 }
 
 void loop() {

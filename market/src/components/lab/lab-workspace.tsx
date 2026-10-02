@@ -32,7 +32,7 @@ import { BottomPanel, type BottomTab, type LogEntry } from "./bottom-panel";
 import { WorkspaceTopbar } from "./workspace-topbar";
 import { OnboardingTour } from "./onboarding-tour";
 
-const TOUR_KEY = "facksten-lab-tour-v1";
+const TOUR_KEY = "pushrsp-lab-tour-v1";
 const MAX_HISTORY = 50;
 
 type Init = { project: LabProject; previous: LabProject | null; notice: string | null };

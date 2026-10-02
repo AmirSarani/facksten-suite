@@ -22,7 +22,7 @@ export function Newsletter() {
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent-tertiary" dir="ltr">
               &gt; NEWSLETTER::SUBSCRIBE
             </p>
-            <h2 className="mt-2 text-fluid-title font-bold text-on-surface">خبرنامه فنی Facksten</h2>
+            <h2 className="mt-2 text-fluid-title font-bold text-on-surface">خبرنامه فنی PushRSP</h2>
             <p className="mt-2 text-sm leading-7 text-on-surface-variant">
               موجودی قطعات جدید، کدهای آموزشی و تخفیف‌های محدود را در ایمیل‌تان دریافت کنید.
             </p>

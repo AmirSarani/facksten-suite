@@ -47,7 +47,7 @@ export function HeroStatic({ heroTitle, heroSubtitle, heroCtaLabel, heroCtaHref 
               className="font-mono text-xs font-bold uppercase tracking-[0.35em] text-primary-container"
               dir="ltr"
             >
-              // FACKSTEN
+              // PUSHRSP
             </p>
             <h1
               className="cyber-glitch text-fluid-hero font-extrabold text-on-surface text-balance"
@@ -56,7 +56,7 @@ export function HeroStatic({ heroTitle, heroSubtitle, heroCtaLabel, heroCtaHref 
               {heroTitle}
             </h1>
             <p className="cyber-cursor text-fluid-lead max-w-xl text-on-surface-variant text-pretty">{heroSubtitle}</p>
-            <ul className="space-y-1.5 pt-0.5" aria-label="مزایای فکستن">
+            <ul className="space-y-1.5 pt-0.5" aria-label="مزایای PushRSP">
               {TRUST_LINES.map((line) => (
                 <li key={line} className="flex items-start gap-2 text-sm text-on-surface-variant sm:text-[0.9375rem]">
                   <span className="mt-0.5 font-mono text-primary-container" aria-hidden>

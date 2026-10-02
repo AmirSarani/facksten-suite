@@ -6,10 +6,10 @@ export const EXTERNAL = {
 } as const;
 
 export const SITE = {
-  name: "Facksten",
+  name: "PushRSP",
   tagline: "فروشگاه تخصصی الکترونیک",
   phone: "۰۲۱-۱۲۳۴۵۶۷۸",
-  email: "info@facksten.com",
+  email: "info@pushrsp.com",
   address: "تهران، خیابان جمهوری",
 } as const;
 

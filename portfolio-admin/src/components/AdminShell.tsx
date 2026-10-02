@@ -20,11 +20,11 @@ function BrandMark() {
   return (
     <div className="flex min-w-0 items-center gap-2 sm:gap-3">
       <div className="relative grid h-9 w-9 shrink-0 place-items-center bg-surface-container shadow-neon-sm">
-        <span className="font-brand text-lg text-cta">F</span>
+        <span className="font-brand text-lg text-cta">P</span>
         <span className="absolute right-1 bottom-1 h-1 w-1 bg-cta" />
       </div>
       <div className="min-w-0">
-        <p className="font-brand truncate text-sm text-on-surface">Facksten</p>
+        <p className="font-brand truncate text-sm text-on-surface">PushRSP</p>
         <p className="hidden truncate font-mono text-[10px] tracking-[0.18em] text-on-surface-variant sm:block">
           PORTFOLIO ADMIN
         </p>

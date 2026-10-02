@@ -3,7 +3,7 @@ import { Icon } from "@/components/icon";
 
 export const metadata: Metadata = {
   title: "گارانتی و اصالت",
-  description: "ضمانت اصالت و سلامت فیزیکی کالاهای فکستن",
+  description: "ضمانت اصالت و سلامت فیزیکی کالاهای PushRSP",
 };
 
 export default function WarrantyPage() {
@@ -15,7 +15,7 @@ export default function WarrantyPage() {
         <div className="mt-6 space-y-4 text-sm leading-7 text-on-surface-variant">
           <p className="flex items-start gap-2">
             <Icon name="verified_user" className="mt-0.5 h-4 w-4 shrink-0 text-primary-container" />
-            فکستن اصالت و سلامت فیزیکی کالاهای سخت‌افزاری را تضمین می‌کند.
+            PushRSP اصالت و سلامت فیزیکی کالاهای سخت‌افزاری را تضمین می‌کند.
           </p>
           <p>در صورت دریافت کالای معیوب یا مغایر، تا ۷ روز کاری امکان تعویض یا مرجوعی وجود دارد.</p>
           <p className="alert-ok cyber-chamfer-sm p-4 text-sm leading-7">

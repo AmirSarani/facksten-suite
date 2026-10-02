@@ -348,11 +348,11 @@ export default async function PartnerDashboard() {
               <div className="min-w-0">
                 <p className="font-bold text-on-surface">سارا محمدی</p>
                 <a
-                  href="mailto:partner-support@facksten.com"
+                  href="mailto:partner-support@pushrsp.com"
                   className="mt-0.5 block truncate text-xs text-primary-container hover:underline"
                   dir="ltr"
                 >
-                  partner-support@facksten.com
+                  partner-support@pushrsp.com
                 </a>
               </div>
             </div>

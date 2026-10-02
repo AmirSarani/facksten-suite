@@ -1,6 +1,6 @@
-# Facksten Market
+# PushRSP Market
 
-فروشگاه Facksten با سه پنل واقعی: مشتری، همکار، ادمین.
+فروشگاه PushRSP با سه پنل واقعی: مشتری، همکار، ادمین.
 
 ## اجرا
 
@@ -23,9 +23,9 @@ npm run dev
 
 | نقش | ایمیل | رمز |
 |-----|--------|-----|
-| ادمین | admin@facksten.com | <SEED_PASSWORD> |
-| همکار | partner@facksten.com | <SEED_PASSWORD> |
-| مشتری | user@facksten.com | <SEED_PASSWORD> |
+| ادمین | admin@pushrsp.com | <SEED_PASSWORD> |
+| همکار | partner@pushrsp.com | <SEED_PASSWORD> |
+| مشتری | user@pushrsp.com | <SEED_PASSWORD> |
 
 ## مسیرها
 
@@ -34,4 +34,4 @@ npm run dev
 - همکار: `/partner/*`
 - ادمین: `/admin/*`
 
-`E:/cursor/facksten` جدا و دست‌نخورده است.
+`E:/cursor/pushrsp` جدا و دست‌نخورده است.

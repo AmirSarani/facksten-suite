@@ -5,10 +5,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Facksten | Studio",
-    template: "%s | Facksten",
+    default: "PushRSP | Studio",
+    template: "%s | PushRSP",
   },
-  description: "Facksten electronics systems studio — hardware, firmware, industrial UI.",
+  description: "PushRSP electronics systems studio — hardware, firmware, industrial UI.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3020"),
 };
 

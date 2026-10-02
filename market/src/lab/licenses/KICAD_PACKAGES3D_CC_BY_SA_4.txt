@@ -20,7 +20,7 @@ Summary (not a substitute for the full license text above): KiCad library
 data may be used freely, including commercially, in designs and generated
 files without those designs needing to be shared under CC-BY-SA. If the
 library files themselves (or modified copies) are redistributed as a
-collection — as Facksten does here with the parts converted to GLB for the
+collection — as PushRSP does here with the parts converted to GLB for the
 lab's 3D preview — that redistribution must keep the CC-BY-SA 4.0 license and
 attribution. See public/lab/models/CREDITS.md for the per-part attribution.
 

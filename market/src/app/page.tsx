@@ -65,7 +65,7 @@ export default async function HomePage() {
       {home.showNew ? (
         <ProductRail
           title="کالاهای جدید"
-          subtitle="تازه‌واردهای انبار فکستن"
+          subtitle="تازه‌واردهای انبار PushRSP"
           href="/shop?sort=newest"
           items={rails.newItems}
           tone="default"

@@ -3,7 +3,7 @@ import { WorkspaceLoader } from "@/components/lab/workspace-loader";
 
 export const metadata: Metadata = {
   title: "میز کار آزمایشگاه",
-  description: "ویرایشگر مدار و شبیه‌ساز Arduino فکستن",
+  description: "ویرایشگر مدار و شبیه‌ساز Arduino PushRSP",
 };
 
 type Props = { searchParams: Promise<{ part?: string; template?: string; share?: string }> };

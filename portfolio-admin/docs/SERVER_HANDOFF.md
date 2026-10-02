@@ -1,4 +1,4 @@
-# Facksten / Su Portfolio — Server Handoff
+# PushRSP / Su Portfolio — Server Handoff
 
 **تاریخ:** 2026-09-19 (Asia/Tehran)  
 **سرور:** `77.221.156.164`  
@@ -7,7 +7,7 @@
 
 | محصول | Repo |
 |--------|------|
-| فروشگاه | `AmirSarani/facksten-market` |
+| فروشگاه | `AmirSarani/pushrsp-market` |
 | سایت پورتفولیو | `AmirSarani/portfolio-web` |
 | ادمین پورتفولیو | `AmirSarani/portfolio-admin` |
 
@@ -19,9 +19,9 @@
 
 | سرویس | URL |
 |--------|-----|
-| فروشگاه | http://77.221.156.164/facksten |
-| آزمایشگاه مجازی | http://77.221.156.164/facksten/lab |
-| میز کار lab | http://77.221.156.164/facksten/lab/workspace |
+| فروشگاه | http://77.221.156.164/pushrsp |
+| آزمایشگاه مجازی | http://77.221.156.164/pushrsp/lab |
+| میز کار lab | http://77.221.156.164/pushrsp/lab/workspace |
 | پورتفولیو (FA، بدون `/fa`) | http://77.221.156.164/portfolio |
 | پورتفولیو EN | http://77.221.156.164/portfolio/en |
 | ادمین پورتفولیو | http://77.221.156.164/portfolio-admin/ |
@@ -29,7 +29,7 @@
 **پیوند متقابل**
 
 - هدر فروشگاه → «نمونه کارها» / «آزمایشگاه مجازی»
-- هدر پورتفولیو → «فروشگاه» → `/facksten`
+- هدر پورتفولیو → «فروشگاه» → `/pushrsp`
 - ادمین پورتفولیو → «← سایت» / «بازگشت به سایت» → `/portfolio`
 
 ---
@@ -39,8 +39,8 @@
 ریشه ایزوله:
 
 ```text
-/opt/facksten/
-├── app/                 # فروشگاه Next.js (basePath=/facksten)
+/opt/pushrsp/
+├── app/                 # فروشگاه Next.js (basePath=/pushrsp)
 ├── portfolio-web/       # سایت پورتفولیو Next.js (basePath=/portfolio)
 ├── portfolio-admin/     # SPA Vite → dist/
 ├── lab-assets/          # ایندکس/اتریبیوشن Adafruit CAD (خارج از باندل کلاینت)
@@ -49,14 +49,14 @@
 
 | نقش | مسیر |
 |------|------|
-| کد فروشگاه | `/opt/facksten/app` |
-| DB فروشگاه | `/opt/facksten/app/prod.db` (`DATABASE_URL=file:…`) |
-| کد پورتفولیو | `/opt/facksten/portfolio-web` |
-| DB پورتفولیو | `/opt/facksten/portfolio-web/prod.db` |
-| ادمین (static) | `/opt/facksten/portfolio-admin/dist/` |
-| Lab assets sync | `/opt/facksten/lab-assets` |
-| تصاویر فروشگاه (nginx) | `/opt/facksten/app/public/images/` |
-| کاور/آواتار پورتفولیو | `/opt/facksten/portfolio-web/public/covers/` ، `…/avatars/` |
+| کد فروشگاه | `/opt/pushrsp/app` |
+| DB فروشگاه | `/opt/pushrsp/app/prod.db` (`DATABASE_URL=file:…`) |
+| کد پورتفولیو | `/opt/pushrsp/portfolio-web` |
+| DB پورتفولیو | `/opt/pushrsp/portfolio-web/prod.db` |
+| ادمین (static) | `/opt/pushrsp/portfolio-admin/dist/` |
+| Lab assets sync | `/opt/pushrsp/lab-assets` |
+| تصاویر فروشگاه (nginx) | `/opt/pushrsp/app/public/images/` |
+| کاور/آواتار پورتفولیو | `/opt/pushrsp/portfolio-web/public/covers/` ، `…/avatars/` |
 
 ---
 
@@ -64,19 +64,19 @@
 
 | Unit | WorkingDirectory | Bind |
 |------|------------------|------|
-| `facksten-market.service` | `/opt/facksten/app` | `127.0.0.1:13010` |
-| `facksten-portfolio.service` | `/opt/facksten/portfolio-web` | `127.0.0.1:13020` |
+| `pushrsp-market.service` | `/opt/pushrsp/app` | `127.0.0.1:13010` |
+| `pushrsp-portfolio.service` | `/opt/pushrsp/portfolio-web` | `127.0.0.1:13020` |
 
 ```bash
-systemctl status facksten-market facksten-portfolio
-systemctl restart facksten-market
-systemctl restart facksten-portfolio
+systemctl status pushrsp-market pushrsp-portfolio
+systemctl restart pushrsp-market
+systemctl restart pushrsp-portfolio
 ```
 
 ادمین پورتفولیو پروسس Node ندارد؛ فقط فایل‌های `dist/` پشت nginx است. بعد از تغییر:
 
 ```bash
-cd /opt/facksten/portfolio-admin && npm run build
+cd /opt/pushrsp/portfolio-admin && npm run build
 # nginx همان alias را سرو می‌کند
 ```
 
@@ -85,11 +85,11 @@ cd /opt/facksten/portfolio-admin && npm run build
 ## ۴) Nginx
 
 - Site: `/etc/nginx/sites-enabled/deepseek-ip` (`server_name 77.221.156.164`)
-- Snippet: `/etc/nginx/snippets/facksten-market.conf`
+- Snippet: `/etc/nginx/snippets/pushrsp-market.conf`
 
 خلاصه locationها:
 
-- `/facksten` → proxy `:13010`
+- `/pushrsp` → proxy `:13010`
 - `/portfolio` → proxy `:13020` (و `=/portfolio/` → 301 به بدون اسلش)
 - `/portfolio/fa` → 301 به مسیر بدون `/fa`
 - `/portfolio-admin/` → alias `portfolio-admin/dist/`
@@ -104,21 +104,21 @@ nginx -t && nginx -s reload
 
 ## ۵) Env مهم (بدون secret)
 
-**فروشگاه** `/opt/facksten/app/.env`
+**فروشگاه** `/opt/pushrsp/app/.env`
 
-- `DATABASE_URL=file:/opt/facksten/app/prod.db`
+- `DATABASE_URL=file:/opt/pushrsp/app/prod.db`
 - `NEXT_PUBLIC_PORTFOLIO_URL=http://77.221.156.164/portfolio`
 
-**پورتفولیو** `/opt/facksten/portfolio-web/.env`
+**پورتفولیو** `/opt/pushrsp/portfolio-web/.env`
 
-- `DATABASE_URL=file:/opt/facksten/portfolio-web/prod.db`
+- `DATABASE_URL=file:/opt/pushrsp/portfolio-web/prod.db`
 - `NEXT_PUBLIC_SITE_URL=http://77.221.156.164/portfolio`
 - `NEXT_PUBLIC_BASE_PATH=/portfolio`
-- `NEXT_PUBLIC_MARKET_URL=http://77.221.156.164/facksten`
+- `NEXT_PUBLIC_MARKET_URL=http://77.221.156.164/pushrsp`
 - `COOKIE_SECURE=false` ، `SESSION_SAMESITE=lax` (HTTP)
 - `SESSION_SECRET` — در سرور موجود است؛ در چت تکرار نشود؛ در صورت لو رفتن بچرخانید
 
-**ادمین** `/opt/facksten/portfolio-admin/.env`
+**ادمین** `/opt/pushrsp/portfolio-admin/.env`
 
 - `VITE_API_BASE=http://77.221.156.164/portfolio`
 - `VITE_SITE_URL=http://77.221.156.164/portfolio`
@@ -129,8 +129,8 @@ nginx -t && nginx -s reload
 
 | سیستم | ایمیل | رمز (seed) |
 |--------|--------|------------|
-| فروشگاه | `user@facksten.com` | `<SEED_PASSWORD>` |
-| ادمین پورتفولیو | `admin@facksten.local` | `<SEED_ADMIN_PASSWORD>` |
+| فروشگاه | `user@pushrsp.com` | `<SEED_PASSWORD>` |
+| ادمین پورتفولیو | `admin@pushrsp.local` | `<SEED_ADMIN_PASSWORD>` |
 
 در پروداکشن رمزها را عوض کنید. **رمز root سرور قبلاً در چت آمده — باید rotate شود.**
 
@@ -138,19 +138,19 @@ nginx -t && nginx -s reload
 
 ## ۷) قابلیت‌های مهم دیپلوی‌شده (خلاصه)
 
-### فروشگاه (`/facksten`)
+### فروشگاه (`/pushrsp`)
 
-- basePath `/facksten`، هدر ثابت، جمع‌شدن نوار ارسال رایگان + سرچ با اسکرول
+- basePath `/pushrsp`، هدر ثابت، جمع‌شدن نوار ارسال رایگان + سرچ با اسکرول
 - بنر پورتفولیو (بالا) و بنر آزمایشگاه (پایین‌تر، بعد از PromoBand)
-- پنل‌ها: `/facksten/account` ، `/partner` ، `/admin`
+- پنل‌ها: `/pushrsp/account` ، `/partner` ، `/admin`
 - **آزمایشگاه مجازی:** `/lab` — Blink با avr8js + avr-gcc، سیم‌کشی، BOM→سبد، docs در `docs/lab/README.md`
-- اسکریپت sync: `npm run lab:sync` → `/opt/facksten/lab-assets`
+- اسکریپت sync: `npm run lab:sync` → `/opt/pushrsp/lab-assets`
 
 ### پورتفولیو (`/portfolio`)
 
 - FA بدون پیشوند `/fa`؛ EN زیر `/en`
 - هدر «فروشگاه»؛ سوییچ زبان با ناوبری سخت
-- ادمین با کوکی ۱۴روزه `facksten_portfolio_admin` و دکمه بازگشت به سایت
+- ادمین با کوکی ۱۴روزه `pushrsp_portfolio_admin` و دکمه بازگشت به سایت
 
 ---
 
@@ -158,22 +158,22 @@ nginx -t && nginx -s reload
 
 ```bash
 # فروشگاه
-cd /opt/facksten/app
-npm run build && systemctl restart facksten-market
+cd /opt/pushrsp/app
+npm run build && systemctl restart pushrsp-market
 
 # پورتفولیو
-cd /opt/facksten/portfolio-web
-npm run build && systemctl restart facksten-portfolio
+cd /opt/pushrsp/portfolio-web
+npm run build && systemctl restart pushrsp-portfolio
 
 # ادمین
-cd /opt/facksten/portfolio-admin
+cd /opt/pushrsp/portfolio-admin
 npm run build
 ```
 
 تست lab:
 
 ```bash
-cd /opt/facksten/app && npm run test:lab
+cd /opt/pushrsp/app && npm run test:lab
 ```
 
 ---
@@ -182,9 +182,9 @@ cd /opt/facksten/app && npm run test:lab
 
 | مسیر | remote |
 |------|--------|
-| `/opt/facksten/app` | (ممکن است remote خالی / دیپلوی کپی باشد — با `git -C … remote -v` چک کنید) |
-| `/opt/facksten/portfolio-web` | `https://github.com/AmirSarani/portfolio-web.git` |
-| `/opt/facksten/portfolio-admin` | `https://github.com/AmirSarani/portfolio-admin.git` |
+| `/opt/pushrsp/app` | (ممکن است remote خالی / دیپلوی کپی باشد — با `git -C … remote -v` چک کنید) |
+| `/opt/pushrsp/portfolio-web` | `https://github.com/AmirSarani/portfolio-web.git` |
+| `/opt/pushrsp/portfolio-admin` | `https://github.com/AmirSarani/portfolio-admin.git` |
 
 پچ‌های سرور ≠ لزوماً آخرین commit GitHub. برای handoff کد: diff سرور را commit/push کنید یا tarball بگیرید.
 
@@ -199,4 +199,4 @@ cd /opt/facksten/app && npm run test:lab
 
 ---
 
-*تولید شده برای handoff عملیاتی Su Portfolio / Facksten — 2026-09-19*
+*تولید شده برای handoff عملیاتی Su Portfolio / PushRSP — 2026-09-19*

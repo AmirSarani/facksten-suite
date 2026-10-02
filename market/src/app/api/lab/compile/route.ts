@@ -84,7 +84,7 @@ export async function POST(req: Request) {
   }
 
   activeCompiles += 1;
-  const dir = await mkdtemp(join(tmpdir(), "facksten-lab-")).catch((e) => {
+  const dir = await mkdtemp(join(tmpdir(), "pushrsp-lab-")).catch((e) => {
     activeCompiles -= 1;
     throw e;
   });

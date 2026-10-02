@@ -56,7 +56,7 @@ export default function AboutPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={assetUrl(UI_IMAGES.aboutHero)}
-              alt="آزمایشگاه مهندسی Facksten"
+              alt="آزمایشگاه مهندسی PushRSP"
               width={2400}
               height={1309}
               decoding="async"
@@ -75,7 +75,7 @@ export default function AboutPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={assetUrl(UI_IMAGES.aboutStory)}
-                alt="داستان شکل‌گیری Facksten"
+                alt="داستان شکل‌گیری PushRSP"
                 width={2000}
                 height={1090}
                 decoding="async"
@@ -157,7 +157,7 @@ export default function AboutPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={assetUrl(UI_IMAGES.aboutLab)}
-            alt="آزمایشگاه تخصصی Facksten"
+            alt="آزمایشگاه تخصصی PushRSP"
             width={2800}
             height={1562}
             decoding="async"

@@ -121,7 +121,7 @@ export default async function ArticlePage({ params }: Props) {
             <div className="mt-12 flex flex-col gap-4 cyber-chamfer border border-primary-container/30 bg-primary-container/10 p-5 shadow-[var(--box-shadow-neon-sm)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
               <div>
                 <p className="font-mono text-base font-bold uppercase tracking-wide text-on-surface">قطعه لازم برای این پروژه را دارید؟</p>
-                <p className="mt-1 text-sm text-on-surface-variant">از فروشگاه فکستن برد، سنسور و ماژول را با ارسال سریع تهیه کنید.</p>
+                <p className="mt-1 text-sm text-on-surface-variant">از فروشگاه PushRSP برد، سنسور و ماژول را با ارسال سریع تهیه کنید.</p>
               </div>
               <Link
                 href="/shop"

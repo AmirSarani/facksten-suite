@@ -48,13 +48,13 @@ export default function PaymentPage() {
   const subtotal = items.reduce((s, l) => s + l.product.price * l.qty, 0);
   const shipping = subtotal >= 1_000_000 || subtotal === 0 ? 0 : 45_000;
   const discount =
-    couponApplied && coupon.trim().toUpperCase() === "FACKSTEN" ? Math.min(50_000, subtotal) : 0;
+    couponApplied && coupon.trim().toUpperCase() === "PUSHRSP" ? Math.min(50_000, subtotal) : 0;
   const total = Math.max(0, subtotal + shipping - discount);
 
   async function pay() {
     setLoading(true);
     setError("");
-    const raw = sessionStorage.getItem("facksten_checkout");
+    const raw = sessionStorage.getItem("pushrsp_checkout");
     if (!raw) {
       setError("ابتدا آدرس را تکمیل کنید");
       setLoading(false);
@@ -78,7 +78,7 @@ export default function PaymentPage() {
       setError(data.error ?? "پرداخت ناموفق");
       return;
     }
-    sessionStorage.removeItem("facksten_checkout");
+    sessionStorage.removeItem("pushrsp_checkout");
     router.push(data.redirect);
   }
 

@@ -22,7 +22,7 @@ export function OrderInvoice({ order }: { order: InvoiceOrder }) {
     <div className="print-invoice cyber-chamfer border border-outline bg-surface-container-lowest p-6">
       <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xl font-black text-primary">Facksten</p>
+          <p className="text-xl font-black text-primary">PushRSP</p>
           <p className="text-sm text-on-surface-variant">فاکتور فروش</p>
         </div>
         <div className="text-left text-sm">

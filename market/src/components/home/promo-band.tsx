@@ -25,7 +25,7 @@ export function PromoBand() {
           </p>
           <p className="text-fluid-title font-bold text-on-primary text-balance">قطعه درست، برای پروژه درست</p>
           <p className="mt-1.5 text-sm leading-6 text-on-primary/85 sm:text-base">
-            از انبار فکستن بخرید — اصالت کالا و پشتیبانی فنی قبل از سفارش.
+            از انبار PushRSP بخرید — اصالت کالا و پشتیبانی فنی قبل از سفارش.
           </p>
         </div>
         <Link

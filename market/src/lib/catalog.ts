@@ -220,7 +220,7 @@ export type HomeConfig = {
 export const DEFAULT_HOME_CONFIG: HomeConfig = {
   heroTitle: "قطعه درست را پیدا کن؛ پروژه را تمام کن.",
   heroSubtitle:
-    "فکستن فروشگاه قطعات الکترونیک برای سازنده‌ها، دانشجویان و مهندسان است — مقاومت و خازن تا آردوینو، ESP32 و سنسور، با دسته‌بندی دقیق و ارسال سریع.",
+    "PushRSP فروشگاه قطعات الکترونیک برای سازنده‌ها، دانشجویان و مهندسان است — مقاومت و خازن تا آردوینو، ESP32 و سنسور، با دسته‌بندی دقیق و ارسال سریع.",
   heroCtaLabel: "مشاهده فروشگاه",
   heroCtaHref: "/shop",
   stripCategorySlugs: [],
@@ -292,7 +292,7 @@ export async function getSiteSettings() {
     (await prisma.siteSetting.findUnique({ where: { id: "main" } })) ?? {
       id: "main",
       phone: "۰۲۱-۱۲۳۴۵۶۷۸",
-      email: "info@facksten.com",
+      email: "info@pushrsp.com",
       address: "تهران، خیابان جمهوری",
       faqJson: "[]",
       homeJson: "{}",

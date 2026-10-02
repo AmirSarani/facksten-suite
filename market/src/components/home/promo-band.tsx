@@ -21,7 +21,7 @@ export function PromoBand() {
       <div className="relative mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-5 px-page py-8 sm:flex-row sm:items-center sm:py-10">
         <div className="min-w-0 max-w-2xl">
           <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.25em] text-on-primary/70" dir="ltr">
-            // PROMO::ACTIVE
+            {"// PROMO::ACTIVE"}
           </p>
           <p className="text-fluid-title font-bold text-on-primary text-balance">قطعه درست، برای پروژه درست</p>
           <p className="mt-1.5 text-sm leading-6 text-on-primary/85 sm:text-base">

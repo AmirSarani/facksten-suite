@@ -101,7 +101,7 @@ export default async function HomePage() {
             <div className="mb-4 flex items-end justify-between gap-3 border-b border-outline-variant/40 pb-4 sm:mb-5">
               <div className="min-w-0">
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-tertiary" dir="ltr">
-                  // DIGITAL::ASSETS
+                  {"// DIGITAL::ASSETS"}
                 </p>
                 <h2 className="mt-1 text-fluid-title font-bold text-on-surface">محصولات دانلودی و کد</h2>
                 <p className="mt-1 text-sm text-on-surface-variant sm:text-base">سورس کدها، پروژه‌های آماده و فایل‌های آموزشی</p>
@@ -153,7 +153,7 @@ export default async function HomePage() {
           <div className="mb-4 flex items-end justify-between gap-3 border-b border-outline-variant/40 pb-4 sm:mb-5">
             <div className="min-w-0">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-secondary" dir="ltr">
-                // ARTICLES::LATEST
+                {"// ARTICLES::LATEST"}
               </p>
               <h2 className="mt-1 text-fluid-title font-bold text-on-surface">آخرین مقالات آموزشی</h2>
               <p className="mt-1 text-sm text-on-surface-variant sm:text-base">دانش خود را در زمینه الکترونیک ارتقا دهید</p>

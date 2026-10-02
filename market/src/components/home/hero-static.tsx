@@ -47,7 +47,7 @@ export function HeroStatic({ heroTitle, heroSubtitle, heroCtaLabel, heroCtaHref 
               className="font-mono text-xs font-bold uppercase tracking-[0.35em] text-primary-container"
               dir="ltr"
             >
-              // PUSHRSP
+              {"// PUSHRSP"}
             </p>
             <h1
               className="cyber-glitch text-fluid-hero font-extrabold text-on-surface text-balance"

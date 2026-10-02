@@ -27,7 +27,7 @@ export function SocialProof() {
         <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent-secondary" dir="ltr">
-              // SOCIAL::PROOF
+              {"// SOCIAL::PROOF"}
             </p>
             <h2 className="mt-1 text-fluid-title font-bold text-on-surface text-balance">
               مهندسان و سازندگان به PushRSP اعتماد می‌کنند

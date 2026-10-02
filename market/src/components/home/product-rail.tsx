@@ -63,7 +63,7 @@ export function ProductRail({
         <div className="mb-4 flex items-end justify-between gap-3 border-b border-outline-variant/40 pb-4 sm:mb-5">
           <div className="min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-tertiary" dir="ltr">
-              // RAIL::{layout.toUpperCase()}
+              {"// RAIL::"}{layout.toUpperCase()}
             </p>
             <h2 className="mt-1 text-fluid-title font-bold text-on-surface text-balance">{title}</h2>
             {subtitle && <p className="mt-1 text-sm text-on-surface-variant line-clamp-2">{subtitle}</p>}

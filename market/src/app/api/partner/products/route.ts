@@ -30,7 +30,7 @@ const productSchema = z.object({
 });
 
 async function uniqueSku(base: string, excludeId?: string) {
-  let sku = base.slice(0, 40);
+  const sku = base.slice(0, 40);
   let n = 0;
   while (true) {
     const candidate = n === 0 ? sku : `${sku}-${n}`;

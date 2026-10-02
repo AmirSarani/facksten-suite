@@ -16,7 +16,7 @@ const articleSchema = z.object({
 });
 
 async function uniqueSlug(base: string, excludeId?: string) {
-  let slug = slugifyContent(base, "article");
+  const slug = slugifyContent(base, "article");
   let n = 0;
   while (true) {
     const candidate = n === 0 ? slug : `${slug}-${n}`;

@@ -37,7 +37,7 @@ export function LabPromo() {
               className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-accent-tertiary"
               dir="ltr"
             >
-              // LAB::VIRTUAL
+              {"// LAB::VIRTUAL"}
             </p>
             <span className="cyber-chamfer-sm border border-accent-tertiary/40 bg-accent-tertiary/10 px-2 py-0.5 font-mono text-[10px] text-accent-tertiary">
               جدید

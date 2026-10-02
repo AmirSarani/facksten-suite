@@ -42,7 +42,7 @@ export function PortfolioPromo() {
               className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-primary-container"
               dir="ltr"
             >
-              // STUDIO::PORTFOLIO
+              {"// STUDIO::PORTFOLIO"}
             </p>
             <span className="cyber-chamfer-sm border border-primary-container/40 bg-primary-container/10 px-2 py-0.5 font-mono text-[10px] text-primary-container">
               خدمات طراحی وب

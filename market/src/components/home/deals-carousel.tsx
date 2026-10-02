@@ -50,7 +50,7 @@ export function DealsCarousel({ items }: { items: CarouselDeal[] }) {
         <div className="mb-4 flex items-end justify-between gap-3 border-b border-outline-variant/40 pb-4 sm:mb-5">
           <div className="min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent-tertiary" dir="ltr">
-              // DEALS::CAROUSEL
+              {"// DEALS::CAROUSEL"}
             </p>
             <h2 className="mt-1 text-fluid-title font-bold text-on-surface">پیشنهادهای ویژه</h2>
             <p className="mt-1 text-sm text-on-surface-variant">تخفیف‌های محدود — اسلاید بزنید یا صبر کنید تا خودکار عوض شود</p>

@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   poweredByHeader: false,
+  // Bare origin (localhost:3020/) has no page outside the basePath; nginx never routes "/" here in prod.
+  async redirects() {
+    return [{ source: "/", destination: "/portfolio", basePath: false, permanent: false }];
+  },
   async headers() {
     return [
       {

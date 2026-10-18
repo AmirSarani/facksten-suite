@@ -1,8 +1,11 @@
+import { withBasePath } from "@/lab/base-path";
+
 /** External projects — linked later; placeholders for now */
 export const EXTERNAL = {
   industrial: process.env.NEXT_PUBLIC_INDUSTRIAL_URL ?? "#industrial",
   academy: process.env.NEXT_PUBLIC_ACADEMY_URL ?? "#academy",
-  lab: process.env.NEXT_PUBLIC_LAB_URL ?? "/lab",
+  // Rendered in a plain <a>, so it needs the basePath itself.
+  lab: process.env.NEXT_PUBLIC_LAB_URL ?? withBasePath("/lab"),
 } as const;
 
 export const SITE = {

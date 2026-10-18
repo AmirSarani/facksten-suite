@@ -32,6 +32,22 @@ cd portfolio-admin && npm i && npm run dev
 
 Use each package’s `.env.example` — never commit real `.env` or `*.db`.
 
+### Whole suite on one origin (like the server)
+
+Each app only answers under its basePath, and cross-app links assume one domain. With the three dev servers running, start the local stand-in for nginx (Node ≥ 22.18):
+
+```bash
+node scripts/dev-proxy.ts   # → http://localhost:8080  (/pushrsp, /portfolio, /portfolio-admin/)
+```
+
+For links between the apps to stay local, set in the env files:
+
+| File | Value |
+|------|-------|
+| `market/.env` | `NEXT_PUBLIC_PORTFOLIO_URL=http://localhost:8080/portfolio` |
+| `portfolio-web/.env` | `NEXT_PUBLIC_MARKET_URL=http://localhost:8080/pushrsp` |
+| `portfolio-admin/.env.local` | `VITE_API_BASE=/portfolio` and `VITE_SITE_URL=http://localhost:8080/portfolio` |
+
 ## Lab
 
 See `market/docs/lab/README.md`. Adafruit CAD raw assets stay on server (`/opt/pushrsp/lab-assets`); run `npm run lab:sync` there.

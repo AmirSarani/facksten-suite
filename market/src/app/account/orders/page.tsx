@@ -118,7 +118,7 @@ export default async function OrdersPage({ searchParams }: Props) {
             تاریخچه
           </a>
           <Link
-            href="/products"
+            href="/shop"
             className="cyber-chamfer-sm bg-cta px-3 py-2 text-sm font-semibold text-on-primary"
           >
             خرید جدید
@@ -372,7 +372,7 @@ export default async function OrdersPage({ searchParams }: Props) {
                 </Link>
               ) : (
                 <Link
-                  href="/products"
+                  href="/shop"
                   className="mt-3 inline-flex cyber-chamfer-sm bg-cta px-4 py-2 text-sm font-semibold text-on-primary"
                 >
                   رفتن به فروشگاه

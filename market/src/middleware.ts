@@ -24,6 +24,14 @@ export async function middleware(req: NextRequest) {
   );
   const user = session.user;
 
+  // new URL(path, req.url) drops the basePath; nextUrl keeps it.
+  const redirectTo = (path: string) => {
+    const url = req.nextUrl.clone();
+    url.pathname = path;
+    url.search = "";
+    return NextResponse.redirect(url);
+  };
+
   const needAuth =
     pathname.startsWith("/account") ||
     pathname.startsWith("/partner") ||
@@ -38,14 +46,14 @@ export async function middleware(req: NextRequest) {
   }
 
   if (pathname.startsWith("/admin") && user?.role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/", req.url));
+    return redirectTo("/");
   }
   if (pathname.startsWith("/partner") && user?.role !== "PARTNER" && user?.role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/", req.url));
+    return redirectTo("/");
   }
   if (pathname.startsWith("/account") && user && user.role !== "CUSTOMER" && user.role !== "ADMIN") {
     if (user.role === "PARTNER") {
-      return NextResponse.redirect(new URL("/partner", req.url));
+      return redirectTo("/partner");
     }
   }
 

@@ -150,7 +150,7 @@ export default async function AccountHomePage() {
       actions={
         <>
           <Link
-            href="/products"
+            href="/shop"
             className="cyber-chamfer-sm border border-outline bg-surface-container-low px-3 py-2 text-sm font-semibold text-on-surface hover:border-primary-container hover:text-primary-container"
           >
             فروشگاه
@@ -347,7 +347,7 @@ export default async function AccountHomePage() {
             <div className="cyber-chamfer-sm border border-dashed border-outline px-4 py-8 text-center">
               <p className="text-sm text-on-surface-variant">هنوز سفارشی ثبت نکرده‌اید.</p>
               <Link
-                href="/products"
+                href="/shop"
                 className="mt-3 inline-flex cyber-chamfer-sm bg-cta px-4 py-2 text-sm font-semibold text-on-primary"
               >
                 شروع خرید
@@ -411,7 +411,7 @@ export default async function AccountHomePage() {
                 {wishlistItems.map((w) => (
                   <li key={w.id}>
                     <Link
-                      href={`/products/${w.product.slug}`}
+                      href={`/product/${w.product.slug}`}
                       className="flex items-center justify-between gap-2 cyber-chamfer-sm border border-outline bg-surface-container-low px-3 py-2.5 hover:border-primary-container/50"
                     >
                       <span className="min-w-0">

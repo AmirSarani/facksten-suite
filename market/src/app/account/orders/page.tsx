@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { AccountShell } from "@/components/account-shell";
 import { Icon } from "@/components/icon";
@@ -323,7 +324,7 @@ export default async function OrdersPage({ searchParams }: Props) {
 
         <form
           method="get"
-          action="/account/orders"
+          action={withBasePath("/account/orders")}
           className="mb-4 flex flex-wrap items-center gap-2 cyber-chamfer border border-outline bg-surface-container-lowest p-3"
         >
           {status ? <input type="hidden" name="status" value={status} /> : null}

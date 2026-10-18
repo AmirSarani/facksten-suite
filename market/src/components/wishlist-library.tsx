@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -66,7 +67,7 @@ export function WishlistLibrary({ items }: { items: WishlistItemView[] }) {
 
   async function remove(productId: string) {
     setRemoving(productId);
-    await fetch("/api/wishlist", {
+    await fetch(withBasePath("/api/wishlist"), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ productId }),

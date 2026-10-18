@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/icon";
@@ -10,7 +11,7 @@ export function AuthNavLinks() {
   const [user, setUser] = useState<Me>(null);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch(withBasePath("/api/auth/me"))
       .then((r) => r.json())
       .then((d) => setUser(d.user ?? null))
       .catch(() => setUser(null));

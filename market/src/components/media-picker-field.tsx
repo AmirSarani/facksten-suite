@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { assetUrl } from "@/lib/asset-url";
@@ -46,7 +47,7 @@ export function MediaPickerField({
 
       try {
         setProgress(55);
-        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+        const res = await fetch(withBasePath("/api/admin/upload"), { method: "POST", body: fd });
         const data = await res.json().catch(() => ({}));
         setProgress(100);
         if (!res.ok) {
@@ -69,7 +70,7 @@ export function MediaPickerField({
     setLoadingGallery(true);
     setError("");
     try {
-      const res = await fetch(`/api/admin/media?folder=${folder}`);
+      const res = await fetch(withBasePath(`/api/admin/media?folder=${folder}`));
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error ?? "بارگذاری گالری ناموفق");

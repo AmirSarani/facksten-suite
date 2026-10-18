@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,7 +11,7 @@ export function ProductDeleteButton({ productId }: { productId: string }) {
   async function onDelete() {
     if (!confirm("محصول حذف شود؟ در صورت داشتن سفارش، فقط غیرفعال می‌شود.")) return;
     setLoading(true);
-    const res = await fetch("/api/admin/products", {
+    const res = await fetch(withBasePath("/api/admin/products"), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: productId }),

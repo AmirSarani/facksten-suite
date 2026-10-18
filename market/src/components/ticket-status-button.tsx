@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TICKET_STATUS_FA } from "@/lib/panel";
@@ -12,7 +13,7 @@ export function TicketStatusButton({ ticketId, status }: { ticketId: string; sta
 
   async function setStatus(next: string) {
     setLoading(true);
-    await fetch(`/api/tickets/${ticketId}/status`, {
+    await fetch(withBasePath(`/api/tickets/${ticketId}/status`), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: next }),

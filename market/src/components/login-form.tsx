@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -40,7 +41,7 @@ export function LoginForm() {
     const fd = new FormData(e.currentTarget);
     const payload = Object.fromEntries(fd.entries());
     const url = mode === "login" ? "/api/auth/login" : "/api/auth/register";
-    const res = await fetch(url, {
+    const res = await fetch(withBasePath(url), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -51,7 +52,10 @@ export function LoginForm() {
       setError(data.error ?? "خطا در ورود");
       return;
     }
-    const next = search.get("next") || data.redirect || "/";
+    const requested = search.get("next");
+    // Only same-app paths; router.push adds the basePath itself.
+    const next =
+      requested && requested.startsWith("/") && !requested.startsWith("//") ? requested : data.redirect || "/";
     router.push(next);
     router.refresh();
   }

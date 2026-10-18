@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -313,7 +314,7 @@ export function ProductEditorForm({
     const fd = new FormData();
     fd.set("folder", "digital");
     fd.set("file", file);
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+    const res = await fetch(withBasePath("/api/admin/upload"), { method: "POST", body: fd });
     const data = await res.json().catch(() => ({}));
     setUploadingIdx(null);
     if (!res.ok) {
@@ -364,7 +365,7 @@ export function ProductEditorForm({
       slug: isAdmin && mode === "edit" && slug.trim() ? slug.trim() : undefined,
     };
 
-    const res = await fetch(apiBase, {
+    const res = await fetch(withBasePath(apiBase), {
       method: mode === "create" ? "POST" : "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

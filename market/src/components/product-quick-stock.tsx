@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +23,7 @@ export function ProductQuickStock({
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const res = await fetch(apiBase, {
+    const res = await fetch(withBasePath(apiBase), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

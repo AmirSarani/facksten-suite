@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -31,7 +32,7 @@ export function AccountReviewCard({
   async function onDelete() {
     if (!confirm("این نظر حذف شود؟")) return;
     setLoading(true);
-    await fetch("/api/reviews", {
+    await fetch(withBasePath("/api/reviews"), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: review.id }),
@@ -45,7 +46,7 @@ export function AccountReviewCard({
     setLoading(true);
     setMsg("");
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/reviews", {
+    const res = await fetch(withBasePath("/api/reviews"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

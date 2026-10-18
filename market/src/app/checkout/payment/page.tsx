@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -37,7 +38,7 @@ export default function PaymentPage() {
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/cart");
+      const res = await fetch(withBasePath("/api/cart"));
       if (res.ok) {
         const data = await res.json();
         setItems(data.items ?? []);
@@ -61,7 +62,7 @@ export default function PaymentPage() {
       return;
     }
     const shippingData = JSON.parse(raw);
-    const res = await fetch("/api/checkout", {
+    const res = await fetch(withBasePath("/api/checkout"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

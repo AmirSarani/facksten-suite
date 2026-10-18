@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -58,7 +59,7 @@ export function SettingsForm({
     setSavingProfile(true);
     setProfileMsg(null);
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/account/profile", {
+    const res = await fetch(withBasePath("/api/account/profile"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -80,7 +81,7 @@ export function SettingsForm({
     setSavingNotify(true);
     setNotifyMsg(null);
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/account/profile", {
+    const res = await fetch(withBasePath("/api/account/profile"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -115,7 +116,7 @@ export function SettingsForm({
       return;
     }
     setSavingPass(true);
-    const res = await fetch("/api/account/password", {
+    const res = await fetch(withBasePath("/api/account/password"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ current: fd.get("current"), next }),
@@ -154,7 +155,7 @@ export function SettingsForm({
       phone: String(fd.get("phone") ?? ""),
       isDefault: fd.get("isDefault") === "on",
     };
-    const res = await fetch("/api/account/addresses", {
+    const res = await fetch(withBasePath("/api/account/addresses"), {
       method: editing ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -173,7 +174,7 @@ export function SettingsForm({
     if (addr.isDefault) return;
     setBusyAddrId(addr.id);
     setAddrMsg(null);
-    const res = await fetch("/api/account/addresses", {
+    const res = await fetch(withBasePath("/api/account/addresses"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -207,7 +208,7 @@ export function SettingsForm({
     if (!confirm("آدرس حذف شود؟")) return;
     setBusyAddrId(id);
     setAddrMsg(null);
-    const res = await fetch("/api/account/addresses", {
+    const res = await fetch(withBasePath("/api/account/addresses"), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),

@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { PartnerShell } from "@/components/partner-shell";
 import { Icon } from "@/components/icon";
@@ -193,7 +194,7 @@ export default async function PartnerInventoryPage({ searchParams }: Props) {
 
         <form
           method="get"
-          action="/partner/inventory"
+          action={withBasePath("/partner/inventory")}
           className="mb-4 flex flex-wrap items-center gap-2 cyber-chamfer border border-outline bg-surface-container-lowest p-3"
         >
           {stockFilter ? <input type="hidden" name="stock" value={stockFilter} /> : null}

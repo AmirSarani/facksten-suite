@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -10,7 +11,7 @@ export function PartnerInventoryForm() {
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/partner/products", {
+    const res = await fetch(withBasePath("/api/partner/products"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ROLE_FA } from "@/lib/panel";
@@ -33,7 +34,7 @@ export function AdminCreateUserForm() {
     setSaving(true);
     setError("");
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/admin/users", {
+    const res = await fetch(withBasePath("/api/admin/users"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

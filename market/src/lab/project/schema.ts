@@ -32,6 +32,7 @@ export const labProjectSchema = z.object({
       from: wireEndpointSchema,
       to: wireEndpointSchema,
       color: z.string().min(1),
+      points: z.array(z.object({ x: z.number(), y: z.number() })).max(200).optional(),
     }),
   ),
   code: z.string(),

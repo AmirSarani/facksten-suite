@@ -115,6 +115,8 @@ export type WireDef = {
   from: WireEndpoint;
   to: WireEndpoint;
   color: string;
+  /** Bend points between the two ends, on the 0.1" grid. None = a free hanging jumper. */
+  points?: { x: number; y: number }[];
 };
 
 export type LabProject = {

@@ -18,7 +18,8 @@ import {
 } from "@/lab/project/schema";
 import { buildBom, addBomToCart } from "@/lab/bom";
 import { createSimulationEngine } from "@/lab/engine/avr8-engine";
-import { ledsDrivenBy, normRotation, snap } from "@/lab/geometry";
+import { normRotation, snap } from "@/lab/geometry";
+import { buildNetlist, litLeds as computeLitLeds } from "@/lab/netlist";
 import { newId } from "@/lab/ids";
 import { PartDefsSprite } from "@/lab/visuals/part-art";
 import { withBasePath } from "@/lab/base-path";
@@ -149,12 +150,17 @@ export function LabWorkspace({
 
   const defs = useMemo(() => new Map(components.map((c) => [c.id, c])), [components]);
   const simpleMode = project.mode !== "pro";
-  const issues = useMemo(() => validateWiring(project, components), [project, components]);
+  const netlist = useMemo(() => buildNetlist(project, components), [project, components]);
+  const issues = useMemo(() => validateWiring(project, components, netlist), [project, components, netlist]);
   const errors = issues.filter((i) => i.severity === "error").length;
   const warnings = issues.filter((i) => i.severity === "warning").length;
   const bom = useMemo(() => buildBom(project, components), [project, components]);
-  const driven = useMemo(() => ledsDrivenBy(project, components, "d13"), [project, components]);
-  const litLeds = useMemo(() => (ledOn ? driven : new Set<string>()), [ledOn, driven]);
+  // The board is powered while the simulation runs (or is paused): supplies are live then.
+  const powered = engineStatus === "running" || engineStatus === "paused";
+  const litLeds = useMemo(
+    () => (powered ? computeLitLeds(netlist, new Set(ledOn ? ["d13"] : [])) : new Set<string>()),
+    [powered, ledOn, netlist],
+  );
 
   // ---------- helpers ----------
   const log = useCallback((level: LogEntry["level"], text: string) => {
@@ -576,6 +582,7 @@ export function LabWorkspace({
       apiRef={canvasApi}
       project={project}
       components={components}
+      netlist={netlist}
       selectedId={selectedId}
       simpleMode={simpleMode}
       litLeds={litLeds}
@@ -588,8 +595,8 @@ export function LabWorkspace({
         history.current.future = [];
         syncHist();
       }}
-      onMovePart={(id, x, y) => {
-        setProject((p) => ({ ...p, parts: p.parts.map((part) => (part.instanceId === id ? { ...part, x, y } : part)) }));
+      onMoveParts={(moves) => {
+        setProject((p) => ({ ...p, parts: p.parts.map((part) => (moves.has(part.instanceId) ? { ...part, ...moves.get(part.instanceId)! } : part)) }));
         setSaved(false);
       }}
       onAddWire={(wire) => commit((p) => ({ ...p, wires: [...p.wires, wire] }))}

@@ -19,7 +19,9 @@ export type PinSignal =
   | "gnd"
   | "reset"
   | "clock"
-  | "nc";
+  | "nc"
+  /** Breadboard hole / socket contact: carries whatever its net carries. */
+  | "passive";
 
 export type ComponentCategory =
   | "board"
@@ -75,7 +77,14 @@ export type ComponentDef = {
   license: string;
   simulationStatus: SimulationStatus;
   protocols: Protocol[];
+  /**
+   * Pin positions are in canvas units where 10 = 0.1" (2.54 mm), always multiples of 10 so
+   * leads land in breadboard holes. width + height is a multiple of 20 so pins stay on the
+   * grid after a 90° rotation.
+   */
   pins: PinDef[];
+  /** Groups of pin ids wired together inside the part (breadboard strips, duplicate GND pins…). */
+  internalNets?: string[][];
   voltageRange: { min: number; max: number };
   currentLimit: number | null;
   properties: Record<string, string | number | boolean>;

@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, type ReactNode, type Ref } from "react";
 import type { ComponentDef, LabProject, PinDef, PlacedPart, WireDef } from "@/lab/types";
 import { canConnectPins, suggestWireColor } from "@/lab/wiring/validate";
+import { joinShortsSupply, netAt, netSignal, pinKey, pluggedInto, type Netlist } from "@/lab/netlist";
+import { isSocket } from "@/lab/registry";
 import { fitView, partBox, pinPosition, snap, unionBox } from "@/lab/geometry";
 import { PartArt } from "@/lab/visuals/part-art";
 import { newId } from "@/lab/ids";
@@ -20,6 +22,7 @@ type Props = {
   apiRef?: Ref<CanvasApi>;
   project: LabProject;
   components: ComponentDef[];
+  netlist: Netlist;
   selectedId: string | null;
   simpleMode: boolean;
   litLeds: Set<string>;
@@ -27,7 +30,8 @@ type Props = {
   emptyState?: ReactNode;
   onSelect: (id: string | null) => void;
   onMoveStart: () => void;
-  onMovePart: (instanceId: string, x: number, y: number) => void;
+  /** Move one or more parts at once (a breadboard drags the parts plugged into it). */
+  onMoveParts: (moves: Map<string, { x: number; y: number }>) => void;
   onAddWire: (wire: WireDef) => void;
   onDropPart: (componentId: string, x: number, y: number) => void;
   onDeleteSelected: () => void;
@@ -41,6 +45,7 @@ type WireStart = { instanceId: string; pinId: string };
 const MIN_Z = 0.3;
 const MAX_Z = 3;
 const clampZ = (z: number) => Math.min(MAX_Z, Math.max(MIN_Z, z));
+const netSummary = (n: number) => `${n.toLocaleString("fa-IR")} نقطه‌ی هم‌مسیر`;
 
 const PIN_FILL: Record<string, string> = { gnd: "#27272a", vcc: "#e11d48", analog: "#8b5cf6", pwm: "#f59e0b" };
 /** GND wires are stored black; on the dark bench draw them light grey so they stay visible. */
@@ -48,8 +53,8 @@ const displayColor = (c: string) => (c === "#111111" || c === "#000000" ? "#a1a1
 
 export function BoardCanvas(props: Props) {
   const {
-    apiRef, project, components, selectedId, simpleMode, litLeds, highlight, emptyState,
-    onSelect, onMoveStart, onMovePart, onAddWire, onDropPart, onDeleteSelected, onRotateSelected, onWireBlocked,
+    apiRef, project, components, netlist, selectedId, simpleMode, litLeds, highlight, emptyState,
+    onSelect, onMoveStart, onMoveParts, onAddWire, onDropPart, onDeleteSelected, onRotateSelected, onWireBlocked,
   } = props;
 
   const defs = useMemo(() => new Map(components.map((c) => [c.id, c])), [components]);
@@ -61,9 +66,20 @@ export function BoardCanvas(props: Props) {
   const [hoverPin, setHoverPin] = useState<string | null>(null);
   const [dropping, setDropping] = useState(false);
   const [panning, setPanning] = useState(false);
+  const [dragging, setDragging] = useState<string | null>(null);
 
   const gesture = useRef<
-    | { kind: "drag"; id: string; ox: number; oy: number; sx: number; sy: number; moved: boolean }
+    | {
+        kind: "drag";
+        id: string;
+        ox: number;
+        oy: number;
+        sx: number;
+        sy: number;
+        moved: boolean;
+        /** Start positions of every part that moves with this one. */
+        group: Map<string, { x: number; y: number }>;
+      }
     | { kind: "pan"; sx: number; sy: number; vx: number; vy: number; moved: boolean }
     | null
   >(null);
@@ -214,11 +230,22 @@ export function BoardCanvas(props: Props) {
       setWireFrom(null);
       return;
     }
+    const fromKey = pinKey(wireFrom.instanceId, wireFrom.pinId);
+    const toKey = pinKey(target.instanceId, target.pinId);
+    if (simpleMode && joinShortsSupply(netlist, fromKey, toKey)) {
+      onWireBlocked("این سیم تغذیه را مستقیم به GND وصل می‌کند (اتصال کوتاه).");
+      setWireFrom(null);
+      return;
+    }
+    const sig = (key: string, p: PinDef) => {
+      const s = netSignal(netAt(netlist, key));
+      return s === "gnd" ? "gnd" : s === "vcc" ? "vcc" : p.signal;
+    };
     onAddWire({
       id: newId("w"),
       from: wireFrom,
       to: target,
-      color: suggestWireColor(fromPinDef.signal, pin.signal),
+      color: suggestWireColor(sig(fromKey, fromPinDef), sig(toKey, pin)),
     });
     setWireFrom(null);
   }
@@ -245,7 +272,16 @@ export function BoardCanvas(props: Props) {
   function onPartPointerDown(e: React.PointerEvent, part: PlacedPart) {
     if (e.button !== 0) return;
     const loc = toLocal(e.clientX, e.clientY);
-    gesture.current = { kind: "drag", id: part.instanceId, ox: loc.x - part.x, oy: loc.y - part.y, sx: e.clientX, sy: e.clientY, moved: false };
+    const def = defs.get(part.componentId);
+    const group = new Map([[part.instanceId, { x: part.x, y: part.y }]]);
+    if (def && isSocket(def)) {
+      for (const id of pluggedInto(netlist, part.instanceId)) {
+        const p = project.parts.find((q) => q.instanceId === id);
+        if (p) group.set(id, { x: p.x, y: p.y });
+      }
+    }
+    gesture.current = { kind: "drag", id: part.instanceId, ox: loc.x - part.x, oy: loc.y - part.y, sx: e.clientX, sy: e.clientY, moved: false, group };
+    setDragging(part.instanceId);
     onSelect(part.instanceId);
   }
 
@@ -278,7 +314,10 @@ export function BoardCanvas(props: Props) {
         onMoveStart();
       }
       const loc = toLocal(e.clientX, e.clientY);
-      onMovePart(g.id, snap(loc.x - g.ox), snap(loc.y - g.oy));
+      const start = g.group.get(g.id)!;
+      const dx = snap(loc.x - g.ox) - start.x;
+      const dy = snap(loc.y - g.oy) - start.y;
+      onMoveParts(new Map([...g.group].map(([id, p]) => [id, { x: p.x + dx, y: p.y + dy }])));
     } else {
       if (!g.moved) {
         g.moved = true;
@@ -294,12 +333,143 @@ export function BoardCanvas(props: Props) {
     const g = gesture.current;
     if (pointers.current.size === 0) gesture.current = null;
     setPanning(false);
+    setDragging(null);
     // a click (no movement) on empty bench clears selection / cancels a wire
     if (g && g.kind === "pan" && !g.moved && !pinch.current) {
       onSelect(null);
       setWireFrom(null);
     }
   }
+
+  // Breadboards sit underneath everything plugged into them.
+  const ordered = useMemo(() => {
+    const socket = (p: PlacedPart) => {
+      const d = defs.get(p.componentId);
+      return d && isSocket(d) ? 0 : 1;
+    };
+    return [...project.parts].sort((a, b) => socket(a) - socket(b));
+  }, [project.parts, defs]);
+
+  const hoverNet = hoverPin ? netAt(netlist, hoverPin) : undefined;
+  const hoverNetKeys = useMemo(() => new Set(hoverNet && hoverNet.pins.length > 1 ? hoverNet.pins.map((p) => p.key) : []), [hoverNet]);
+  // Leads seated in a hole: shown for the part being dragged or selected.
+  const focusId = dragging ?? selectedId;
+  const seated = focusId ? netlist.contacts.filter((c) => c.a.startsWith(`${focusId}:`) || c.b.startsWith(`${focusId}:`)) : [];
+
+  const sockets = ordered.filter((p) => {
+    const d = defs.get(p.componentId);
+    return !!d && isSocket(d);
+  });
+  const parts = ordered.filter((p) => !sockets.includes(p));
+
+  const renderParts = (list: PlacedPart[]) =>
+    list.map((part) => {
+            const def = defs.get(part.componentId);
+            if (!def) return null;
+            const selected = selectedId === part.instanceId;
+            const flagged = highlight?.partIds.includes(part.instanceId);
+            const box = partBox(part, def);
+            return (
+              <g key={part.instanceId}>
+                {(selected || flagged) && (
+                  <rect
+                    x={box.x - 6}
+                    y={box.y - 6}
+                    width={box.w + 12}
+                    height={box.h + 12}
+                    fill="none"
+                    stroke={flagged ? "#ff3366" : "#ff7a00"}
+                    strokeWidth={1.5 / view.z}
+                    strokeDasharray={`${6 / view.z} ${4 / view.z}`}
+                    rx={4}
+                  />
+                )}
+                <g
+                  transform={`translate(${part.x} ${part.y}) rotate(${part.rotation ?? 0} ${def.width / 2} ${def.height / 2})`}
+                  onPointerDown={(e) => onPartPointerDown(e, part)}
+                  className="cursor-grab active:cursor-grabbing"
+                >
+                  <PartArt def={def} on={litLeds.has(part.instanceId)} />
+                </g>
+              </g>
+            );
+    });
+
+  const renderPins = (list: PlacedPart[]) =>
+    list.map((part) => {
+            const def = defs.get(part.componentId);
+            if (!def) return null;
+            const showLabels = selectedId === part.instanceId && def.pins.length <= 40;
+            return def.pins.map((pin) => {
+              const pos = pinPosition(part, def, pin);
+              const key = pinKey(part.instanceId, pin.id);
+              const hole = pin.signal === "passive";
+              const isStart = wireFrom?.instanceId === part.instanceId && wireFrom.pinId === pin.id;
+              const compatible = fromPinDef && !isStart ? canConnectPins(fromPinDef, pin, simpleMode).ok : null;
+              const dim = wireFrom && !isStart && compatible === false;
+              const glow = !hole && wireFrom && !isStart && compatible === true && part.instanceId !== wireFrom.instanceId;
+              const hovered = hoverPin === key;
+              const inNet = hoverNetKeys.has(key);
+              const r = hole ? 2.6 : isStart || hovered ? 4.6 : 3.4;
+              return (
+                <g key={key} opacity={dim ? 0.25 : 1}>
+                  {(glow || isStart) && <circle cx={pos.x} cy={pos.y} r={6.5} fill="none" stroke="#ff7a00" strokeWidth={1.2} className="lab-led-glow" />}
+                  {inNet && !hovered && <circle cx={pos.x} cy={pos.y} r={4.6} fill="#22c55e" fillOpacity={0.25} stroke="#22c55e" strokeWidth={1} style={{ pointerEvents: "none" }} />}
+                  <circle
+                    cx={pos.x}
+                    cy={pos.y}
+                    r={hole ? 4.6 : r}
+                    fill={hole ? (hovered || isStart ? "#ff7a00" : "transparent") : isStart ? "#ff7a00" : PIN_FILL[pin.signal] ?? "#3b82f6"}
+                    fillOpacity={hole && !hovered && !isStart ? 0 : 1}
+                    stroke={hole ? (hovered ? "#fff" : "none") : "#e5e7eb"}
+                    strokeWidth={hole ? 0.8 : 0.8}
+                    className="cursor-crosshair"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onPointerEnter={() => setHoverPin(key)}
+                    onPointerLeave={() => setHoverPin((h) => (h === key ? null : h))}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clickPin(part, pin);
+                    }}
+                  >
+                    <title>{hole ? pin.id : `${pin.label} · ${pin.signal}`}</title>
+                  </circle>
+                  {(hovered || showLabels || isStart) && (
+                    <text
+                      x={pos.x + 6}
+                      y={pos.y - 5}
+                      fontSize={8 / Math.max(1, view.z * 0.9)}
+                      fill="#e5e7eb"
+                      stroke="#0a0a0f"
+                      strokeWidth={2.5 / Math.max(1, view.z)}
+                      paintOrder="stroke"
+                      fontFamily="var(--font-mono)"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      {pin.label}
+                    </text>
+                  )}
+                  {hovered && hoverNet && hoverNet.pins.length > 1 && (
+                    // own line: Persian laid out right-to-left, growing rightwards from the pin
+                    <text
+                      x={pos.x + 6}
+                      y={pos.y + 6}
+                      direction="rtl"
+                      textAnchor="end"
+                      fontSize={7 / Math.max(1, view.z * 0.9)}
+                      fill="#86efac"
+                      stroke="#0a0a0f"
+                      strokeWidth={2.5 / Math.max(1, view.z)}
+                      paintOrder="stroke"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      {netSummary(hoverNet.pins.length)}
+                    </text>
+                  )}
+                </g>
+              );
+            });
+    });
 
   const sel = selectedId ? partById(selectedId) : undefined;
   const selDef = sel ? defs.get(sel.componentId) : undefined;
@@ -363,38 +533,10 @@ export function BoardCanvas(props: Props) {
         <rect width="100%" height="100%" fill="url(#lab-bench-dots)" />
 
         <g transform={`translate(${view.x} ${view.y}) scale(${view.z})`}>
-          {/* parts */}
-          {project.parts.map((part) => {
-            const def = defs.get(part.componentId);
-            if (!def) return null;
-            const selected = selectedId === part.instanceId;
-            const flagged = highlight?.partIds.includes(part.instanceId);
-            const box = partBox(part, def);
-            return (
-              <g key={part.instanceId}>
-                {(selected || flagged) && (
-                  <rect
-                    x={box.x - 6}
-                    y={box.y - 6}
-                    width={box.w + 12}
-                    height={box.h + 12}
-                    fill="none"
-                    stroke={flagged ? "#ff3366" : "#ff7a00"}
-                    strokeWidth={1.5 / view.z}
-                    strokeDasharray={`${6 / view.z} ${4 / view.z}`}
-                    rx={4}
-                  />
-                )}
-                <g
-                  transform={`translate(${part.x} ${part.y}) rotate(${part.rotation ?? 0} ${def.width / 2} ${def.height / 2})`}
-                  onPointerDown={(e) => onPartPointerDown(e, part)}
-                  className="cursor-grab active:cursor-grabbing"
-                >
-                  <PartArt def={def} on={litLeds.has(part.instanceId)} />
-                </g>
-              </g>
-            );
-          })}
+          {/* breadboards, their holes, then the parts sitting on them */}
+          {renderParts(sockets)}
+          {renderPins(sockets)}
+          {renderParts(parts)}
 
           {/* wires above parts so they stay clickable */}
           {project.wires.map((w) => {
@@ -443,59 +585,13 @@ export function BoardCanvas(props: Props) {
             ) : null;
           })()}
 
-          {/* pins on top of everything */}
-          {project.parts.map((part) => {
-            const def = defs.get(part.componentId);
-            if (!def) return null;
-            const showLabels = selectedId === part.instanceId;
-            return def.pins.map((pin) => {
-              const pos = pinPosition(part, def, pin);
-              const key = `${part.instanceId}:${pin.id}`;
-              const isStart = wireFrom?.instanceId === part.instanceId && wireFrom.pinId === pin.id;
-              const compatible = fromPinDef && !isStart ? canConnectPins(fromPinDef, pin, simpleMode).ok : null;
-              const dim = wireFrom && !isStart && compatible === false;
-              const glow = wireFrom && !isStart && compatible === true && part.instanceId !== wireFrom.instanceId;
-              const hovered = hoverPin === key;
-              return (
-                <g key={key} opacity={dim ? 0.25 : 1}>
-                  {(glow || isStart) && <circle cx={pos.x} cy={pos.y} r={8} fill="none" stroke="#ff7a00" strokeWidth={1.5} className="lab-led-glow" />}
-                  <circle
-                    cx={pos.x}
-                    cy={pos.y}
-                    r={isStart || hovered ? 6 : 4.2}
-                    fill={isStart ? "#ff7a00" : PIN_FILL[pin.signal] ?? "#3b82f6"}
-                    stroke="#e5e7eb"
-                    strokeWidth={1}
-                    className="cursor-crosshair"
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onPointerEnter={() => setHoverPin(key)}
-                    onPointerLeave={() => setHoverPin((h) => (h === key ? null : h))}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      clickPin(part, pin);
-                    }}
-                  >
-                    <title>{`${pin.label} · ${pin.signal}`}</title>
-                  </circle>
-                  {(hovered || showLabels || isStart) && (
-                    <text
-                      x={pos.x + 7}
-                      y={pos.y + 3}
-                      fontSize={9 / Math.max(1, view.z * 0.9)}
-                      fill="#e5e7eb"
-                      stroke="#0a0a0f"
-                      strokeWidth={2.5 / Math.max(1, view.z)}
-                      paintOrder="stroke"
-                      fontFamily="var(--font-mono)"
-                      style={{ pointerEvents: "none" }}
-                    >
-                      {pin.label}
-                    </text>
-                  )}
-                </g>
-              );
-            });
-          })}
+          {/* leads seated in breadboard holes */}
+          {seated.map((c) => (
+            <rect key={`${c.a}|${c.b}`} x={c.x - 3.5} y={c.y - 3.5} width={7} height={7} rx={1.5} fill="none" stroke="#22c55e" strokeWidth={1.4} style={{ pointerEvents: "none" }} />
+          ))}
+
+          {/* pins of everything else on top */}
+          {renderPins(parts)}
         </g>
       </svg>
 

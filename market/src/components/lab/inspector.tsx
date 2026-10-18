@@ -121,6 +121,11 @@ export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, o
 
       <section>
         <h4 className="mb-2 font-mono text-[11px] uppercase tracking-widest text-primary-container">&gt; پین‌اوت</h4>
+        {def.pins.some((p) => p.signal === "passive") ? (
+          <p className="text-[11px] leading-6 text-on-surface-variant">
+            {def.pins.length.toLocaleString("fa-IR")} سوراخ. هر ستون دو گروه ۵تایی دارد (a–e و f–j) که داخلشان به هم وصل‌اند؛ ریل‌های + و − در طول برد سراسری‌اند. نشانگر را روی هر سوراخ ببرید تا مسیرش سبز شود.
+          </p>
+        ) : (
         <ul className="max-h-48 space-y-1 overflow-y-auto pe-1 text-[11px]">
           {def.pins.map((p) => (
             <li key={p.id} className="flex items-center justify-between gap-2 border-b border-outline/40 py-1">
@@ -135,6 +140,7 @@ export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, o
             </li>
           ))}
         </ul>
+        )}
       </section>
 
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-[11px]">

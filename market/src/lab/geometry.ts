@@ -1,4 +1,4 @@
-import type { ComponentDef, LabProject, PinDef, PlacedPart } from "./types";
+import type { ComponentDef, PinDef, PlacedPart } from "./types";
 
 export const GRID = 10;
 
@@ -79,59 +79,4 @@ export function fitView(box: Box, viewW: number, viewH: number, pad = 40, maxZoo
       y: (viewH - box.h * zoom) / 2 - box.y * zoom,
     },
   };
-}
-
-/**
- * LED instances whose anode is driven by `boardPinId` (e.g. "d13") on an MCU board, either
- * directly or through one series resistor. The simulator only reports that pin, so only these
- * LEDs should light up.
- */
-export function ledsDrivenBy(
-  project: Pick<LabProject, "parts" | "wires">,
-  components: ComponentDef[],
-  boardPinId: string,
-): Set<string> {
-  const defs = new Map(components.map((c) => [c.id, c]));
-  const kindOf = (instanceId: string) => {
-    const part = project.parts.find((p) => p.instanceId === instanceId);
-    return part ? defs.get(part.componentId)?.behaviorModel.kind : undefined;
-  };
-  const key = (instanceId: string, pinId: string) => `${instanceId}:${pinId}`;
-
-  const adj = new Map<string, string[]>();
-  const link = (a: string, b: string) => {
-    adj.set(a, [...(adj.get(a) ?? []), b]);
-    adj.set(b, [...(adj.get(b) ?? []), a]);
-  };
-  for (const w of project.wires) link(key(w.from.instanceId, w.from.pinId), key(w.to.instanceId, w.to.pinId));
-
-  // A resistor passes the signal from one lead to the other.
-  for (const part of project.parts) {
-    const def = defs.get(part.componentId);
-    if (def?.behaviorModel.kind === "resistor" && def.pins.length === 2) {
-      link(key(part.instanceId, def.pins[0].id), key(part.instanceId, def.pins[1].id));
-    }
-  }
-
-  const start = project.parts
-    .filter((p) => kindOf(p.instanceId) === "mcu")
-    .map((p) => key(p.instanceId, boardPinId));
-
-  const seen = new Set<string>(start);
-  const queue = [...start];
-  const lit = new Set<string>();
-  while (queue.length) {
-    const cur = queue.shift()!;
-    const [iid, pid] = cur.split(":");
-    const kind = kindOf(iid);
-    if (kind === "led" && pid !== "cathode" && pid !== "gnd") lit.add(iid);
-    for (const next of adj.get(cur) ?? []) {
-      if (seen.has(next)) continue;
-      // don't walk back through other MCU pins
-      if (kindOf(next.split(":")[0]) === "mcu") continue;
-      seen.add(next);
-      queue.push(next);
-    }
-  }
-  return lit;
 }

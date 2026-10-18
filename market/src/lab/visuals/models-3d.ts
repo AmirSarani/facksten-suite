@@ -109,69 +109,68 @@ class Builder {
 
 const px = (v: number, span: number) => v * S - span * S / 2;
 
+/** Header strips along X: one per run of pins sharing a y. */
+function headersAlongX(b: Builder, def: ComponentDef, top: number, h = 0.8) {
+  const byY = new Map<number, number[]>();
+  for (const p of def.pins) byY.set(p.y, [...(byY.get(p.y) ?? []), p.x]);
+  const black = mat(C.black, { roughness: 0.8 });
+  const gold = mat(C.gold, { metalness: 0.9, roughness: 0.25 });
+  for (const [y, xs] of byY) {
+    const z = px(y, def.height);
+    const x1 = px(Math.min(...xs), def.width) - 0.3;
+    const x2 = px(Math.max(...xs), def.width) + 0.3;
+    b.box(x2 - x1, h, 0.55, black, (x1 + x2) / 2, top + h / 2, z);
+    for (const x of xs) b.box(0.18, 0.02, 0.18, gold, px(x, def.width), top + h + 0.01, z);
+  }
+}
+
 function pinXs(def: ComponentDef) {
   return def.pins.map((p) => ({ x: px(p.x, def.width), z: px(p.y, def.height) }));
 }
 
 function arduinoUno(def: ComponentDef): PartModel {
   const b = new Builder();
-  const w = def.width * S;
-  const d = Math.max(def.height, ...def.pins.map((p) => p.y + 12)) * S;
-  // headers may run past def.height: grow the board downward, keep pins in place
-  const t = b.pcb(w, d, C.pcbTeal, 0.16, (d - def.height * S) / 2);
+  const t = b.pcb(def.width * S, def.height * S, C.pcbTeal);
   const at = (xPx: number, yPx: number) => ({ x: px(xPx, def.width), z: px(yPx, def.height) });
+  headersAlongX(b, def, t);
 
-  const rows = (xPx: number) => def.pins.filter((p) => Math.abs(p.x - xPx) < 1).map((p) => p.y);
-  b.header(8, rows(8), def, t);
-  b.header(200, rows(200), def, t);
-
-  // USB-B and DC barrel jack
-  const usb = at(81, 23);
-  b.box(2.9, 1.1, 1.9, mat(C.metal, { metalness: 0.95, roughness: 0.25 }), usb.x, t + 0.55, usb.z);
-  const dc = at(147, 20);
-  b.box(2.3, 1.1, 1.6, mat(C.black, { roughness: 0.5 }), dc.x, t + 0.55, dc.z);
-  b.cyl(0.35, 0.35, 0.02, mat(0x09090b), dc.x, t + 1.11, dc.z);
+  // USB-B and DC barrel jack on the left edge
+  const usb = at(14, 57);
+  b.box(2.6, 1.1, 2.3, mat(C.metal, { metalness: 0.95, roughness: 0.25 }), usb.x, t + 0.55, usb.z);
+  const dc = at(15, 168);
+  b.box(2.3, 1.1, 1.8, mat(C.black, { roughness: 0.5 }), dc.x, t + 0.55, dc.z);
 
   // ATmega328P DIP-28 with legs
-  const chip = at(108, 111);
-  b.box(4.8, 0.35, 1.5, mat(C.black, { roughness: 0.4 }), chip.x, t + 0.3, chip.z);
+  const chip = at(180, 137);
+  b.box(7, 0.35, 1.3, mat(C.black, { roughness: 0.4 }), chip.x, t + 0.3, chip.z);
   const legMat = mat(C.metal, { metalness: 0.9, roughness: 0.3 });
   for (let i = 0; i < 14; i++) {
-    const lx = chip.x - 2.25 + i * 0.345;
-    b.box(0.12, 0.25, 0.28, legMat, lx, t + 0.15, chip.z - 0.85);
-    b.box(0.12, 0.25, 0.28, legMat, lx, t + 0.15, chip.z + 0.85);
+    const lx = chip.x - 3.25 + i * 0.5;
+    b.box(0.12, 0.25, 0.28, legMat, lx, t + 0.15, chip.z - 0.75);
+    b.box(0.12, 0.25, 0.28, legMat, lx, t + 0.15, chip.z + 0.75);
   }
-  b.label("ATMEGA328P", 3.6, chip.x, t + 0.48, chip.z, "#9ca3af");
+  b.label("ATMEGA328P", 4, chip.x, t + 0.48, chip.z, "#9ca3af");
 
-  // crystal, reset button, voltage regulator, capacitors
-  const xt = at(98, 154);
+  const xt = at(93, 101);
   b.box(1.3, 0.4, 0.5, mat(C.metal, { metalness: 0.95, roughness: 0.2 }), xt.x, t + 0.2, xt.z);
-  const rst = at(42, 62);
+  const rst = at(30, 22);
   b.box(0.7, 0.3, 0.7, mat(0xa1a1aa, { metalness: 0.6 }), rst.x, t + 0.15, rst.z);
   b.cyl(0.22, 0.22, 0.2, mat(0xdc2626), rst.x, t + 0.4, rst.z);
-  const cap = at(150, 70);
-  for (const dx of [0, 0.8]) b.cyl(0.3, 0.3, 0.9, mat(0x1f2937, { metalness: 0.4 }), cap.x + dx, t + 0.45, cap.z);
-  const led = at(163, 62);
+  const led = at(153, 64);
   const ledMat = mat(0xf59e0b, { emissive: 0x000000 });
   b.box(0.3, 0.12, 0.2, ledMat, led.x, t + 0.06, led.z);
 
-  b.label("ARDUINO UNO", 5, 0, t + 0.01, at(108, 200).z, "#d1fae5");
+  b.label("ARDUINO UNO", 5, at(212, 96).x, t + 0.01, at(212, 96).z, "#d1fae5");
   return { group: b.group, glow: [ledMat] };
 }
 
 function arduinoNano(def: ComponentDef): PartModel {
   const b = new Builder();
-  const w = def.width * S;
-  const d = Math.max(def.height, ...def.pins.map((p) => p.y + 10)) * S;
-  const zOff = (d - def.height * S) / 2;
-  const t = b.pcb(w, d, C.pcbBlue, 0.16, zOff);
-  const rows = (xPx: number) => def.pins.filter((p) => Math.abs(p.x - xPx) < 1).map((p) => p.y);
-  b.header(8, rows(8), def, t, 0.6);
-  b.header(120, rows(120), def, t, 0.6);
-  // mini-USB at the far edge, MCU in the middle
-  b.box(2.1, 0.8, 1.2, mat(C.metal, { metalness: 0.95, roughness: 0.25 }), 0, t + 0.4, zOff + d / 2 - 0.6);
-  b.box(2.2, 0.2, 2.2, mat(C.black, { roughness: 0.4 }), 0, t + 0.1, 0.4);
-  b.label("NANO", 2.2, 0, t + 0.01, -2, "#dbeafe");
+  const t = b.pcb(def.width * S, def.height * S, C.pcbBlue);
+  headersAlongX(b, def, t, 0.6);
+  b.box(1.2, 0.8, 2.1, mat(C.metal, { metalness: 0.95, roughness: 0.25 }), px(5, def.width), t + 0.4, 0);
+  b.box(2.2, 0.2, 2.2, mat(C.black, { roughness: 0.4 }), px(91, def.width), t + 0.1, 0);
+  b.label("NANO", 2.2, px(140, def.width), t + 0.01, 0, "#dbeafe");
   return { group: b.group, glow: [] };
 }
 
@@ -180,21 +179,18 @@ function breadboard(def: ComponentDef): PartModel {
   const w = def.width * S;
   const d = def.height * S;
   b.box(w, 0.5, d, mat(C.cream, { roughness: 0.9 }), 0, 0.25, 0);
-  b.box(w - 1.2, 0.02, 0.12, mat(0xdc2626), 0.3, 0.51, px(9, def.height));
-  b.box(w - 1.2, 0.02, 0.12, mat(0x2563eb), 0.3, 0.51, px(def.height - 20, def.height));
-  b.box(w - 0.4, 0.02, 0.3, mat(0xd8d3c0), 0, 0.51, 0);
-  const hole = new THREE.BoxGeometry(0.14, 0.03, 0.14);
-  const holes = new THREE.InstancedMesh(hole, mat(0x3f3f46), 30 * 10);
-  const m = new THREE.Matrix4();
-  let i = 0;
-  for (let c = 0; c < 30; c++) {
-    for (let r = 0; r < 10; r++) {
-      const band = r < 5 ? 0 : 1;
-      const zPx = (band ? def.height / 2 + 8 : 20) + (r % 5) * 9;
-      m.makeTranslation(px(20 + c * 8.4, def.width), 0.51, px(zPx, def.height));
-      holes.setMatrixAt(i++, m);
-    }
+  const yOf = (id: string) => def.pins.find((p) => p.id === id)?.y ?? 0;
+  for (const [id, color, dy] of [["tp1", 0xdc2626, -6], ["tn1", 0x2563eb, 6], ["bp1", 0xdc2626, -6], ["bn1", 0x2563eb, 6]] as const) {
+    b.box(w - 1.2, 0.02, 0.1, mat(color), 0, 0.51, px(yOf(id) + dy, def.height));
   }
+  b.box(w - 0.4, 0.02, 0.6, mat(0xd8d3c0), 0, 0.51, px((yOf("e1") + yOf("f1")) / 2, def.height));
+  const hole = new THREE.BoxGeometry(0.14, 0.03, 0.14);
+  const holes = new THREE.InstancedMesh(hole, mat(0x3f3f46), def.pins.length);
+  const m = new THREE.Matrix4();
+  def.pins.forEach((p, i) => {
+    m.makeTranslation(px(p.x, def.width), 0.51, px(p.y, def.height));
+    holes.setMatrixAt(i, m);
+  });
   b.group.add(holes);
   return { group: b.group, glow: [] };
 }

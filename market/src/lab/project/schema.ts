@@ -1,7 +1,8 @@
 import { z } from "zod";
 import type { LabProject } from "../types";
 
-export const LAB_PROJECT_VERSION = 1;
+/** v2: parts on the 0.1" grid, 830-point breadboard (rail-pos/rail-gnd became tp1/tn1). */
+export const LAB_PROJECT_VERSION = 2;
 export const LAB_STORAGE_KEY = "pushrsp-lab-project-v1";
 export const LAB_SHARE_PREFIX = "pushrsp-lab-share:";
 
@@ -53,6 +54,15 @@ export function migrateProject(raw: unknown): LabProject {
     next.wires = Array.isArray(next.wires) ? next.wires : [];
     next.code = typeof next.code === "string" ? next.code : "";
     next.boardId = typeof next.boardId === "string" ? next.boardId : "arduino-uno";
+  }
+  if (version < 2) {
+    next.version = 2;
+    const railMap: Record<string, string> = { "rail-pos": "tp1", "rail-gnd": "tn1" };
+    const remap = (end: unknown) => {
+      const e = end as { instanceId?: string; pinId?: string } | null;
+      return e && typeof e.pinId === "string" && railMap[e.pinId] ? { ...e, pinId: railMap[e.pinId] } : end;
+    };
+    next.wires = (Array.isArray(next.wires) ? next.wires : []).map((w: Record<string, unknown>) => ({ ...w, from: remap(w.from), to: remap(w.to) }));
   }
   const parsed = labProjectSchema.parse(next);
   return parsed as LabProject;

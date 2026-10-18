@@ -69,157 +69,262 @@ function Slab({
   );
 }
 
-function Lead({ x, y1, y2 }: { x: number; y1: number; y2: number }) {
-  return <rect x={x - 1.2} y={Math.min(y1, y2)} width="2.4" height={Math.abs(y2 - y1)} fill="url(#lab-metal)" />;
+function Lead({ x, y1, y2, w = 2 }: { x: number; y1: number; y2: number; w?: number }) {
+  return <rect x={x - w / 2} y={Math.min(y1, y2)} width={w} height={Math.abs(y2 - y1)} fill="url(#lab-metal)" />;
 }
 
-/** Female header strip with gold contacts centred on the given pin positions. */
-function Header({ cx, ys, width = 12 }: { cx: number; ys: number[]; width?: number }) {
-  if (!ys.length) return null;
-  const top = Math.min(...ys) - 6;
-  const bottom = Math.max(...ys) + 6;
+/** Horizontal female header with a gold contact on every pin of the row. */
+function HeaderRow({ xs, y, h = 9 }: { xs: number[]; y: number; h?: number }) {
+  if (!xs.length) return null;
+  const x1 = Math.min(...xs) - 5;
+  const x2 = Math.max(...xs) + 5;
   return (
     <g>
-      <rect x={cx - width / 2 + 2} y={top + 2} width={width} height={bottom - top} fill="#000" opacity=".6" />
-      <rect x={cx - width / 2} y={top} width={width} height={bottom - top} fill="url(#lab-black)" />
-      {ys.map((y) => (
-        <rect key={y} x={cx - 1.8} y={y - 1.8} width="3.6" height="3.6" fill="#d4af37" />
+      <rect x={x1 + 1.5} y={y - h / 2 + 1.5} width={x2 - x1} height={h} fill="#000" opacity=".6" />
+      <rect x={x1} y={y - h / 2} width={x2 - x1} height={h} rx={1} fill="url(#lab-black)" />
+      {xs.map((x) => (
+        <rect key={x} x={x - 1.6} y={y - 1.6} width="3.2" height="3.2" fill="#d4af37" />
       ))}
     </g>
   );
 }
 
-function Label({ x, y, text, size = 8, fill = "#e5e7eb", anchor = "middle" }: { x: number; y: number; text: string; size?: number; fill?: string; anchor?: "start" | "middle" | "end" }) {
+function Label({ x, y, text, size = 8, fill = "#e5e7eb", anchor = "middle", rotate }: { x: number; y: number; text: string; size?: number; fill?: string; anchor?: "start" | "middle" | "end"; rotate?: number }) {
   return (
-    <text x={x} y={y} textAnchor={anchor} fontSize={size} fill={fill} fontFamily={MONO} style={{ pointerEvents: "none", userSelect: "none" }}>
+    <text
+      x={x}
+      y={y}
+      textAnchor={anchor}
+      fontSize={size}
+      fill={fill}
+      fontFamily={MONO}
+      transform={rotate ? `rotate(${rotate} ${x} ${y})` : undefined}
+      style={{ pointerEvents: "none", userSelect: "none" }}
+    >
       {text}
     </text>
   );
 }
 
-function pinYs(def: ComponentDef, x: number) {
-  return def.pins.filter((p) => Math.abs(p.x - x) < 1).map((p) => p.y);
+/** Group a part's pins into header rows (same y, consecutive 0.1" steps). */
+function headerRows(def: ComponentDef) {
+  const byY = new Map<number, number[]>();
+  for (const p of def.pins) byY.set(p.y, [...(byY.get(p.y) ?? []), p.x]);
+  const rows: { y: number; xs: number[] }[] = [];
+  for (const [y, xs] of byY) {
+    const sorted = [...xs].sort((a, b) => a - b);
+    let run: number[] = [];
+    for (const x of sorted) {
+      if (run.length && x - run[run.length - 1] > 10) {
+        rows.push({ y, xs: run });
+        run = [];
+      }
+      run.push(x);
+    }
+    if (run.length) rows.push({ y, xs: run });
+  }
+  return rows;
+}
+
+/** Tiny silkscreen pin names beside a header, like the real board. */
+function PinNames({ def, side, fill = "#d1fae5" }: { def: ComponentDef; side: "below" | "above"; fill?: string }) {
+  return (
+    <g>
+      {def.pins.map((p) => {
+        const below = side === "below" ? p.y < def.height / 2 : p.y > def.height / 2;
+        const y = below ? p.y + 8 : p.y - 8;
+        return <Label key={p.id} x={p.x + 1.6} y={y} text={p.label.replace("/LED", "").replace("/SDA", "").replace("/SCL", "")} size={3.6} fill={fill} anchor={below ? "end" : "start"} rotate={-90} />;
+      })}
+    </g>
+  );
 }
 
 function Uno({ def }: { def: ComponentDef }) {
-  const { width: w } = def;
-  const h = Math.max(def.height, ...def.pins.map((p) => p.y + 12));
+  const { width: w, height: h } = def;
   return (
     <g>
-      <Slab x={0} y={0} w={w} h={h} d={6} top="url(#lab-pcb)" side="#063b37" r={8} stroke="#0a3d38" />
-      {/* USB-B + DC barrel jack */}
-      <Slab x={52} y={4} w={58} h={38} d={5} top="url(#lab-metal)" side="#6b7280" r={2} />
-      <Slab x={124} y={4} w={46} h={32} d={5} top="url(#lab-black)" side="#000" r={2} />
-      <Header cx={8} ys={pinYs(def, 8)} />
-      <Header cx={200} ys={pinYs(def, 200)} />
-      {/* ATmega328P DIP */}
-      <Slab x={60} y={96} w={96} h={30} d={4} top="url(#lab-black)" side="#000" r={2} />
+      <Slab x={0} y={0} w={w} h={h} d={5} top="url(#lab-pcb)" side="#063b37" r={7} stroke="#0a3d38" />
+      {/* mounting holes */}
+      {[[14, 14], [w - 14, 24], [w - 14, h - 14], [60, h - 10]].map(([cx, cy]) => (
+        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={3.2} fill="#0a0a0f" stroke="#cbd5e1" strokeWidth=".8" />
+      ))}
+      {/* USB-B (overhangs the left edge) and DC barrel jack */}
+      <Slab x={-12} y={34} w={52} h={46} d={4} top="url(#lab-metal)" side="#6b7280" r={2} />
+      <rect x={-8} y={44} width={10} height={26} fill="#4b5563" />
+      <Slab x={-8} y={150} w={46} h={36} d={4} top="url(#lab-black)" side="#000" r={2} />
+      <circle cx={6} cy={168} r={6} fill="#0a0a0f" stroke="#3f3f46" />
+      {headerRows(def).map((r) => (
+        <HeaderRow key={`${r.y}-${r.xs[0]}`} xs={r.xs} y={r.y} />
+      ))}
+      <PinNames def={def} side="below" />
+      <Label x={225} y={50} text="DIGITAL (PWM ~)" size={5} fill="#a7f3d0" />
+      <Label x={130} y={186} text="POWER" size={5} fill="#a7f3d0" />
+      <Label x={225} y={186} text="ANALOG IN" size={5} fill="#a7f3d0" />
+      {/* ATmega328P DIP-28 */}
+      <Slab x={110} y={124} w={140} h={26} d={3} top="url(#lab-black)" side="#000" r={2} />
       {Array.from({ length: 14 }, (_, i) => (
         <g key={i}>
-          <rect x={63 + i * 6.5} y={92} width="2.4" height="5" fill="url(#lab-metal)" />
-          <rect x={63 + i * 6.5} y={125} width="2.4" height="5" fill="url(#lab-metal)" />
+          <rect x={115 + i * 9.6} y={120} width="2.4" height="5" fill="url(#lab-metal)" />
+          <rect x={115 + i * 9.6} y={149} width="2.4" height="5" fill="url(#lab-metal)" />
         </g>
       ))}
-      <circle cx={66} cy={104} r={2} fill="#3f3f46" />
-      <Label x={108} y={115} text="ATmega328P" size={7} fill="#9ca3af" />
-      {/* 16 MHz crystal, reset button, status LEDs */}
-      <Slab x={84} y={148} w={28} h={12} d={3} top="url(#lab-metal)" side="#6b7280" r={6} />
-      <Label x={98} y={170} text="16MHz" size={5} fill="#a7f3d0" />
-      <circle cx={42} cy={62} r={7} fill="#dc2626" stroke="#7f1d1d" />
-      <circle cx={40} cy={60} r={2.2} fill="#fff" opacity=".45" />
-      <Label x={42} y={80} text="RESET" size={6} fill="#a7f3d0" />
-      <rect x={160} y={60} width="7" height="4" fill="#f59e0b" />
-      <Label x={172} y={64} text="L" size={5} fill="#a7f3d0" anchor="start" />
-      <Label x={108} y={h - 26} text="ARDUINO UNO" size={9} fill="#d1fae5" />
-      <Label x={108} y={h - 15} text="R3 · ATmega328P" size={6} fill="#a7f3d0" />
+      <circle cx={116} cy={137} r={2} fill="#3f3f46" />
+      <Label x={180} y={140} text="ATMEGA328P-PU" size={6.5} fill="#9ca3af" />
+      {/* crystal, reset, LEDs */}
+      <Slab x={80} y={96} w={26} h={10} d={2} top="url(#lab-metal)" side="#6b7280" r={5} />
+      <Label x={93} y={115} text="16MHz" size={4} fill="#a7f3d0" />
+      <circle cx={30} cy={22} r={6} fill="#dc2626" stroke="#7f1d1d" />
+      <circle cx={28.5} cy={20.5} r={1.8} fill="#fff" opacity=".45" />
+      <Label x={30} y={36} text="RESET" size={4} fill="#a7f3d0" />
+      {[["L", 64], ["TX", 76], ["RX", 88], ["ON", 100]].map(([t, y]) => (
+        <g key={t}>
+          <rect x={150} y={Number(y) - 3} width="7" height="4" fill={t === "ON" ? "#22c55e" : "#f59e0b"} opacity=".9" />
+          <Label x={160} y={Number(y) + 1} text={String(t)} size={4} fill="#a7f3d0" anchor="start" />
+        </g>
+      ))}
+      <Label x={212} y={92} text="UNO" size={18} fill="#d1fae5" />
+      <Label x={212} y={106} text="ARDUINO" size={7} fill="#a7f3d0" />
     </g>
   );
 }
 
 function Nano({ def }: { def: ComponentDef }) {
-  const { width: w } = def;
-  const h = Math.max(def.height, ...def.pins.map((p) => p.y + 10));
+  const { width: w, height: h } = def;
   return (
     <g>
-      <Slab x={0} y={0} w={w} h={h} d={5} top="url(#lab-pcb-blue)" side="#0c2450" r={5} stroke="#0c2450" />
-      <Header cx={8} ys={pinYs(def, 8)} width={11} />
-      <Header cx={120} ys={pinYs(def, 120)} width={11} />
-      <Slab x={40} y={h - 26} w={50} h={22} d={4} top="url(#lab-metal)" side="#6b7280" r={2} />
-      <Slab x={42} y={86} w={46} h={46} d={4} top="url(#lab-black)" side="#000" r={2} />
-      <Label x={65} y={112} text="ATmega" size={6} fill="#9ca3af" />
-      <Label x={65} y={60} text="NANO" size={10} fill="#dbeafe" />
+      <Slab x={0} y={0} w={w} h={h} d={4} top="url(#lab-pcb-blue)" side="#0c2450" r={3} stroke="#0c2450" />
+      {/* mini-USB at the left */}
+      <Slab x={-8} y={28} w={26} h={24} d={3} top="url(#lab-metal)" side="#6b7280" r={2} />
+      {def.pins.map((p) => (
+        <g key={p.id}>
+          <circle cx={p.x} cy={p.y} r={3.6} fill="#d4af37" />
+          <circle cx={p.x} cy={p.y} r={1.6} fill="#1e3a8a" />
+        </g>
+      ))}
+      <PinNames def={def} side="below" fill="#dbeafe" />
+      <Slab x={78} y={28} w={26} h={26} d={3} top="url(#lab-black)" side="#000" r={2} />
+      <Label x={91} y={43} text="328P" size={5} fill="#9ca3af" />
+      <circle cx={40} cy={40} r={4} fill="#e5e7eb" stroke="#64748b" />
+      <Label x={140} y={44} text="NANO" size={9} fill="#dbeafe" />
     </g>
   );
 }
 
 function Breadboard({ def }: { def: ComponentDef }) {
   const { width: w, height: h } = def;
+  const holes = def.pins;
+  const rowY: Record<string, number> = {};
+  for (const p of holes) {
+    const m = /^([a-j])1$/.exec(p.id);
+    if (m) rowY[m[1]] = p.y;
+  }
+  const colX = (c: number) => holes.find((p) => p.id === `a${c}`)?.x ?? 0;
+  const rails = [
+    { y: holes.find((p) => p.id === "tp1")?.y ?? 20, color: "#dc2626", sign: "+" },
+    { y: holes.find((p) => p.id === "tn1")?.y ?? 30, color: "#2563eb", sign: "−" },
+    { y: holes.find((p) => p.id === "bp1")?.y ?? 200, color: "#dc2626", sign: "+" },
+    { y: holes.find((p) => p.id === "bn1")?.y ?? 210, color: "#2563eb", sign: "−" },
+  ];
+  const trenchY = ((rowY.e ?? 100) + (rowY.f ?? 130)) / 2;
   return (
     <g>
-      <Slab x={0} y={0} w={w} h={h} d={7} top="#f3f0e6" side="#b8b29a" r={6} stroke="#cfc9b3" />
-      <rect x={18} y={8} width={w - 26} height={3} fill="#dc2626" opacity=".85" />
-      <rect x={18} y={h - 22} width={w - 26} height={3} fill="#2563eb" opacity=".85" />
-      <rect x={6} y={h / 2 - 3} width={w - 12} height={6} fill="#d8d3c0" />
-      {Array.from({ length: 30 }, (_, c) =>
-        [0, 1].map((band) =>
-          [0, 1, 2, 3, 4].map((r) => (
-            <rect key={`${c}-${band}-${r}`} x={20 + c * 8.4} y={(band ? h / 2 + 8 : 20) + r * 9} width="3" height="3" fill="#6b7280" opacity=".7" />
-          )),
-        ),
-      )}
-      <Label x={20} y={h - 6} text="830" size={7} fill="#8a8470" anchor="start" />
+      <Slab x={0} y={0} w={w} h={h} d={6} top="#f4f1e8" side="#b8b29a" r={5} stroke="#d6d0bb" />
+      {/* rail stripes sit outside each rail pair */}
+      {rails.map((r, i) => {
+        const y = i % 2 === 0 ? r.y - 6 : r.y + 6;
+        const outer = i === 0 || i === 3;
+        return (
+          <g key={i}>
+            <rect x={20} y={outer ? (i === 0 ? r.y - 7 : r.y + 6) : y - 0.75} width={w - 40} height={1.5} fill={r.color} opacity=".8" />
+            <Label x={12} y={r.y + 2.5} text={r.sign} size={7} fill={r.color} />
+            <Label x={w - 12} y={r.y + 2.5} text={r.sign} size={7} fill={r.color} />
+          </g>
+        );
+      })}
+      {/* centre trench */}
+      <rect x={6} y={trenchY - 5} width={w - 12} height={10} fill="#ddd8c4" />
+      <rect x={6} y={trenchY - 5} width={w - 12} height={2} fill="#c9c3ad" />
+      {/* holes */}
+      {holes.map((p) => (
+        <rect key={p.id} x={p.x - 1.7} y={p.y - 1.7} width="3.4" height="3.4" rx=".6" fill="#3f3f46" opacity=".85" />
+      ))}
+      {/* row letters and every-5th column numbers */}
+      {Object.entries(rowY).map(([r, y]) => (
+        <g key={r}>
+          <Label x={16} y={y + 2} text={r} size={5} fill="#8a8470" />
+          <Label x={w - 16} y={y + 2} text={r} size={5} fill="#8a8470" />
+        </g>
+      ))}
+      {Array.from({ length: 13 }, (_, i) => (i === 0 ? 1 : i * 5)).map((c) => (
+        <g key={c}>
+          <Label x={colX(c)} y={(rowY.a ?? 60) - 7} text={String(c)} size={4.5} fill="#8a8470" />
+          <Label x={colX(c)} y={(rowY.j ?? 170) + 11} text={String(c)} size={4.5} fill="#8a8470" />
+        </g>
+      ))}
     </g>
   );
 }
 
 function Led({ def, on }: { def: ComponentDef; on: boolean }) {
-  const cx = def.width / 2;
-  const cy = def.height / 2;
+  const cathode = def.pins.find((p) => p.id === "cathode")!;
+  const anode = def.pins.find((p) => p.id === "anode")!;
+  const cx = (cathode.x + anode.x) / 2;
+  const cy = cathode.y - 11;
   return (
     <g>
-      {on && <circle cx={cx} cy={cy} r={24} fill="#ef4444" opacity=".35" />}
-      <Lead x={cx} y1={8} y2={cy - 12} />
-      <Lead x={cx} y1={cy + 12} y2={def.height - 8} />
-      <circle cx={cx + 2} cy={cy + 3} r={13} fill="#000" opacity=".5" />
-      <circle cx={cx} cy={cy} r={13} fill="#7f1d1d" />
-      <circle cx={cx} cy={cy} r={11} fill={on ? "url(#lab-dome-on)" : "url(#lab-dome)"} />
-      <path d={`M${cx - 13} ${cy + 5} h26`} stroke="#450a0a" strokeWidth="1.4" />
-      <ellipse cx={cx - 4} cy={cy - 4} rx={3} ry={4.5} fill="#fff" opacity=".6" />
+      {on && <circle cx={cx} cy={cy} r={20} fill="#ef4444" opacity=".35" className="lab-led-glow" />}
+      {/* leads: anode is the longer, bent one */}
+      <path d={`M${cathode.x} ${cathode.y} V${cy + 4}`} stroke="url(#lab-metal)" strokeWidth="1.6" fill="none" />
+      <path d={`M${anode.x} ${anode.y} V${cy + 7} L${anode.x - 2} ${cy + 4}`} stroke="url(#lab-metal)" strokeWidth="1.6" fill="none" />
+      <circle cx={cx + 1.5} cy={cy + 2} r={9} fill="#000" opacity=".45" />
+      <circle cx={cx} cy={cy} r={9} fill="#7f1d1d" />
+      <circle cx={cx} cy={cy} r={7.6} fill={on ? "url(#lab-dome-on)" : "url(#lab-dome)"} />
+      {/* flat edge marks the cathode */}
+      <path d={`M${cx - 8.6} ${cy - 3.5} v7`} stroke="#450a0a" strokeWidth="1.4" />
+      <ellipse cx={cx - 2.6} cy={cy - 2.8} rx={2} ry={3} fill="#fff" opacity=".6" />
     </g>
   );
 }
 
 function LedRgb({ def }: { def: ComponentDef }) {
+  const y = def.pins[0].y;
+  const cx = def.width / 2;
   return (
     <g>
       {def.pins.map((p) => (
-        <Lead key={p.id} x={p.x} y1={p.y} y2={20} />
+        <Lead key={p.id} x={p.x} y1={p.y} y2={y - (p.id === "gnd" ? 22 : 16)} w={1.6} />
       ))}
-      <circle cx={42} cy={27} r={12} fill="#000" opacity=".45" />
-      <circle cx={40} cy={25} r={12} fill="url(#lab-dome-white)" stroke="#9ca3af" strokeWidth=".8" />
-      <circle cx={36} cy={27} r={2.6} fill="#ef4444" />
-      <circle cx={40} cy={22} r={2.6} fill="#22c55e" />
-      <circle cx={44} cy={27} r={2.6} fill="#3b82f6" />
+      <circle cx={cx + 1.5} cy={y - 22} r={11} fill="#000" opacity=".45" />
+      <circle cx={cx} cy={y - 24} r={11} fill="url(#lab-dome-white)" stroke="#9ca3af" strokeWidth=".8" />
+      <circle cx={cx - 4} cy={y - 22} r={2.4} fill="#ef4444" />
+      <circle cx={cx} cy={y - 27} r={2.4} fill="#22c55e" />
+      <circle cx={cx + 4} cy={y - 22} r={2.4} fill="#3b82f6" />
     </g>
   );
 }
 
-const BANDS: Record<string, string[]> = {
-  "resistor-220": ["#dc2626", "#dc2626", "#7a4a1f", "#d4af37"],
-  "resistor-10k": ["#7a4a1f", "#111118", "#f97316", "#d4af37"],
-};
+/** 4-band colour code for the part's resistance. */
+function bandColors(ohms: number) {
+  const colors = ["#111118", "#7a4a1f", "#dc2626", "#f97316", "#facc15", "#16a34a", "#2563eb", "#7c3aed", "#6b7280", "#f8fafc"];
+  const digits = String(Math.round(ohms));
+  const exp = Math.max(0, digits.length - 2);
+  return [colors[Number(digits[0])], colors[Number(digits[1] ?? 0)], colors[exp] ?? colors[0], "#d4af37"];
+}
 
 function Resistor({ def }: { def: ComponentDef }) {
-  const { width: w, height: h, id } = def;
-  const bands = BANDS[id] ?? BANDS["resistor-220"];
+  const [a, b] = def.pins;
+  const y = a.y;
+  const ohms = def.behaviorModel.kind === "resistor" ? def.behaviorModel.ohms : 220;
+  const bodyX = a.x + 7;
+  const bodyW = b.x - a.x - 14;
   return (
     <g>
-      <rect x={4} y={h / 2 - 1.2} width={w - 8} height={2.4} fill="url(#lab-metal)" />
-      <rect x={20} y={h / 2 - 7} width={w - 36} height={17} rx={8} fill="#000" opacity=".45" />
-      <rect x={18} y={h / 2 - 9} width={w - 36} height={17} rx={8} fill="#d9b98a" />
-      <rect x={22} y={h / 2 - 8} width={w - 44} height={4} rx={2} fill="#fff" opacity=".3" />
-      {bands.map((c, i) => (
-        <rect key={i} x={26 + i * 8.5} y={h / 2 - 9} width="4" height="17" fill={c} />
+      <rect x={a.x} y={y - 0.9} width={b.x - a.x} height={1.8} fill="url(#lab-metal)" />
+      <rect x={bodyX + 1.5} y={y - 4} width={bodyW} height={9} rx={4} fill="#000" opacity=".4" />
+      <rect x={bodyX} y={y - 5} width={bodyW} height={10} rx={4.5} fill="#d9b98a" />
+      <rect x={bodyX + 3} y={y - 4.5} width={bodyW - 6} height={2.4} rx={1.2} fill="#fff" opacity=".3" />
+      {bandColors(ohms).map((c, i) => (
+        <rect key={i} x={bodyX + 4 + i * (i === 3 ? 6.5 : 4.6)} y={y - 5} width="2.4" height="10" fill={c} />
       ))}
     </g>
   );
@@ -230,126 +335,132 @@ function Button({ def }: { def: ComponentDef }) {
   return (
     <g>
       {def.pins.map((p) => (
-        <rect key={p.id} x={p.x - 2} y={p.y - 2} width="4" height="4" fill="url(#lab-metal)" />
+        <rect key={p.id} x={p.x - 1.4} y={p.y - 1.4} width="2.8" height="2.8" fill="url(#lab-metal)" />
       ))}
-      <Slab x={10} y={10} w={w - 20} h={h - 20} d={4} top="url(#lab-black)" side="#000" r={3} />
-      <circle cx={w / 2} cy={h / 2} r={9} fill="#e11d48" stroke="#7f1d1d" />
-      <circle cx={w / 2 - 3} cy={h / 2 - 3} r={3} fill="#fff" opacity=".4" />
+      <Slab x={6} y={6} w={w - 12} h={h - 12} d={3} top="url(#lab-black)" side="#000" r={3} />
+      <circle cx={w / 2} cy={h / 2} r={10} fill="#1f2937" />
+      <circle cx={w / 2} cy={h / 2} r={8} fill="#e11d48" stroke="#7f1d1d" />
+      <circle cx={w / 2 - 2.5} cy={h / 2 - 2.5} r={2.6} fill="#fff" opacity=".4" />
     </g>
   );
 }
 
 function Pot({ def }: { def: ComponentDef }) {
-  const { width: w, height: h } = def;
+  const { width: w } = def;
+  const y = def.pins[0].y;
   return (
     <g>
       {def.pins.map((p) => (
-        <Lead key={p.id} x={p.x} y1={p.y} y2={16} />
+        <Lead key={p.id} x={p.x} y1={p.y} y2={y - 12} w={1.8} />
       ))}
-      <Slab x={6} y={14} w={w - 12} h={h - 18} d={4} top="url(#lab-pcb-blue)" side="#0c2450" r={4} />
-      <circle cx={w / 2 + 2} cy={h / 2 + 7} r={13} fill="#000" opacity=".5" />
-      <circle cx={w / 2} cy={h / 2 + 5} r={13} fill="url(#lab-metal)" stroke="#4b5563" />
-      <rect x={w / 2 - 1.5} y={h / 2 - 7} width="3" height="12" fill="#1f2937" />
+      <Slab x={2} y={4} w={w - 4} h={y - 14} d={3} top="url(#lab-pcb-blue)" side="#0c2450" r={3} />
+      <circle cx={w / 2 + 1.5} cy={(y - 10) / 2 + 3.5} r={13} fill="#000" opacity=".45" />
+      <circle cx={w / 2} cy={(y - 10) / 2 + 2} r={13} fill="url(#lab-metal)" stroke="#4b5563" />
+      <rect x={w / 2 - 1.4} y={(y - 10) / 2 - 9} width="2.8" height="12" fill="#1f2937" />
     </g>
   );
 }
 
 function Buzzer({ def }: { def: ComponentDef }) {
-  const { width: w, height: h } = def;
+  const { width: w } = def;
+  const y = def.pins[0].y;
+  const cy = y - 16;
   return (
     <g>
-      <circle cx={w / 2 + 3} cy={h / 2 + 3} r={14} fill="#000" opacity=".6" />
-      <circle cx={w / 2} cy={h / 2} r={14} fill="url(#lab-black)" stroke="#3f3f46" />
-      <circle cx={w / 2} cy={h / 2} r={3.5} fill="#0a0a0f" stroke="#52525b" />
-      <Label x={w / 2 + 8} y={h / 2 - 6} text="+" size={8} fill="#9ca3af" />
+      <circle cx={w / 2 + 2} cy={cy + 2} r={17} fill="#000" opacity=".55" />
+      <circle cx={w / 2} cy={cy} r={17} fill="url(#lab-black)" stroke="#3f3f46" />
+      <circle cx={w / 2} cy={cy} r={3} fill="#0a0a0f" stroke="#52525b" />
+      <Label x={def.pins[0].x + 4} y={y - 3} text="+" size={7} fill="#e5e7eb" />
     </g>
   );
 }
 
 function Servo({ def }: { def: ComponentDef }) {
   const { width: w } = def;
-  const wires: [number, string][] = [
-    [10, "#7a4a1f"],
-    [30, "#dc2626"],
-    [50, "#f97316"],
-  ];
+  const colors: Record<string, string> = { gnd: "#7a4a1f", vcc: "#dc2626", sig: "#f97316" };
+  const y = def.pins[0].y;
   return (
     <g>
-      {wires.map(([x, c]) => (
-        <path key={x} d={`M${x} 60 V50 Q${x} 44 ${x + 6} 44`} stroke={c} strokeWidth="2.6" fill="none" />
+      {def.pins.map((p) => (
+        <path key={p.id} d={`M${p.x} ${p.y} V${y - 8}`} stroke={colors[p.id] ?? "#999"} strokeWidth="2.2" fill="none" />
       ))}
-      <Slab x={4} y={12} w={w - 8} h={32} d={5} top="url(#lab-pcb-blue)" side="#0c2450" r={3} />
-      <Slab x={0} y={20} w={8} h={16} d={2} top="#1d4ed8" side="#0c2450" r={1} />
-      <Slab x={w - 8} y={20} w={8} h={16} d={2} top="#1d4ed8" side="#0c2450" r={1} />
-      <circle cx={48} cy={20} r={9} fill="url(#lab-dome-white)" stroke="#9ca3af" />
-      <rect x={30} y={17} width="18" height="6" rx={3} fill="#f3f4f6" stroke="#9ca3af" strokeWidth=".6" />
-      <Label x={22} y={37} text="SG90" size={7} fill="#dbeafe" />
+      <rect x={def.pins[0].x - 5} y={y - 4} width={def.pins[def.pins.length - 1].x - def.pins[0].x + 10} height={8} fill="url(#lab-black)" />
+      <Slab x={4} y={2} w={w - 8} h={30} d={4} top="url(#lab-pcb-blue)" side="#0c2450" r={3} />
+      <Slab x={-2} y={10} w={8} h={14} d={2} top="#1d4ed8" side="#0c2450" r={1} />
+      <Slab x={w - 6} y={10} w={8} h={14} d={2} top="#1d4ed8" side="#0c2450" r={1} />
+      <circle cx={58} cy={17} r={9} fill="url(#lab-dome-white)" stroke="#9ca3af" />
+      <rect x={40} y={14} width="18" height="6" rx={3} fill="#f3f4f6" stroke="#9ca3af" strokeWidth=".6" />
+      <Label x={24} y={21} text="SG90" size={7} fill="#dbeafe" />
     </g>
   );
 }
 
 function Dht22({ def }: { def: ComponentDef }) {
-  const { width: w, height: h } = def;
+  const { width: w } = def;
+  const y = def.pins[0].y;
   return (
     <g>
       {def.pins.map((p) => (
-        <Lead key={p.id} x={p.x} y1={p.y} y2={16} />
+        <Lead key={p.id} x={p.x} y1={p.y} y2={y - 10} w={1.6} />
       ))}
-      <Slab x={6} y={14} w={w - 12} h={h - 18} d={4} top="#f8fafc" side="#94a3b8" r={4} />
-      {Array.from({ length: 6 }, (_, i) => (
-        <rect key={i} x={16 + i * 9} y={19} width="4" height="14" rx={2} fill="#94a3b8" />
+      <Slab x={2} y={2} w={w - 4} h={y - 12} d={3} top="#f8fafc" side="#94a3b8" r={3} />
+      {Array.from({ length: 4 }, (_, i) => (
+        <rect key={i} x={9 + i * 9} y={8} width="4" height={y - 34} rx={2} fill="#94a3b8" />
       ))}
-      <Label x={w / 2} y={h - 7} text="DHT22" size={7} fill="#475569" />
+      <Label x={w / 2} y={y - 16} text="DHT22" size={6} fill="#475569" />
     </g>
   );
 }
 
 function HcSr04({ def }: { def: ComponentDef }) {
-  const { width: w, height: h } = def;
+  const { width: w } = def;
+  const y = def.pins[0].y;
   return (
     <g>
       {def.pins.map((p) => (
-        <Lead key={p.id} x={p.x} y1={p.y} y2={h - 18} />
+        <Lead key={p.id} x={p.x} y1={p.y} y2={y - 8} w={1.6} />
       ))}
-      <Slab x={2} y={2} w={w - 4} h={h - 20} d={4} top="url(#lab-pcb-blue)" side="#0c2450" r={3} />
-      {[24, 66].map((cx) => (
+      <Slab x={0} y={0} w={w} h={y - 8} d={3} top="url(#lab-pcb-blue)" side="#0c2450" r={2} />
+      {[20, w - 20].map((cx) => (
         <g key={cx}>
-          <circle cx={cx + 3} cy={23} r={14} fill="#000" opacity=".6" />
-          <circle cx={cx} cy={20} r={14} fill="url(#lab-metal)" stroke="#4b5563" />
-          <circle cx={cx} cy={20} r={9} fill="#374151" />
-          <circle cx={cx} cy={20} r={4} fill="#111827" />
+          <circle cx={cx + 2} cy={16} r={13} fill="#000" opacity=".55" />
+          <circle cx={cx} cy={14} r={13} fill="url(#lab-metal)" stroke="#4b5563" />
+          <circle cx={cx} cy={14} r={8.5} fill="#374151" />
+          <circle cx={cx} cy={14} r={3.5} fill="#111827" />
         </g>
       ))}
-      <Label x={w / 2} y={h - 22} text="HC-SR04" size={5} fill="#dbeafe" />
+      <Label x={w / 2} y={y - 12} text="HC-SR04" size={4.5} fill="#dbeafe" />
     </g>
   );
 }
 
 function Pir({ def }: { def: ComponentDef }) {
-  const { width: w, height: h } = def;
+  const { width: w } = def;
+  const y = def.pins[0].y;
   return (
     <g>
       {def.pins.map((p) => (
-        <Lead key={p.id} x={p.x} y1={p.y} y2={h - 18} />
+        <Lead key={p.id} x={p.x} y1={p.y} y2={y - 8} w={1.6} />
       ))}
-      <Slab x={2} y={4} w={w - 4} h={h - 22} d={4} top="url(#lab-pcb-green)" side="#0c3d20" r={3} />
-      <circle cx={w / 2 + 3} cy={22} r={17} fill="#000" opacity=".5" />
-      <circle cx={w / 2} cy={19} r={17} fill="url(#lab-dome-white)" stroke="#9ca3af" />
+      <Slab x={0} y={0} w={w} h={y - 8} d={3} top="url(#lab-pcb-green)" side="#0c3d20" r={2} />
+      <circle cx={w / 2 + 2} cy={(y - 8) / 2 + 2} r={17} fill="#000" opacity=".45" />
+      <circle cx={w / 2} cy={(y - 8) / 2} r={17} fill="url(#lab-dome-white)" stroke="#9ca3af" />
       {[-7, 0, 7].map((dx) => (
-        <path key={dx} d={`M${w / 2 + dx} 6 v26`} stroke="#cbd5e1" strokeWidth="1" />
+        <path key={dx} d={`M${w / 2 + dx} ${(y - 8) / 2 - 15} v30`} stroke="#cbd5e1" strokeWidth="1" />
       ))}
     </g>
   );
 }
 
 function Lcd({ def }: { def: ComponentDef }) {
-  const { width: w, height: h } = def;
+  const { width: w } = def;
+  const y = def.pins[0].y;
   return (
     <g>
       {def.pins.map((p) => (
-        <Lead key={p.id} x={p.x} y1={p.y} y2={h - 16} />
+        <Lead key={p.id} x={p.x} y1={p.y} y2={y - 8} w={1.6} />
       ))}
-      <Slab x={0} y={0} w={w} h={h - 16} d={5} top="url(#lab-pcb-green)" side="#0c3d20" r={3} />
+      <Slab x={0} y={0} w={w} h={y - 8} d={4} top="url(#lab-pcb-green)" side="#0c3d20" r={3} />
       <rect x={8} y={7} width={w - 16} height={40} fill="#0a0a0f" />
       <rect x={11} y={10} width={w - 22} height={34} fill="#1d5fa8" />
       {[0, 1].map((row) =>
@@ -357,22 +468,23 @@ function Lcd({ def }: { def: ComponentDef }) {
           <rect key={`${row}-${i}`} x={14 + i * 8.4} y={15 + row * 14} width="6" height="10" fill="#dbeafe" opacity=".25" />
         )),
       )}
-      <Label x={w - 10} y={h - 20} text="1602 I2C" size={6} fill="#bbf7d0" anchor="end" />
+      <Label x={w - 10} y={y - 12} text="1602 I2C" size={5} fill="#bbf7d0" anchor="end" />
     </g>
   );
 }
 
 function Oled({ def }: { def: ComponentDef }) {
   const { width: w, height: h } = def;
+  const y = def.pins[0].y;
   return (
     <g>
+      <Slab x={0} y={0} w={w} h={h} d={3} top="url(#lab-black)" side="#000" r={3} stroke="#3f3f46" />
+      <HeaderRow xs={def.pins.map((p) => p.x)} y={y} h={8} />
       {def.pins.map((p) => (
-        <Lead key={p.id} x={p.x} y1={p.y} y2={h - 16} />
+        <Label key={p.id} x={p.x} y={y + 10} text={p.label} size={3.6} fill="#94a3b8" />
       ))}
-      <Slab x={2} y={2} w={w - 4} h={h - 18} d={4} top="url(#lab-black)" side="#000" r={3} stroke="#3f3f46" />
-      <rect x={9} y={7} width={w - 18} height={26} fill="#020617" stroke="#334155" />
-      <path d="M13 26 l8 -10 l7 6 l9 -12 l9 8 l10 -6 l8 4" stroke="#38bdf8" strokeWidth="1.6" fill="none" />
-      <Label x={w / 2} y={h - 20} text="OLED 128×64" size={5} fill="#94a3b8" />
+      <rect x={7} y={y + 15} width={w - 14} height={h - y - 21} fill="#020617" stroke="#334155" />
+      <path d={`M12 ${h - 14} l8 -10 l7 6 l9 -12 l9 8 l10 -6 l8 4`} stroke="#38bdf8" strokeWidth="1.4" fill="none" />
     </g>
   );
 }
@@ -411,9 +523,9 @@ export function PartArt({ def, on = false }: { def: ComponentDef; on?: boolean }
   return <g filter="url(#lab-shadow)">{art}</g>;
 }
 
-/** Visual extent of a part drawing (some boards draw headers past def.height). */
+/** Visual extent of a part drawing. */
 export function artHeight(def: ComponentDef) {
-  return Math.max(def.height, ...def.pins.map((p) => p.y + 12));
+  return def.height;
 }
 
 /**

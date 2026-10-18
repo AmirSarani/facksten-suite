@@ -1,4 +1,11 @@
 import type { TemplateDef } from "../types";
+import { LAB_PROJECT_VERSION } from "../project/schema";
+
+/*
+ * Layout: Uno at (40,40); breadboard at (350,40). Breadboard holes are then at
+ * x = 380 + 10·(column − 1), rows a–e at y 100–140, f–j at 170–210 (see BB in registry.ts).
+ * Parts are positioned so their leads land in holes — they connect by being plugged in.
+ */
 
 const BLINK_CODE = `/*
   چشمک LED روی پایه ۱۳ (Blink)
@@ -102,21 +109,21 @@ export const LAB_TEMPLATES: TemplateDef[] = [
       { componentId: "breadboard", qty: 1 },
     ],
     project: {
-      version: 1,
+      version: LAB_PROJECT_VERSION,
       name: "چشمک LED",
       boardId: "arduino-uno",
       mode: "simple",
       code: BLINK_CODE,
+      // LED in c10 (cathode) / c11 (anode); 220Ω from e11 to e15; D13 → a15; GND → d10.
       parts: [
         { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
-        { instanceId: "bb1", componentId: "breadboard", x: 300, y: 40, rotation: 0 },
-        { instanceId: "r1", componentId: "resistor-220", x: 320, y: 220, rotation: 0 },
-        { instanceId: "led1", componentId: "led-red", x: 420, y: 210, rotation: 0 },
+        { instanceId: "bb1", componentId: "breadboard", x: 350, y: 40, rotation: 0 },
+        { instanceId: "led1", componentId: "led-red", x: 460, y: 100, rotation: 0 },
+        { instanceId: "r1", componentId: "resistor-220", x: 470, y: 130, rotation: 0 },
       ],
       wires: [
-        { id: "w1", from: { instanceId: "uno1", pinId: "d13" }, to: { instanceId: "r1", pinId: "a" }, color: "#3b82f6" },
-        { id: "w2", from: { instanceId: "r1", pinId: "b" }, to: { instanceId: "led1", pinId: "anode" }, color: "#3b82f6" },
-        { id: "w3", from: { instanceId: "led1", pinId: "cathode" }, to: { instanceId: "uno1", pinId: "gnd1" }, color: "#111111" },
+        { id: "w1", from: { instanceId: "uno1", pinId: "d13" }, to: { instanceId: "bb1", pinId: "a15" }, color: "#3b82f6" },
+        { id: "w2", from: { instanceId: "uno1", pinId: "gnd3" }, to: { instanceId: "bb1", pinId: "d10" }, color: "#111111" },
       ],
     },
   },
@@ -133,30 +140,30 @@ export const LAB_TEMPLATES: TemplateDef[] = [
       { componentId: "resistor-220", qty: 3 },
     ],
     project: {
-      version: 1,
+      version: LAB_PROJECT_VERSION,
       name: "چراغ راهنمایی",
       boardId: "arduino-uno",
       mode: "simple",
       code: TRAFFIC_CODE,
+      // Three copies of the Blink layout at columns 10, 20 and 30; GND through the top − rail.
       parts: [
         { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
-        { instanceId: "r1", componentId: "resistor-220", x: 300, y: 40, rotation: 0 },
-        { instanceId: "r2", componentId: "resistor-220", x: 300, y: 100, rotation: 0 },
-        { instanceId: "r3", componentId: "resistor-220", x: 300, y: 160, rotation: 0 },
-        { instanceId: "led1", componentId: "led-red", x: 400, y: 30, rotation: 0 },
-        { instanceId: "led2", componentId: "led-red", x: 400, y: 90, rotation: 0 },
-        { instanceId: "led3", componentId: "led-red", x: 400, y: 150, rotation: 0 },
+        { instanceId: "bb1", componentId: "breadboard", x: 350, y: 40, rotation: 0 },
+        { instanceId: "led1", componentId: "led-red", x: 460, y: 100, rotation: 0 },
+        { instanceId: "r1", componentId: "resistor-220", x: 470, y: 130, rotation: 0 },
+        { instanceId: "led2", componentId: "led-red", x: 560, y: 100, rotation: 0 },
+        { instanceId: "r2", componentId: "resistor-220", x: 570, y: 130, rotation: 0 },
+        { instanceId: "led3", componentId: "led-red", x: 660, y: 100, rotation: 0 },
+        { instanceId: "r3", componentId: "resistor-220", x: 670, y: 130, rotation: 0 },
       ],
       wires: [
-        { id: "w1", from: { instanceId: "uno1", pinId: "d11" }, to: { instanceId: "r1", pinId: "a" }, color: "#3b82f6" },
-        { id: "w2", from: { instanceId: "r1", pinId: "b" }, to: { instanceId: "led1", pinId: "anode" }, color: "#3b82f6" },
-        { id: "w3", from: { instanceId: "uno1", pinId: "d12" }, to: { instanceId: "r2", pinId: "a" }, color: "#22c55e" },
-        { id: "w4", from: { instanceId: "r2", pinId: "b" }, to: { instanceId: "led2", pinId: "anode" }, color: "#22c55e" },
-        { id: "w5", from: { instanceId: "uno1", pinId: "d13" }, to: { instanceId: "r3", pinId: "a" }, color: "#eab308" },
-        { id: "w6", from: { instanceId: "r3", pinId: "b" }, to: { instanceId: "led3", pinId: "anode" }, color: "#eab308" },
-        { id: "w7", from: { instanceId: "led1", pinId: "cathode" }, to: { instanceId: "uno1", pinId: "gnd1" }, color: "#111111" },
-        { id: "w8", from: { instanceId: "led2", pinId: "cathode" }, to: { instanceId: "uno1", pinId: "gnd1" }, color: "#111111" },
-        { id: "w9", from: { instanceId: "led3", pinId: "cathode" }, to: { instanceId: "uno1", pinId: "gnd1" }, color: "#111111" },
+        { id: "w1", from: { instanceId: "uno1", pinId: "d11" }, to: { instanceId: "bb1", pinId: "a15" }, color: "#3b82f6" },
+        { id: "w2", from: { instanceId: "uno1", pinId: "d12" }, to: { instanceId: "bb1", pinId: "a25" }, color: "#22c55e" },
+        { id: "w3", from: { instanceId: "uno1", pinId: "d13" }, to: { instanceId: "bb1", pinId: "a35" }, color: "#eab308" },
+        { id: "w4", from: { instanceId: "uno1", pinId: "gnd3" }, to: { instanceId: "bb1", pinId: "tn1" }, color: "#111111" },
+        { id: "w5", from: { instanceId: "bb1", pinId: "tn6" }, to: { instanceId: "bb1", pinId: "d10" }, color: "#111111" },
+        { id: "w6", from: { instanceId: "bb1", pinId: "tn15" }, to: { instanceId: "bb1", pinId: "d20" }, color: "#111111" },
+        { id: "w7", from: { instanceId: "bb1", pinId: "tn23" }, to: { instanceId: "bb1", pinId: "d30" }, color: "#111111" },
       ],
     },
   },
@@ -174,23 +181,24 @@ export const LAB_TEMPLATES: TemplateDef[] = [
       { componentId: "resistor-220", qty: 1 },
     ],
     project: {
-      version: 1,
+      version: LAB_PROJECT_VERSION,
       name: "دکمه و LED",
       boardId: "arduino-uno",
       mode: "simple",
       code: BUTTON_CODE,
+      // Blink LED at column 10; the button straddles the trench at columns 40 and 43.
       parts: [
         { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
-        { instanceId: "btn1", componentId: "button", x: 300, y: 40, rotation: 0 },
-        { instanceId: "r1", componentId: "resistor-220", x: 300, y: 120, rotation: 0 },
-        { instanceId: "led1", componentId: "led-red", x: 400, y: 110, rotation: 0 },
+        { instanceId: "bb1", componentId: "breadboard", x: 350, y: 40, rotation: 0 },
+        { instanceId: "led1", componentId: "led-red", x: 460, y: 100, rotation: 0 },
+        { instanceId: "r1", componentId: "resistor-220", x: 470, y: 130, rotation: 0 },
+        { instanceId: "btn1", componentId: "button", x: 760, y: 130, rotation: 0 },
       ],
       wires: [
-        { id: "w1", from: { instanceId: "uno1", pinId: "d2" }, to: { instanceId: "btn1", pinId: "a1" }, color: "#3b82f6" },
-        { id: "w2", from: { instanceId: "btn1", pinId: "b1" }, to: { instanceId: "uno1", pinId: "gnd1" }, color: "#111111" },
-        { id: "w3", from: { instanceId: "uno1", pinId: "d13" }, to: { instanceId: "r1", pinId: "a" }, color: "#3b82f6" },
-        { id: "w4", from: { instanceId: "r1", pinId: "b" }, to: { instanceId: "led1", pinId: "anode" }, color: "#3b82f6" },
-        { id: "w5", from: { instanceId: "led1", pinId: "cathode" }, to: { instanceId: "uno1", pinId: "gnd2" }, color: "#111111" },
+        { id: "w1", from: { instanceId: "uno1", pinId: "d13" }, to: { instanceId: "bb1", pinId: "a15" }, color: "#3b82f6" },
+        { id: "w2", from: { instanceId: "uno1", pinId: "gnd3" }, to: { instanceId: "bb1", pinId: "d10" }, color: "#111111" },
+        { id: "w3", from: { instanceId: "uno1", pinId: "d2" }, to: { instanceId: "bb1", pinId: "a40" }, color: "#22c55e" },
+        { id: "w4", from: { instanceId: "uno1", pinId: "gnd1" }, to: { instanceId: "bb1", pinId: "j43" }, color: "#111111" },
       ],
     },
   },
@@ -205,14 +213,14 @@ export const LAB_TEMPLATES: TemplateDef[] = [
       { componentId: "servo-sg90", qty: 1 },
     ],
     project: {
-      version: 1,
+      version: LAB_PROJECT_VERSION,
       name: "جاروب سروو",
       boardId: "arduino-uno",
       mode: "pro",
       code: SERVO_CODE,
       parts: [
         { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
-        { instanceId: "srv1", componentId: "servo-sg90", x: 320, y: 80, rotation: 0 },
+        { instanceId: "srv1", componentId: "servo-sg90", x: 380, y: 120, rotation: 0 },
       ],
       wires: [
         { id: "w1", from: { instanceId: "uno1", pinId: "d9" }, to: { instanceId: "srv1", pinId: "sig" }, color: "#eab308" },
@@ -232,14 +240,14 @@ export const LAB_TEMPLATES: TemplateDef[] = [
       { componentId: "hc-sr04", qty: 1 },
     ],
     project: {
-      version: 1,
+      version: LAB_PROJECT_VERSION,
       name: "فاصله‌سنج",
       boardId: "arduino-uno",
       mode: "pro",
       code: HCSR04_CODE,
       parts: [
         { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
-        { instanceId: "us1", componentId: "hc-sr04", x: 320, y: 60, rotation: 0 },
+        { instanceId: "us1", componentId: "hc-sr04", x: 380, y: 100, rotation: 0 },
       ],
       wires: [
         { id: "w1", from: { instanceId: "uno1", pinId: "5v" }, to: { instanceId: "us1", pinId: "vcc" }, color: "#e11d48" },
@@ -259,7 +267,7 @@ export function templateToProject(t: TemplateDef) {
   const now = new Date().toISOString();
   return {
     ...t.project,
-    version: 1 as const,
+    version: LAB_PROJECT_VERSION,
     id: typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `t-${t.id}-${Date.now()}`,
     createdAt: now,
     updatedAt: now,

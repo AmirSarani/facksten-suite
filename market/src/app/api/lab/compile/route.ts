@@ -95,14 +95,8 @@ export async function POST(req: Request) {
       if (!/#\s*include\s*[<"]Arduino\.h[>"]/.test(sketch)) {
         sketch = `#include <Arduino.h>\n${sketch}`;
       }
-      sketch += `\n\nint main(void) {\n  init();\n  setup();\n  for(;;) { loop(); }\n  return 0;\n}\n`;
-      // Provide empty init if not present
-      if (!/\bvoid\s+init\s*\(/.test(sketch)) {
-        sketch = sketch.replace(
-          "#include <Arduino.h>",
-          `#include <Arduino.h>\nstatic void init(void) { sei(); }\n`,
-        );
-      }
+      // __lab_init() (scripts/lab-shim/Arduino.h) sets up timers, PWM and the ADC like the real core
+      sketch += `\n\nint main(void) {\n  __lab_init();\n  setup();\n  for(;;) { loop(); }\n  return 0;\n}\n`;
     }
 
     const srcPath = join(dir, "sketch.cpp");

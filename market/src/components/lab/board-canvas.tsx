@@ -7,7 +7,7 @@ import { joinShortsSupply, netAt, netSignal, pinKey, pluggedInto, type Netlist }
 import { isSocket } from "@/lab/registry";
 import { fitView, partBox, pinPosition, snap, unionBox } from "@/lab/geometry";
 import { intersects, nearest, orthoBends, rectFrom, segmentMids, simplify, wirePath, type Pt } from "@/lab/wiring/route";
-import { PartArt } from "@/lab/visuals/part-art";
+import { PartArt, type PartVisual } from "@/lab/visuals/part-art";
 import { newId } from "@/lab/ids";
 import { Icon } from "@/components/icon";
 
@@ -27,7 +27,14 @@ type Props = {
   /** Selected part and wire ids. */
   selection: string[];
   simpleMode: boolean;
-  litLeds: Set<string>;
+  /** Live part state while the board is powered (LED level, servo angle…). */
+  visuals: Map<string, PartVisual>;
+  /** Simulation running: buttons press and potentiometers turn instead of dragging. */
+  interactive: boolean;
+  onPress: (instanceId: string, down: boolean) => void;
+  /** Potentiometer position 0–1. */
+  onPot: (instanceId: string, value: number) => void;
+  potValue: (instanceId: string) => number;
   highlight: { partIds: string[]; wireIds: string[] } | null;
   emptyState?: ReactNode;
   onSelect: (ids: string[]) => void;
@@ -68,7 +75,9 @@ type Gesture =
     }
   | { kind: "pin"; sx: number; sy: number; vx: number; vy: number; moved: boolean; continuing: boolean }
   | { kind: "bend"; wireId: string; index: number; sx: number; sy: number; moved: boolean; inserted: boolean }
-  | { kind: "end"; wireId: string; side: "from" | "to"; sx: number; sy: number; moved: boolean };
+  | { kind: "end"; wireId: string; side: "from" | "to"; sx: number; sy: number; moved: boolean }
+  | { kind: "press"; id: string; sx: number; sy: number; moved: boolean }
+  | { kind: "knob"; id: string; sx: number; sy: number; moved: boolean; start: number };
 
 const MIN_Z = 0.3;
 const MAX_Z = 3;
@@ -97,8 +106,8 @@ const sameEnd = (a: End, b: End) => a.instanceId === b.instanceId && a.pinId ===
 
 export function BoardCanvas(props: Props) {
   const {
-    apiRef, project, components, netlist, selection, simpleMode, litLeds, highlight, emptyState,
-    onSelect, onEditStart, onMoveParts, onAddWire, onPatchWire, onDropPart, onDeleteSelected, onRotateSelected, onWireBlocked,
+    apiRef, project, components, netlist, selection, simpleMode, visuals, interactive, highlight, emptyState,
+    onPress, onPot, potValue, onSelect, onEditStart, onMoveParts, onAddWire, onPatchWire, onDropPart, onDeleteSelected, onRotateSelected, onWireBlocked,
   } = props;
 
   const defs = useMemo(() => new Map(components.map((c) => [c.id, c])), [components]);
@@ -415,6 +424,16 @@ export function BoardCanvas(props: Props) {
       const part = partById(hit.id);
       if (!part) return;
       const partDef = defs.get(part.componentId);
+      // while running, controls are operated rather than moved (Alt+drag still moves them)
+      if (interactive && !e.altKey && partDef?.behaviorModel.kind === "button") {
+        onPress(part.instanceId, true);
+        gesture.current = { kind: "press", id: part.instanceId, ...base };
+        return;
+      }
+      if (interactive && !e.altKey && partDef?.behaviorModel.kind === "potentiometer") {
+        gesture.current = { kind: "knob", id: part.instanceId, ...base, start: potValue(part.instanceId) };
+        return;
+      }
       // Shift+drag on a breadboard boxes the parts sitting on it; Shift+click still toggles it
       if (e.shiftKey && partDef && isSocket(partDef)) {
         gesture.current = { kind: "marquee", ...base, start: loc, additive: selection, clickToggles: part.instanceId };
@@ -507,6 +526,11 @@ export function BoardCanvas(props: Props) {
         break;
       }
       case "end":
+      case "press":
+        break;
+      case "knob":
+        // drag up to turn clockwise; 150 px for the full sweep
+        onPot(g.id, Math.max(0, Math.min(1, g.start + (g.sy - e.clientY) / 150)));
         break;
     }
   }
@@ -600,7 +624,11 @@ export function BoardCanvas(props: Props) {
         onPatchWire(wire.id, { [g.side]: target.end, points });
         break;
       }
+      case "press":
+        onPress(g.id, false);
+        break;
       case "drag":
+      case "knob":
         break;
     }
   }
@@ -674,9 +702,15 @@ export function BoardCanvas(props: Props) {
             data-kind="part"
             data-id={part.instanceId}
             transform={`translate(${part.x} ${part.y}) rotate(${part.rotation ?? 0} ${def.width / 2} ${def.height / 2})`}
-            className="cursor-grab active:cursor-grabbing"
+            className={
+              interactive && def.behaviorModel.kind === "button"
+                ? "cursor-pointer"
+                : interactive && def.behaviorModel.kind === "potentiometer"
+                  ? "cursor-ns-resize"
+                  : "cursor-grab active:cursor-grabbing"
+            }
           >
-            <PartArt def={def} on={litLeds.has(part.instanceId)} />
+            <PartArt def={def} state={visuals.get(part.instanceId)} />
           </g>
         </g>
       );
@@ -787,7 +821,9 @@ export function BoardCanvas(props: Props) {
   const anySelectedPart = selection.some((id) => partById(id));
   const hint = !project.parts.length
     ? null
-    : draft
+    : interactive && !draft
+      ? "شبیه‌سازی روشن است · روی دکمه نگه دارید تا فشرده بماند · ولوم را بالا/پایین بکشید · Alt+کشیدن = جابه‌جایی"
+      : draft
       ? draft.dragged
         ? "روی پین مقصد رها کنید · آهنربا به نزدیک‌ترین پین می‌چسبد"
         : "روی پین مقصد بزنید · کلیک روی فضای خالی = نقطه‌ی خم · Shift = خط آزاد · Backspace = حذف خم · Esc لغو"

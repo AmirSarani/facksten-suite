@@ -1,25 +1,22 @@
 "use client";
 
-import type { SimPinState } from "../types";
 import type {
   EngineStatus,
   SerialByte,
+  SimFrame,
+  SimInputs,
   SimulationEngine,
   WorkerInMessage,
   WorkerOutMessage,
 } from "./types";
 
-/**
- * Main-thread wrapper around the avr8js Web Worker.
- * Blink on pin 13 drives LED state via onPinChange.
- */
+/** Main-thread wrapper around the avr8js Web Worker (see avr8-worker.ts). */
 export class Avr8Engine implements SimulationEngine {
   private worker: Worker | null = null;
   private status: EngineStatus = "idle";
-  private pinListeners = new Set<(s: SimPinState) => void>();
+  private frameListeners = new Set<(f: SimFrame) => void>();
   private serialListeners = new Set<(d: SerialByte) => void>();
   private statusListeners = new Set<(s: EngineStatus, d?: string) => void>();
-  private boardInstanceId = "board-0";
 
   private ensureWorker() {
     if (this.worker) return;
@@ -33,15 +30,8 @@ export class Avr8Engine implements SimulationEngine {
           this.status = msg.status;
           this.statusListeners.forEach((cb) => cb(msg.status, msg.detail));
           break;
-        case "pin":
-          this.pinListeners.forEach((cb) =>
-            cb({
-              instanceId: this.boardInstanceId,
-              pinId: `d${msg.pin}`,
-              value: msg.value,
-              kind: "digital",
-            }),
-          );
+        case "frame":
+          this.frameListeners.forEach((cb) => cb(msg.frame));
           break;
         case "serial":
           this.serialListeners.forEach((cb) => cb({ byte: msg.byte, ts: Date.now() }));
@@ -63,10 +53,6 @@ export class Avr8Engine implements SimulationEngine {
   private send(msg: WorkerInMessage) {
     this.ensureWorker();
     this.worker!.postMessage(msg);
-  }
-
-  setBoardInstanceId(id: string) {
-    this.boardInstanceId = id;
   }
 
   async load(hex: string): Promise<void> {
@@ -93,9 +79,17 @@ export class Avr8Engine implements SimulationEngine {
     this.send({ type: "setSpeed", multiplier });
   }
 
-  onPinChange(cb: (state: SimPinState) => void): () => void {
-    this.pinListeners.add(cb);
-    return () => this.pinListeners.delete(cb);
+  setInputs(inputs: SimInputs): void {
+    this.send({ type: "inputs", inputs });
+  }
+
+  sendSerial(text: string): void {
+    this.send({ type: "serialIn", bytes: [...new TextEncoder().encode(text)] });
+  }
+
+  onFrame(cb: (frame: SimFrame) => void): () => void {
+    this.frameListeners.add(cb);
+    return () => this.frameListeners.delete(cb);
   }
 
   onSerial(cb: (data: SerialByte) => void): () => void {

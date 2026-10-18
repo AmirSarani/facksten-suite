@@ -55,8 +55,7 @@ void loop() {
 }
 `;
 
-const SERVO_CODE = `// سروو روی D9 — نیاز به کتابخانه Servo در سخت‌افزار واقعی
-// در MVP فرم‌ویر پالس تقریبی کامپایل می‌شود
+const SERVO_CODE = `// سروو روی D9 — کتابخانه‌ی Servo پالس واقعی ۵۴۴ تا ۲۴۰۰ میکروثانیه می‌سازد
 #include <Servo.h>
 Servo s;
 void setup() {
@@ -91,6 +90,69 @@ void loop() {
   Serial.print("Distance cm: ");
   Serial.println(distance);
   delay(500);
+}
+`;
+
+const FADE_CODE = `// محو شدن نرم LED با PWM روی D9 (analogWrite)
+void setup() {
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  for (int v = 0; v <= 255; v += 5) {
+    analogWrite(9, v);
+    delay(20);
+  }
+  for (int v = 255; v >= 0; v -= 5) {
+    analogWrite(9, v);
+    delay(20);
+  }
+}
+`;
+
+const DIMMER_CODE = `// ولوم روی A0 نور LED روی D9 را تنظیم می‌کند
+// در حین اجرا ولوم را روی میز کار بالا/پایین بکشید
+void setup() {
+  Serial.begin(9600);
+  pinMode(9, OUTPUT);
+}
+
+void loop() {
+  int raw = analogRead(A0);          // 0..1023
+  analogWrite(9, raw / 4);           // 0..255
+  Serial.print("A0 = ");
+  Serial.println(raw);
+  delay(100);
+}
+`;
+
+const MELODY_CODE = `// ملودی با tone() روی بازر D8
+int notes[] = {262, 294, 330, 349, 392, 440, 494, 523};
+
+void setup() {}
+
+void loop() {
+  for (int i = 0; i < 8; i++) {
+    tone(8, notes[i], 200);
+    delay(250);
+  }
+  noTone(8);
+  delay(1000);
+}
+`;
+
+const ECHO_CODE = `// هر چه در Serial Monitor بفرستید، برمی‌گردد
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Send me something:");
+}
+
+void loop() {
+  if (Serial.available()) {
+    char c = Serial.read();
+    Serial.print("got: ");
+    Serial.println(c);
+  }
 }
 `;
 
@@ -205,7 +267,7 @@ export const LAB_TEMPLATES: TemplateDef[] = [
   {
     id: "servo-sweep",
     name: "جاروب سروو",
-    description: "سروو SG90 روی D9 — کد Arduino Servo؛ کامپایل کامل Servo در محدودیت‌ها مستند شده",
+    description: "سروو SG90 روی D9 — بوق سروو روی میز کار با پالس واقعی می‌چرخد",
     difficulty: "medium",
     tags: ["servo", "pwm"],
     bom: [
@@ -255,6 +317,119 @@ export const LAB_TEMPLATES: TemplateDef[] = [
         { id: "w3", from: { instanceId: "uno1", pinId: "d9" }, to: { instanceId: "us1", pinId: "trig" }, color: "#3b82f6" },
         { id: "w4", from: { instanceId: "uno1", pinId: "d10" }, to: { instanceId: "us1", pinId: "echo" }, color: "#22c55e" },
       ],
+    },
+  },
+  {
+    id: "fade-pwm",
+    name: "محو شدن LED (PWM)",
+    description: "analogWrite روی D9 — روشنایی LED نرم بالا و پایین می‌رود",
+    difficulty: "easy",
+    tags: ["led", "pwm"],
+    bom: [
+      { componentId: "arduino-uno", qty: 1 },
+      { componentId: "led-red", qty: 1 },
+      { componentId: "resistor-220", qty: 1 },
+      { componentId: "breadboard", qty: 1 },
+    ],
+    project: {
+      version: LAB_PROJECT_VERSION,
+      name: "محو شدن LED",
+      boardId: "arduino-uno",
+      mode: "simple",
+      code: FADE_CODE,
+      // Blink layout, fed from the PWM pin D9
+      parts: [
+        { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
+        { instanceId: "bb1", componentId: "breadboard", x: 350, y: 40, rotation: 0 },
+        { instanceId: "led1", componentId: "led-red", x: 460, y: 100, rotation: 0 },
+        { instanceId: "r1", componentId: "resistor-220", x: 470, y: 130, rotation: 0 },
+      ],
+      wires: [
+        { id: "w1", from: { instanceId: "uno1", pinId: "d9" }, to: { instanceId: "bb1", pinId: "a15" }, color: "#f97316" },
+        { id: "w2", from: { instanceId: "uno1", pinId: "gnd3" }, to: { instanceId: "bb1", pinId: "d10" }, color: "#111111" },
+      ],
+    },
+  },
+  {
+    id: "pot-dimmer",
+    name: "دیمر با ولوم",
+    description: "analogRead از ولوم روی A0 و analogWrite روی LED — ولوم را حین اجرا بچرخانید",
+    difficulty: "easy",
+    tags: ["analog", "pwm", "potentiometer"],
+    bom: [
+      { componentId: "arduino-uno", qty: 1 },
+      { componentId: "potentiometer", qty: 1 },
+      { componentId: "led-red", qty: 1 },
+      { componentId: "resistor-220", qty: 1 },
+      { componentId: "breadboard", qty: 1 },
+    ],
+    project: {
+      version: LAB_PROJECT_VERSION,
+      name: "دیمر با ولوم",
+      boardId: "arduino-uno",
+      mode: "simple",
+      code: DIMMER_CODE,
+      // LED as in Blink (on D9); potentiometer legs in j50/j51/j52
+      parts: [
+        { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
+        { instanceId: "bb1", componentId: "breadboard", x: 350, y: 40, rotation: 0 },
+        { instanceId: "led1", componentId: "led-red", x: 460, y: 100, rotation: 0 },
+        { instanceId: "r1", componentId: "resistor-220", x: 470, y: 130, rotation: 0 },
+        { instanceId: "pot1", componentId: "potentiometer", x: 860, y: 160, rotation: 0 },
+      ],
+      wires: [
+        { id: "w1", from: { instanceId: "uno1", pinId: "d9" }, to: { instanceId: "bb1", pinId: "a15" }, color: "#f97316" },
+        { id: "w2", from: { instanceId: "uno1", pinId: "gnd3" }, to: { instanceId: "bb1", pinId: "d10" }, color: "#111111" },
+        { id: "w3", from: { instanceId: "uno1", pinId: "5v" }, to: { instanceId: "bb1", pinId: "f50" }, color: "#e11d48" },
+        { id: "w4", from: { instanceId: "uno1", pinId: "a0" }, to: { instanceId: "bb1", pinId: "f51" }, color: "#22c55e" },
+        { id: "w5", from: { instanceId: "uno1", pinId: "gnd2" }, to: { instanceId: "bb1", pinId: "f52" }, color: "#111111" },
+      ],
+    },
+  },
+  {
+    id: "buzzer-melody",
+    name: "ملودی با بازر",
+    description: "tone() روی D8 — صدای واقعی از بلندگوی کامپیوتر پخش می‌شود",
+    difficulty: "easy",
+    tags: ["buzzer", "tone", "sound"],
+    bom: [
+      { componentId: "arduino-uno", qty: 1 },
+      { componentId: "buzzer", qty: 1 },
+      { componentId: "breadboard", qty: 1 },
+    ],
+    project: {
+      version: LAB_PROJECT_VERSION,
+      name: "ملودی با بازر",
+      boardId: "arduino-uno",
+      mode: "simple",
+      code: MELODY_CODE,
+      // buzzer legs in e20 (+) and e23 (−)
+      parts: [
+        { instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 },
+        { instanceId: "bb1", componentId: "breadboard", x: 350, y: 40, rotation: 0 },
+        { instanceId: "bz1", componentId: "buzzer", x: 560, y: 100, rotation: 0 },
+      ],
+      wires: [
+        { id: "w1", from: { instanceId: "uno1", pinId: "d8" }, to: { instanceId: "bb1", pinId: "a20" }, color: "#3b82f6" },
+        { id: "w2", from: { instanceId: "uno1", pinId: "gnd3" }, to: { instanceId: "bb1", pinId: "a23" }, color: "#111111" },
+      ],
+    },
+  },
+  {
+    id: "serial-echo",
+    name: "پژواک سریال",
+    description: "Serial.read — هر چه در Serial Monitor بفرستید، برد پاسخ می‌دهد",
+    difficulty: "easy",
+    tags: ["serial"],
+    bom: [{ componentId: "arduino-uno", qty: 1 }],
+    project: {
+      version: LAB_PROJECT_VERSION,
+      name: "پژواک سریال",
+      boardId: "arduino-uno",
+      mode: "simple",
+      code: ECHO_CODE,
+      parts: [{ instanceId: "uno1", componentId: "arduino-uno", x: 40, y: 40, rotation: 0 }],
+      wires: [],
     },
   },
 ];

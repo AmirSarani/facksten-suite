@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -243,7 +244,7 @@ export function ArticleEditorForm({
       dateLabel: dateLabel || undefined,
     };
 
-    const res = await fetch("/api/admin/articles", {
+    const res = await fetch(withBasePath("/api/admin/articles"), {
       method: mode === "create" ? "POST" : "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),

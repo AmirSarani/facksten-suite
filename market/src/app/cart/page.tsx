@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/icon";
@@ -28,7 +29,7 @@ export default function CartPage() {
 
   async function load() {
     setLoading(true);
-    const res = await fetch("/api/cart");
+    const res = await fetch(withBasePath("/api/cart"));
     if (res.ok) {
       const data = await res.json();
       setItems(data.items ?? []);
@@ -44,7 +45,7 @@ export default function CartPage() {
   }, []);
 
   async function setQty(productId: string, qty: number) {
-    await fetch("/api/cart", {
+    await fetch(withBasePath("/api/cart"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ productId, qty }),

@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import {
   createContext,
   useCallback,
@@ -23,7 +24,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch("/api/cart");
+      const res = await fetch(withBasePath("/api/cart"));
       if (!res.ok) {
         setCount(0);
         return;
@@ -42,7 +43,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addProductId = useCallback(
     async (productId: string, qty = 1) => {
-      const res = await fetch("/api/cart", {
+      const res = await fetch(withBasePath("/api/cart"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId, qty }),

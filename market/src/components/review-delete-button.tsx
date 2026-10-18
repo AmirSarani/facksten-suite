@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,7 +11,7 @@ export function ReviewDeleteButton({ id }: { id: string }) {
   async function onDelete() {
     if (!confirm("این نظر حذف شود؟")) return;
     setLoading(true);
-    await fetch("/api/admin/reviews", {
+    await fetch(withBasePath("/api/admin/reviews"), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),

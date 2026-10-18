@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,7 +22,7 @@ export default function ShippingPage() {
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/cart");
+      const res = await fetch(withBasePath("/api/cart"));
       if (res.ok) {
         const data = await res.json();
         setItems(data.items ?? []);

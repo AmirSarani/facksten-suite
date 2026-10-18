@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ROLE_FA } from "@/lib/panel";
@@ -32,7 +33,7 @@ export function RoleSelect({ userId, role }: { userId: string; role: string }) {
         const prev = value;
         setValue(next);
         setBusy(true);
-        const res = await fetch("/api/admin/users/role", {
+        const res = await fetch(withBasePath("/api/admin/users/role"), {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, role: next }),

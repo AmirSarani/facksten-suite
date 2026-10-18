@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { AdminShell } from "@/components/admin-shell";
 import { Icon } from "@/components/icon";
@@ -209,7 +210,7 @@ export default async function AdminArticlesPage({ searchParams }: Props) {
 
         <form
           method="get"
-          action="/admin/articles"
+          action={withBasePath("/admin/articles")}
           className="mb-4 flex flex-wrap items-center gap-2 cyber-chamfer border border-outline bg-surface-container-lowest p-3"
         >
           {category ? <input type="hidden" name="category" value={category} /> : null}

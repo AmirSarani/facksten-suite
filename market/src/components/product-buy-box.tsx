@@ -1,8 +1,9 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "@/components/cart-provider";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
@@ -27,6 +28,7 @@ export function ProductBuyBox({
   const [qty, setQty] = useState(1);
   const { addProductId } = useCart();
   const router = useRouter();
+  const pathname = usePathname();
 
   const discountPercent =
     compareAtPrice && compareAtPrice > price
@@ -48,13 +50,13 @@ export function ProductBuyBox({
   }
 
   async function addWishlist() {
-    const res = await fetch("/api/wishlist", {
+    const res = await fetch(withBasePath("/api/wishlist"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ productId }),
     });
     if (res.status === 401) {
-      router.push(`/login?next=${encodeURIComponent(window.location.pathname)}`);
+      router.push(`/login?next=${encodeURIComponent(pathname)}`);
       return;
     }
     if (!res.ok) alert("خطا در افزودن به علاقه‌مندی");

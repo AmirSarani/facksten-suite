@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -30,7 +31,7 @@ export function PartnerSettingsForm({ user }: { user: PartnerUser }) {
     setSavingProfile(true);
     setProfileMsg(null);
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/account/profile", {
+    const res = await fetch(withBasePath("/api/account/profile"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -48,7 +49,7 @@ export function PartnerSettingsForm({ user }: { user: PartnerUser }) {
     setSavingNotify(true);
     setNotifyMsg(null);
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/account/profile", {
+    const res = await fetch(withBasePath("/api/account/profile"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -79,7 +80,7 @@ export function PartnerSettingsForm({ user }: { user: PartnerUser }) {
       return;
     }
     setSavingPass(true);
-    const res = await fetch("/api/account/password", {
+    const res = await fetch(withBasePath("/api/account/password"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ current: fd.get("current"), next }),

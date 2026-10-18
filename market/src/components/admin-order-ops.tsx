@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ORDER_STATUS_FA } from "@/lib/panel";
@@ -24,7 +25,7 @@ export function AdminOrderOps({
   async function save(body: Record<string, unknown>) {
     setSaving(true);
     setMsg("");
-    const res = await fetch("/api/admin/orders/status", {
+    const res = await fetch(withBasePath("/api/admin/orders/status"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ orderId, ...body }),

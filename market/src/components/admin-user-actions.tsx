@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -23,7 +24,7 @@ export function AdminUserActions({
     setBusy(true);
     setMsg("");
     setErr("");
-    const res = await fetch("/api/admin/users", {
+    const res = await fetch(withBasePath("/api/admin/users"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: userId, ...body }),

@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +14,7 @@ export function OrderReviewForm({ productId, productTitle }: { productId: string
     setLoading(true);
     setMsg("");
     const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/reviews", {
+    const res = await fetch(withBasePath("/api/reviews"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

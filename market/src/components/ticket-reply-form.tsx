@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Icon } from "@/components/icon";
@@ -11,7 +12,7 @@ export function TicketReplyForm({ ticketId }: { ticketId: string }) {
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const res = await fetch(`/api/tickets/${ticketId}/reply`, {
+    const res = await fetch(withBasePath(`/api/tickets/${ticketId}/reply`), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ body: fd.get("body") }),

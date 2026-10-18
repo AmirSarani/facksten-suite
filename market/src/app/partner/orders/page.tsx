@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { PartnerShell } from "@/components/partner-shell";
 import { Icon } from "@/components/icon";
@@ -266,7 +267,7 @@ export default async function PartnerOrdersPage({ searchParams }: Props) {
 
         <form
           method="get"
-          action="/partner/orders"
+          action={withBasePath("/partner/orders")}
           className="mb-4 flex flex-wrap items-center gap-2 cyber-chamfer border border-outline bg-surface-container-lowest p-3"
         >
           {status ? <input type="hidden" name="status" value={status} /> : null}

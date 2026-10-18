@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { AccountShell } from "@/components/account-shell";
 import { Icon } from "@/components/icon";
@@ -226,7 +227,7 @@ export default async function TicketsPage({ searchParams }: Props) {
 
         <form
           method="get"
-          action="/account/tickets"
+          action={withBasePath("/account/tickets")}
           className="mb-4 flex flex-wrap items-center gap-2 cyber-chamfer border border-outline bg-surface-container-lowest p-3"
         >
           {statusFilter ? <input type="hidden" name="status" value={statusFilter} /> : null}

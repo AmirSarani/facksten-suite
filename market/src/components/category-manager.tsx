@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -129,7 +130,7 @@ export function CategoryManager({ categories }: { categories: AdminCategoryRow[]
       parentId: String(fd.get("parentId") ?? "") || null,
       isPassive: fd.get("isPassive") === "on",
     };
-    const res = await fetch("/api/admin/categories", {
+    const res = await fetch(withBasePath("/api/admin/categories"), {
       method: editing ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -147,7 +148,7 @@ export function CategoryManager({ categories }: { categories: AdminCategoryRow[]
   async function remove(id: string) {
     if (!confirm("این دسته حذف شود؟ محصولات آن بدون دسته می‌مانند.")) return;
     setBusyId(id);
-    const res = await fetch("/api/admin/categories", {
+    const res = await fetch(withBasePath("/api/admin/categories"), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
@@ -168,7 +169,7 @@ export function CategoryManager({ categories }: { categories: AdminCategoryRow[]
     const orderedIds = siblings.map((c) => c.id);
     [orderedIds[idx], orderedIds[idx + dir]] = [orderedIds[idx + dir], orderedIds[idx]];
     setBusyId(id);
-    await fetch("/api/admin/categories", {
+    await fetch(withBasePath("/api/admin/categories"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "reorder", orderedIds }),
@@ -179,7 +180,7 @@ export function CategoryManager({ categories }: { categories: AdminCategoryRow[]
 
   async function togglePassive(c: AdminCategoryRow) {
     setBusyId(c.id);
-    const res = await fetch("/api/admin/categories", {
+    const res = await fetch(withBasePath("/api/admin/categories"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,7 +11,7 @@ export function ArticleDeleteButton({ articleId }: { articleId: string }) {
   async function onDelete() {
     if (!confirm("مقاله حذف شود؟")) return;
     setLoading(true);
-    const res = await fetch("/api/admin/articles", {
+    const res = await fetch(withBasePath("/api/admin/articles"), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: articleId }),

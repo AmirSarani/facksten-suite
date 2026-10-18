@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { ORDER_STATUS_FA } from "@/lib/panel";
 
@@ -12,7 +13,7 @@ export function OrderStatusSelect({ orderId, status }: { orderId: string; status
       defaultValue={status}
       className="cyber-chamfer-sm border border-outline bg-surface-container-lowest px-2 py-1.5 font-mono text-sm"
       onChange={async (e) => {
-        await fetch("/api/admin/orders/status", {
+        await fetch(withBasePath("/api/admin/orders/status"), {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ orderId, status: e.target.value }),

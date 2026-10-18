@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { AdminShell } from "@/components/admin-shell";
 import { AdminCreateUserForm } from "@/components/admin-create-user-form";
@@ -294,7 +295,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
 
         <form
           method="get"
-          action="/admin/users"
+          action={withBasePath("/admin/users")}
           className="mb-4 flex flex-wrap items-center gap-2 cyber-chamfer border border-outline bg-surface-container-lowest p-3"
         >
           {status ? <input type="hidden" name="status" value={status} /> : null}

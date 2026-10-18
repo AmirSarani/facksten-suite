@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -28,7 +29,7 @@ export function NewTicketForm({ compact = false, orders = [], defaultOpen = fals
     const form = e.currentTarget;
     const fd = new FormData(form);
     const orderId = String(fd.get("orderId") || "").trim() || null;
-    const res = await fetch("/api/tickets", {
+    const res = await fetch(withBasePath("/api/tickets"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

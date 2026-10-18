@@ -25,7 +25,7 @@ export class ApiError extends Error {
 }
 
 export function getApiBase(): string {
-  const raw = import.meta.env.VITE_API_BASE ?? "http://localhost:3020";
+  const raw = import.meta.env.VITE_API_BASE ?? "http://localhost:3020/portfolio";
   return raw.replace(/\/$/, "");
 }
 

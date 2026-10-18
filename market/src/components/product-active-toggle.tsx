@@ -1,5 +1,6 @@
 "use client";
 
+import { withBasePath } from "@/lab/base-path";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -9,7 +10,7 @@ export function ProductActiveToggle({ productId, active }: { productId: string; 
 
   async function toggle() {
     setLoading(true);
-    await fetch("/api/admin/products", {
+    await fetch(withBasePath("/api/admin/products"), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: productId, active: !active }),

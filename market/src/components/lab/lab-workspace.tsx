@@ -19,7 +19,11 @@ import {
 import { buildBom, addBomToCart } from "@/lab/bom";
 import { createSimulationEngine } from "@/lab/engine/avr8-engine";
 import { normRotation, snap } from "@/lab/geometry";
-import { buildNetlist, litLeds as computeLitLeds } from "@/lab/netlist";
+import { buildNetlist } from "@/lab/netlist";
+import { partStates, resolveInputs } from "@/lab/circuit";
+import { BuzzerAudio } from "@/lab/engine/buzzer-audio";
+import type { SimFrame } from "@/lab/engine/types";
+import type { PartVisual } from "@/lab/visuals/part-art";
 import { newId } from "@/lab/ids";
 import { PartDefsSprite } from "@/lab/visuals/part-art";
 import { withBasePath } from "@/lab/base-path";
@@ -125,7 +129,13 @@ export function LabWorkspace({
   const [saved, setSaved] = useState(true);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [serial, setSerial] = useState("");
-  const [ledOn, setLedOn] = useState(false);
+  /** Latest simulation frame (pin levels, PWM duty, pulse widths). */
+  const [frame, setFrame] = useState<SimFrame | null>(null);
+  /** Push-buttons currently held down on the bench. */
+  const [pressed, setPressed] = useState<Set<string>>(new Set());
+  /** Potentiometer positions, 0–1 (default half way). */
+  const [pots, setPots] = useState<Map<string, number>>(new Map());
+  const buzzer = useRef<BuzzerAudio | null>(null);
   const [speed, setSpeed] = useState(1);
   const [engineStatus, setEngineStatus] = useState<EngineStatus>("idle");
   const [compiling, setCompiling] = useState(false);
@@ -162,10 +172,20 @@ export function LabWorkspace({
   const bom = useMemo(() => buildBom(project, components), [project, components]);
   // The board is powered while the simulation runs (or is paused): supplies are live then.
   const powered = engineStatus === "running" || engineStatus === "paused";
-  const litLeds = useMemo(
-    () => (powered ? computeLitLeds(netlist, new Set(ledOn ? ["d13"] : [])) : new Set<string>()),
-    [powered, ledOn, netlist],
-  );
+  // The circuit as the running board sees it: pressed buttons close their contacts.
+  const simNetlist = useMemo(() => (pressed.size ? buildNetlist(project, components, { closed: pressed }) : netlist), [pressed, project, components, netlist]);
+  const simInputs = useMemo(() => resolveInputs(simNetlist, pots), [simNetlist, pots]);
+  const simInputsRef = useRef(simInputs);
+  const states = useMemo(() => partStates(simNetlist, powered ? frame : null), [simNetlist, powered, frame]);
+  const visuals = useMemo(() => {
+    const v = new Map<string, PartVisual>();
+    for (const [id, level] of states.leds) v.set(id, { level });
+    for (const [id, angle] of states.servos) v.set(id, { angle });
+    for (const id of pressed) v.set(id, { pressed: true });
+    for (const p of project.parts) if (p.componentId === "potentiometer") v.set(p.instanceId, { value: pots.get(p.instanceId) ?? 0.5 });
+    return v;
+  }, [states, pressed, pots, project.parts]);
+  const tone = powered ? Math.max(0, ...states.buzzers.values()) || null : null;
 
   // ---------- helpers ----------
   const log = useCallback((level: LogEntry["level"], text: string) => {
@@ -254,8 +274,17 @@ export function LabWorkspace({
   useEffect(() => {
     const engine = createSimulationEngine();
     engineRef.current = engine;
-    const offPin = engine.onPinChange((s) => {
-      if (s.pinId === "d13") setLedOn(s.value === 1);
+    // frames arrive ~30×/s; render at most once per animation frame
+    let pending: SimFrame | null = null;
+    let raf = 0;
+    const offFrame = engine.onFrame((f) => {
+      pending = f;
+      if (!raf) {
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          setFrame(pending);
+        });
+      }
     });
     const offSerial = engine.onSerial((d) => {
       setSerial((prev) => {
@@ -268,12 +297,23 @@ export function LabWorkspace({
       if (detail) log(s === "error" ? "error" : "info", detail);
     });
     return () => {
-      offPin();
+      offFrame();
+      cancelAnimationFrame(raf);
       offSerial();
       offStatus();
       engine.terminate();
     };
   }, [log]);
+
+  useEffect(() => {
+    simInputsRef.current = simInputs;
+    engineRef.current?.setInputs(simInputs);
+  }, [simInputs]);
+
+  useEffect(() => {
+    buzzer.current?.play(tone);
+  }, [tone]);
+  useEffect(() => () => buzzer.current?.close(), []);
 
   // ---------- actions ----------
   const addPartAt = (def: ComponentDef, cx: number, cy: number) => {
@@ -373,7 +413,7 @@ export function LabWorkspace({
 
   const replaceProject = (next: LabProject, message: string) => {
     engineRef.current?.stop();
-    setLedOn(false);
+    setFrame(null);
     commit(() => next);
     setSelectedId(null);
     canvasApi.current?.fitTo(next.parts);
@@ -410,12 +450,16 @@ export function LabWorkspace({
     }
     setCompiling(true);
     setSerial("");
-    setLedOn(false);
+    setFrame(null);
+    // audio may only start from a user gesture — this click is one
+    buzzer.current ??= new BuzzerAudio();
+    buzzer.current.unlock();
     log("info", "در حال کامپایل با avr-gcc…");
 
     const runHex = async (hex: string) => {
       await engineRef.current?.load(hex);
       engineRef.current?.setSpeed(speed);
+      engineRef.current?.setInputs(simInputsRef.current);
       engineRef.current?.start();
     };
     const blinkFallback = async (reason: string) => {
@@ -464,7 +508,8 @@ export function LabWorkspace({
 
   const stopSim = () => {
     engineRef.current?.stop();
-    setLedOn(false);
+    setFrame(null);
+    setPressed(new Set());
   };
 
   const exportJson = () => {
@@ -590,7 +635,7 @@ export function LabWorkspace({
     const pin = def?.pins.find((p) => p.id === e.pinId);
     return `${def?.name ?? e.instanceId} · ${pin?.label ?? e.pinId}`;
   };
-  const lit = selDef ? (selDef.behaviorModel.kind === "mcu" ? ledOn : litLeds.has(selPart!.instanceId)) : false;
+  const lit = selDef ? (selDef.behaviorModel.kind === "mcu" ? powered : states.leds.has(selPart!.instanceId)) : false;
 
   const inspector = (
     <Inspector
@@ -620,6 +665,7 @@ export function LabWorkspace({
       }}
       serial={serial}
       onClearSerial={() => setSerial("")}
+      onSendSerial={powered ? (text) => engineRef.current?.sendSerial(text) : null}
       logs={logs}
       onClearLogs={() => setLogs([])}
       issues={issues}
@@ -662,7 +708,18 @@ export function LabWorkspace({
       netlist={netlist}
       selection={selection}
       simpleMode={simpleMode}
-      litLeds={litLeds}
+      visuals={visuals}
+      interactive={powered}
+      onPress={(id, down) =>
+        setPressed((cur) => {
+          const next = new Set(cur);
+          if (down) next.add(id);
+          else next.delete(id);
+          return next;
+        })
+      }
+      onPot={(id, value) => setPots((cur) => new Map(cur).set(id, value))}
+      potValue={(id) => pots.get(id) ?? 0.5}
       highlight={highlight}
       emptyState={emptyState}
       onSelect={setSelection}
@@ -688,6 +745,17 @@ export function LabWorkspace({
         showToast({ text: m, tone: "warn" }, 3500);
       }}
     />
+  );
+
+  const simClock = powered && frame && (
+    <div className="pointer-events-none absolute right-3 top-3 z-10 flex items-center gap-2 border border-outline bg-surface-container-lowest/90 px-2.5 py-1 font-mono text-[11px] text-on-surface-variant backdrop-blur" dir="ltr">
+      <span className={`size-2 rounded-full ${engineStatus === "running" ? "animate-pulse bg-accent-tertiary" : "bg-amber-400"}`} />
+      <span>{(frame.simMs / 1000).toFixed(1)}s</span>
+      <span className={Math.abs(frame.realtime - speed) / speed > 0.15 ? "text-amber-300" : "text-on-surface-variant/70"} title="سرعت شبیه‌سازی نسبت به زمان واقعی">
+        {Math.round((frame.realtime / speed) * 100)}% real-time
+      </span>
+      {tone ? <span className="text-primary-container">♪ {Math.round(tone)}Hz</span> : null}
+    </div>
   );
 
   const startResize = (e: React.PointerEvent) => {
@@ -733,7 +801,7 @@ export function LabWorkspace({
           onResume={() => engineRef.current?.start()}
           onReset={() => {
             engineRef.current?.reset();
-            setLedOn(false);
+            setFrame(null);
             setSerial("");
           }}
           speed={speed}
@@ -770,7 +838,10 @@ export function LabWorkspace({
             </aside>
 
             <section className="flex min-w-0 flex-1 flex-col" aria-label="بوم و کد">
-              <div className="relative min-h-0 flex-1">{canvas}</div>
+              <div className="relative min-h-0 flex-1">
+                {canvas}
+                {simClock}
+              </div>
               <div
                 role="separator"
                 aria-orientation="horizontal"
@@ -813,7 +884,10 @@ export function LabWorkspace({
           </div>
         ) : (
           <>
-            <div className="relative min-h-0 flex-1">{canvas}</div>
+            <div className="relative min-h-0 flex-1">
+                {canvas}
+                {simClock}
+              </div>
             <nav className="grid shrink-0 grid-cols-3 border-t border-outline bg-surface-container-lowest pb-[env(safe-area-inset-bottom)]" aria-label="پنل‌ها">
               {mobileNav.map((n) => (
                 <button

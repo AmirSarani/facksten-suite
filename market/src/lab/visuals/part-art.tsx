@@ -265,20 +265,21 @@ function Breadboard({ def }: { def: ComponentDef }) {
   );
 }
 
-function Led({ def, on }: { def: ComponentDef; on: boolean }) {
+function Led({ def, on, level = on ? 1 : 0 }: { def: ComponentDef; on: boolean; level?: number }) {
   const cathode = def.pins.find((p) => p.id === "cathode")!;
   const anode = def.pins.find((p) => p.id === "anode")!;
   const cx = (cathode.x + anode.x) / 2;
   const cy = cathode.y - 11;
   return (
     <g>
-      {on && <circle cx={cx} cy={cy} r={20} fill="#ef4444" opacity=".35" className="lab-led-glow" />}
+      {level > 0.02 && <circle cx={cx} cy={cy} r={8 + 14 * level} fill="#ef4444" opacity={0.15 + 0.3 * level} />}
       {/* leads: anode is the longer, bent one */}
       <path d={`M${cathode.x} ${cathode.y} V${cy + 4}`} stroke="url(#lab-metal)" strokeWidth="1.6" fill="none" />
       <path d={`M${anode.x} ${anode.y} V${cy + 7} L${anode.x - 2} ${cy + 4}`} stroke="url(#lab-metal)" strokeWidth="1.6" fill="none" />
       <circle cx={cx + 1.5} cy={cy + 2} r={9} fill="#000" opacity=".45" />
       <circle cx={cx} cy={cy} r={9} fill="#7f1d1d" />
-      <circle cx={cx} cy={cy} r={7.6} fill={on ? "url(#lab-dome-on)" : "url(#lab-dome)"} />
+      <circle cx={cx} cy={cy} r={7.6} fill="url(#lab-dome)" />
+      {level > 0.02 && <circle cx={cx} cy={cy} r={7.6} fill="url(#lab-dome-on)" opacity={Math.min(1, 0.25 + level)} />}
       {/* flat edge marks the cathode */}
       <path d={`M${cx - 8.6} ${cy - 3.5} v7`} stroke="#450a0a" strokeWidth="1.4" />
       <ellipse cx={cx - 2.6} cy={cy - 2.8} rx={2} ry={3} fill="#fff" opacity=".6" />
@@ -330,7 +331,7 @@ function Resistor({ def }: { def: ComponentDef }) {
   );
 }
 
-function Button({ def }: { def: ComponentDef }) {
+function Button({ def, pressed = false }: { def: ComponentDef; pressed?: boolean }) {
   const { width: w, height: h } = def;
   return (
     <g>
@@ -339,15 +340,16 @@ function Button({ def }: { def: ComponentDef }) {
       ))}
       <Slab x={6} y={6} w={w - 12} h={h - 12} d={3} top="url(#lab-black)" side="#000" r={3} />
       <circle cx={w / 2} cy={h / 2} r={10} fill="#1f2937" />
-      <circle cx={w / 2} cy={h / 2} r={8} fill="#e11d48" stroke="#7f1d1d" />
-      <circle cx={w / 2 - 2.5} cy={h / 2 - 2.5} r={2.6} fill="#fff" opacity=".4" />
+      <circle cx={w / 2 + (pressed ? 1 : 0)} cy={h / 2 + (pressed ? 1 : 0)} r={pressed ? 7 : 8} fill={pressed ? "#9f1239" : "#e11d48"} stroke="#7f1d1d" />
+      {!pressed && <circle cx={w / 2 - 2.5} cy={h / 2 - 2.5} r={2.6} fill="#fff" opacity=".4" />}
     </g>
   );
 }
 
-function Pot({ def }: { def: ComponentDef }) {
+function Pot({ def, value = 0.5 }: { def: ComponentDef; value?: number }) {
   const { width: w } = def;
   const y = def.pins[0].y;
+  const knobY = (y - 10) / 2 + 2;
   return (
     <g>
       {def.pins.map((p) => (
@@ -356,7 +358,7 @@ function Pot({ def }: { def: ComponentDef }) {
       <Slab x={2} y={4} w={w - 4} h={y - 14} d={3} top="url(#lab-pcb-blue)" side="#0c2450" r={3} />
       <circle cx={w / 2 + 1.5} cy={(y - 10) / 2 + 3.5} r={13} fill="#000" opacity=".45" />
       <circle cx={w / 2} cy={(y - 10) / 2 + 2} r={13} fill="url(#lab-metal)" stroke="#4b5563" />
-      <rect x={w / 2 - 1.4} y={(y - 10) / 2 - 9} width="2.8" height="12" fill="#1f2937" />
+      <rect x={w / 2 - 1.4} y={knobY - 11} width="2.8" height="11" fill="#1f2937" transform={`rotate(${-135 + 270 * value} ${w / 2} ${knobY})`} />
     </g>
   );
 }
@@ -375,7 +377,7 @@ function Buzzer({ def }: { def: ComponentDef }) {
   );
 }
 
-function Servo({ def }: { def: ComponentDef }) {
+function Servo({ def, angle = 90 }: { def: ComponentDef; angle?: number }) {
   const { width: w } = def;
   const colors: Record<string, string> = { gnd: "#7a4a1f", vcc: "#dc2626", sig: "#f97316" };
   const y = def.pins[0].y;
@@ -389,7 +391,11 @@ function Servo({ def }: { def: ComponentDef }) {
       <Slab x={-2} y={10} w={8} h={14} d={2} top="#1d4ed8" side="#0c2450" r={1} />
       <Slab x={w - 6} y={10} w={8} h={14} d={2} top="#1d4ed8" side="#0c2450" r={1} />
       <circle cx={58} cy={17} r={9} fill="url(#lab-dome-white)" stroke="#9ca3af" />
-      <rect x={40} y={14} width="18" height="6" rx={3} fill="#f3f4f6" stroke="#9ca3af" strokeWidth=".6" />
+      <g transform={`rotate(${angle - 90} 58 17)`}>
+        <rect x={40} y={14} width="21" height="6" rx={3} fill="#f3f4f6" stroke="#9ca3af" strokeWidth=".6" />
+        <circle cx={44} cy={17} r={1.2} fill="#9ca3af" />
+      </g>
+      <circle cx={58} cy={17} r={2.2} fill="#9ca3af" />
       <Label x={24} y={21} text="SG90" size={7} fill="#dbeafe" />
     </g>
   );
@@ -499,20 +505,23 @@ function Fallback({ def }: { def: ComponentDef }) {
 }
 
 /** The drawing for one part, in its own coordinate box. `on` lights LEDs. */
-export function PartArt({ def, on = false }: { def: ComponentDef; on?: boolean }): ReactNode {
+/** Live state from the simulation, drawn on the part. */
+export type PartVisual = { level?: number; pressed?: boolean; angle?: number; value?: number };
+
+export function PartArt({ def, on = false, state }: { def: ComponentDef; on?: boolean; state?: PartVisual }): ReactNode {
   let art: ReactNode;
   switch (def.id) {
     case "arduino-uno": art = <Uno def={def} />; break;
     case "arduino-nano": art = <Nano def={def} />; break;
     case "breadboard": art = <Breadboard def={def} />; break;
-    case "led-red": art = <Led def={def} on={on} />; break;
+    case "led-red": art = <Led def={def} on={on} level={state?.level} />; break;
     case "led-rgb": art = <LedRgb def={def} />; break;
     case "resistor-220":
     case "resistor-10k": art = <Resistor def={def} />; break;
-    case "button": art = <Button def={def} />; break;
-    case "potentiometer": art = <Pot def={def} />; break;
+    case "button": art = <Button def={def} pressed={state?.pressed} />; break;
+    case "potentiometer": art = <Pot def={def} value={state?.value} />; break;
     case "buzzer": art = <Buzzer def={def} />; break;
-    case "servo-sg90": art = <Servo def={def} />; break;
+    case "servo-sg90": art = <Servo def={def} angle={state?.angle} />; break;
     case "dht22": art = <Dht22 def={def} />; break;
     case "hc-sr04": art = <HcSr04 def={def} />; break;
     case "pir": art = <Pir def={def} />; break;

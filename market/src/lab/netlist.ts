@@ -38,7 +38,12 @@ export const pinKey = (instanceId: string, pinId: string) => `${instanceId}:${pi
 const isMcu = (def: ComponentDef) => def.behaviorModel.kind === "mcu";
 const isGndPin = (pin: PinDef) => pin.signal === "gnd" || pin.direction === "gnd";
 
-export function buildNetlist(project: Pick<LabProject, "parts" | "wires">, components: ComponentDef[]): Netlist {
+/** `closed`: push-buttons held down, whose two sides are joined while pressed. */
+export function buildNetlist(
+  project: Pick<LabProject, "parts" | "wires">,
+  components: ComponentDef[],
+  opts: { closed?: Set<string> } = {},
+): Netlist {
   const defs = new Map(components.map((c) => [c.id, c]));
   const pins = new Map<string, PinRef>();
   const parent = new Map<string, string>();
@@ -78,6 +83,9 @@ export function buildNetlist(project: Pick<LabProject, "parts" | "wires">, compo
     }
     for (const group of def.internalNets ?? []) {
       for (let i = 1; i < group.length; i++) union(pinKey(part.instanceId, group[0]), pinKey(part.instanceId, group[i]));
+    }
+    if (def.behaviorModel.kind === "button" && opts.closed?.has(part.instanceId) && def.pins.length >= 2) {
+      union(pinKey(part.instanceId, def.pins[0].id), pinKey(part.instanceId, def.pins[1].id));
     }
   }
 

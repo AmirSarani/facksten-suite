@@ -43,11 +43,25 @@ systemctl restart pushrsp-market
 - انتخاب چندتایی: `Shift`+کلیک، یا `Shift`+کشیدن روی فضای خالی یا روی بردبورد (کادر انتخاب). قطعه‌های انتخاب‌شده با هم جابه‌جا می‌شوند و خم‌های سیم‌های بینشان هم همراهشان می‌رود.
 - کامپایل نیاز به ورود دارد (`/api/lab/compile`). اگر کامپایل ممکن نباشد و کد شبیه Blink باشد، فرم‌ویر آماده‌ی Blink اجرا و این موضوع صریحاً در گزارش نوشته می‌شود.
 
-## کامپایلر و Worker
+## کامپایلر و شبیه‌ساز
 
-- `POST /api/lab/compile` کد Arduino-مانند را با shim در `scripts/lab-shim/` و `avr-gcc -mmcu=atmega328p` به Intel HEX تبدیل می‌کند.
-- کلاینت HEX را به `Avr8Engine` می‌دهد؛ Worker (`avr8-worker.ts`) حلقه `avrInstruction` را اجرا و PORTB5 (D13) را گزارش می‌کند.
-- کتابخانه‌های سنگین (Wire/LiquidCrystal و …) عمداً رد می‌شوند با پیام فارسی.
+- `POST /api/lab/compile` کد Arduino را با `avr-gcc -mmcu=atmega328p` و هسته‌ی کوچک `scripts/lab-shim/` به Intel HEX تبدیل می‌کند. `main()` اول `__lab_init()` را صدا می‌زند تا تایمرها، PWM و ADC مثل هسته‌ی واقعی تنظیم شوند.
+- **هسته‌ی shim** (`Arduino.h` و `Servo.h`):
+  - زمان و PWM: `millis` و `micros` و `delay` روی Timer0، و `analogWrite` روی D3/D5/D6/D9/D10/D11 با PWM سخت‌افزاری.
+  - ورودی و صدا: `analogRead` با ADC، `tone` و `noTone` روی Timer2، و `pulseIn` واقعی.
+  - سریال: `Serial` با دریافت مبتنی بر وقفه (`available`/`read`/`parseInt`) و `print` کامل.
+  - سروو: کتابخانه‌ی Servo روی Timer1 با پالس واقعی ۵۴۴ تا ۲۴۰۰µs.
+  - Wire و LiquidCrystal هنوز پشتیبانی نمی‌شوند و صادقانه رد می‌شوند.
+- **شبیه‌ساز:**
+  - `engine/avr-runner.ts` میکروکنترلر avr8js را می‌سازد و برای هر پین (D0 تا D13 و A0 تا A5) سطح، duty سیگنال PWM، فرکانس (میانه‌ی سه دوره‌ی آخر) و پهنای آخرین پالس را اندازه می‌گیرد.
+  - `engine/avr8-worker.ts` همان را با ساعت واقعی هم‌گام اجرا می‌کند (چرخه‌ها = زمان دیواری × ۱۶MHz × سرعت) و هر ۳۳ms یک frame می‌فرستد.
+- **مدار:** `circuit.ts` بین مدار و برد پل می‌زند.
+  - ورودی هر پین از روی شبکه تعیین می‌شود: GND، تغذیه، وایپر ولوم، مقاومت pull-up یا pull-down، یا شناور (که در آن صورت pull-up داخلی را می‌خواند).
+  - خروجی‌ها از روی frame به روشنایی LED، زاویه‌ی سروو و فرکانس بازر تبدیل می‌شوند.
+  - دکمه‌ی فشرده در netlist دو طرفش را به هم وصل می‌کند (`buildNetlist(…, { closed })`).
+- **در حین اجرا:** روی دکمه کلیک کنید و نگه دارید، ولوم را بالا و پایین بکشید (`Alt`+کشیدن قطعه را جابه‌جا می‌کند)، و در Serial Monitor متن بفرستید. صدای بازر با WebAudio پخش می‌شود.
+- **تست با فرم‌ویر واقعی:** `engine/__fixtures__/*.ino` با `npx tsx scripts/lab-build-fixtures.ts` به hex کامپایل و commit می‌شوند (CI به avr-gcc نیاز ندارد). `avr-runner.test.ts` زمان‌بندی، PWM، سروو، tone، ملودی، pull-up، سریال و ADC را روی همین hexها چک می‌کند. بعد از هر تغییر در shim، این اسکریپت را دوباره اجرا کنید.
+- **لوکال روی ویندوز:** avr-gcc را (مثلاً از `ZakKemble/avr-gcc-build`) در PATH سرور dev بگذارید و وارد حساب شوید. بدون avr-gcc فقط فرم‌ویر آماده‌ی Blink اجرا می‌شود.
 
 ## همگام‌سازی Adafruit (قدیمی)
 

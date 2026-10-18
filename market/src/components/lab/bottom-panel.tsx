@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BomLine, ComponentDef, WiringIssue } from "@/lab/types";
 import { Icon, type IconName } from "@/components/icon";
 import { formatToman } from "@/lib/format";
@@ -17,6 +17,8 @@ type Props = {
   onCodeChange: (code: string) => void;
   serial: string;
   onClearSerial: () => void;
+  /** Send text to the board's RX (null while nothing is running). */
+  onSendSerial: ((text: string) => void) | null;
   logs: LogEntry[];
   onClearLogs: () => void;
   issues: WiringIssue[];
@@ -80,7 +82,7 @@ export function BottomPanel(p: Props) {
 
       <div className="min-h-0 flex-1">
         {p.tab === "code" && <CodeEditor value={p.code} onChange={p.onCodeChange} />}
-        {p.tab === "serial" && <SerialView text={p.serial} onClear={p.onClearSerial} />}
+        {p.tab === "serial" && <SerialView text={p.serial} onClear={p.onClearSerial} onSend={p.onSendSerial} />}
         {p.tab === "log" && <LogView logs={p.logs} onClear={p.onClearLogs} />}
         {p.tab === "issues" && <IssuesView issues={p.issues} onFocus={p.onFocusIssue} />}
         {p.tab === "bom" && <BomView bom={p.bom} defs={p.defs} busy={p.bomBusy} onAdd={p.onAddBom} />}
@@ -111,14 +113,47 @@ function PaneHeader({ title, onClear, clearDisabled }: { title: string; onClear?
   );
 }
 
-function SerialView({ text, onClear }: { text: string; onClear: () => void }) {
+function SerialView({ text, onClear, onSend }: { text: string; onClear: () => void; onSend: ((text: string) => void) | null }) {
   const ref = useAutoScroll<HTMLPreElement>(text);
+  const [line, setLine] = useState("");
+  const [newline, setNewline] = useState(true);
+  const send = () => {
+    if (!onSend || !line) return;
+    onSend(newline ? `${line}
+` : line);
+    setLine("");
+  };
   return (
     <div className="flex h-full flex-col">
       <PaneHeader title="Serial Monitor · 9600 baud" onClear={onClear} clearDisabled={!text} />
       <pre ref={ref} dir="ltr" className="min-h-0 flex-1 overflow-auto whitespace-pre-wrap p-3 font-mono text-xs leading-5 text-accent-tertiary">
         {text || <span className="text-on-surface-variant/60">{"> هنوز خروجی‌ای نیامده. Serial.println(...) در کد، اینجا نمایش داده می‌شود."}</span>}
       </pre>
+      <form
+        dir="ltr"
+        className="flex shrink-0 items-center gap-2 border-t border-outline p-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          send();
+        }}
+      >
+        <input
+          value={line}
+          onChange={(e) => setLine(e.target.value)}
+          disabled={!onSend}
+          placeholder={onSend ? "Send to board (Serial.read)…" : "Run the sketch to send serial input"}
+          aria-label="ارسال به سریال"
+          className="min-w-0 flex-1 border border-outline bg-surface-container-lowest px-2 py-1.5 font-mono text-xs text-on-surface outline-none focus:border-primary-container disabled:opacity-50"
+        />
+        <label className="flex shrink-0 items-center gap-1 font-mono text-[10px] text-on-surface-variant">
+          <input type="checkbox" checked={newline} onChange={(e) => setNewline(e.target.checked)} />
+          
+
+        </label>
+        <button type="submit" disabled={!onSend || !line} className="shrink-0 cursor-pointer border border-outline px-3 py-1.5 font-mono text-xs text-on-surface hover:border-primary-container hover:text-primary-container disabled:pointer-events-none disabled:opacity-40">
+          Send
+        </button>
+      </form>
     </div>
   );
 }

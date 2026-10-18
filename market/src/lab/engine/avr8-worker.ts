@@ -1,168 +1,109 @@
 /**
- * Web Worker entry — runs avr8js CPU loop off the main thread.
+ * Web Worker entry — runs the simulated board (avr-runner.ts) locked to wall-clock time.
  * Built as a separate chunk; loaded via `new Worker(new URL(...), { type: "module" })`.
  */
-import {
-  CPU,
-  avrInstruction,
-  AVRTimer,
-  timer0Config,
-  timer1Config,
-  timer2Config,
-  AVRIOPort,
-  portBConfig,
-  portCConfig,
-  portDConfig,
-  AVRUSART,
-  usart0Config,
-  PinState,
-} from "avr8js";
-import { loadHex } from "./intelhex";
-import type { WorkerInMessage, WorkerOutMessage, EngineStatus } from "./types";
+import { AvrRunner, CLOCK } from "./avr-runner";
+import { SIM_PINS, type SimInputs, type WorkerInMessage, type WorkerOutMessage, type EngineStatus } from "./types";
 
-const FLASH_WORDS = 0x8000;
-const CLOCK = 16e6;
+const FRAME_MS = 33;
+/** Never try to catch up more than this much wall time in one go (tab was hidden, etc.). */
+const MAX_CATCHUP_MS = 50;
+/** Longest a single slice may block before yielding. */
+const SLICE_BUDGET_MS = 30;
+const MAX_RUN_MS = 10 * 60_000;
 
-let program = new Uint16Array(FLASH_WORDS);
-let cpu: CPU | null = null;
-let portB: AVRIOPort | null = null;
-let usart: AVRUSART | null = null;
-let timers: AVRTimer[] = [];
+let runner: AvrRunner | null = null;
 let running = false;
-let paused = false;
 let speed = 1;
-let lastLed: 0 | 1 | null = null;
-let status: EngineStatus = "idle";
-let timeoutId: ReturnType<typeof setTimeout> | null = null;
-const MAX_RUN_MS = 120_000;
+let inputs: SimInputs = { digital: Array(SIM_PINS).fill(null), analog: Array(8).fill(0) };
+let startedAt = 0;
+let lastWall = 0;
+let frameWall = 0;
+
+const channel = new MessageChannel();
 
 function post(msg: WorkerOutMessage) {
   self.postMessage(msg);
 }
 
 function setStatus(s: EngineStatus, detail?: string) {
-  status = s;
   post({ type: "status", status: s, detail });
 }
 
-function createRunner(hex: string) {
-  program = new Uint16Array(FLASH_WORDS);
-  loadHex(hex, new Uint8Array(program.buffer));
-  cpu = new CPU(program);
-  timers = [
-    new AVRTimer(cpu, timer0Config),
-    new AVRTimer(cpu, timer1Config),
-    new AVRTimer(cpu, timer2Config),
-  ];
-  portB = new AVRIOPort(cpu, portBConfig);
-  new AVRIOPort(cpu, portCConfig);
-  new AVRIOPort(cpu, portDConfig);
-  usart = new AVRUSART(cpu, usart0Config, CLOCK);
-
-  portB.addListener(() => {
-    if (!portB) return;
-    const high = portB.pinState(5) === PinState.High ? 1 : 0;
-    if (high !== lastLed) {
-      lastLed = high as 0 | 1;
-      post({ type: "pin", pin: 13, value: lastLed });
-    }
-  });
-
-  usart.onByteTransmit = (value: number) => {
-    post({ type: "serial", byte: value });
-  };
-}
-
-function workUnit() {
-  if (!cpu || !running || paused) return;
-  const cyclesToRun = cpu.cycles + Math.floor(500_000 * speed);
-  const start = performance.now();
-  while (cpu.cycles < cyclesToRun) {
-    avrInstruction(cpu);
-    cpu.tick();
-    if (performance.now() - start > 12) break;
+/** One scheduling slice: run as many cycles as wall time (× speed) asks for. */
+function slice() {
+  if (!runner || !running) return;
+  const wall = performance.now();
+  const dt = Math.min(MAX_CATCHUP_MS, wall - lastWall);
+  lastWall = wall;
+  runner.run(dt * (CLOCK / 1000) * speed, () => performance.now() - wall > SLICE_BUDGET_MS);
+  if (wall - frameWall >= FRAME_MS) {
+    post({ type: "frame", frame: runner.frame(wall - frameWall) });
+    frameWall = wall;
   }
-  // Report LED from PORTB even if listener missed
-  if (portB) {
-    const high = (cpu.data[0x25] & 0x20) !== 0 ? 1 : 0;
-    if (high !== lastLed) {
-      lastLed = high as 0 | 1;
-      post({ type: "pin", pin: 13, value: lastLed });
-    }
-  }
-  if (running && !paused) {
-    timeoutId = setTimeout(workUnit, 0);
-  }
-}
-
-function clearTimer() {
-  if (timeoutId != null) {
-    clearTimeout(timeoutId);
-    timeoutId = null;
-  }
-}
-
-let hardStopTimer: ReturnType<typeof setTimeout> | null = null;
-
-function armHardStop() {
-  if (hardStopTimer) clearTimeout(hardStopTimer);
-  hardStopTimer = setTimeout(() => {
+  if (wall - startedAt > MAX_RUN_MS) {
     running = false;
-    clearTimer();
-    setStatus("stopped", "زمان شبیه‌سازی به پایان رسید (حداکثر ۲ دقیقه).");
-  }, MAX_RUN_MS);
+    setStatus("stopped", "زمان شبیه‌سازی به پایان رسید (حداکثر ۱۰ دقیقه).");
+    return;
+  }
+  // MessageChannel instead of setTimeout(0): no 4 ms clamp between slices
+  channel.port2.postMessage(0);
 }
+channel.port1.onmessage = () => slice();
 
 self.onmessage = (ev: MessageEvent<WorkerInMessage>) => {
   const msg = ev.data;
   try {
     switch (msg.type) {
       case "load":
-        createRunner(msg.hex);
-        lastLed = null;
-        setStatus("loading");
+        running = false;
+        runner = new AvrRunner(msg.hex);
+        runner.onSerial = (byte) => post({ type: "serial", byte });
+        runner.setInputs(inputs);
+        startedAt = 0;
         setStatus("idle", "فرم‌ویر بارگذاری شد");
         break;
       case "start":
-        if (!cpu) {
+        if (!runner) {
           post({ type: "error", message: "ابتدا فرم‌ویر را بارگذاری کنید" });
           return;
         }
+        if (running) return;
         running = true;
-        paused = false;
+        lastWall = performance.now();
+        frameWall = lastWall;
+        runner.frame();
+        if (!startedAt) startedAt = lastWall;
         setStatus("running");
-        armHardStop();
-        workUnit();
+        slice();
         break;
       case "pause":
-        paused = true;
+        running = false;
         setStatus("paused");
         break;
       case "stop":
         running = false;
-        paused = false;
-        clearTimer();
-        if (hardStopTimer) clearTimeout(hardStopTimer);
         setStatus("stopped");
         break;
       case "reset":
         running = false;
-        paused = false;
-        clearTimer();
-        lastLed = null;
-        if (cpu) {
-          cpu.reset();
-        }
+        runner?.cpu.reset();
+        startedAt = 0;
         setStatus("idle", "ریست شد — برای اجرا دوباره Run بزنید");
         break;
       case "setSpeed":
         speed = Math.max(0.1, Math.min(20, msg.multiplier));
         break;
+      case "inputs":
+        inputs = msg.inputs;
+        runner?.setInputs(inputs);
+        break;
+      case "serialIn":
+        runner?.sendSerial(msg.bytes);
+        break;
       case "terminate":
         running = false;
-        clearTimer();
-        if (hardStopTimer) clearTimeout(hardStopTimer);
-        cpu = null;
+        runner = null;
         self.close();
         break;
     }

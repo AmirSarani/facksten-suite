@@ -36,12 +36,54 @@ export type InspectorProps = {
   wire: WireDef | null;
   wireEnds: { from: string; to: string } | null;
   summary: { parts: number; wires: number; errors: number; warnings: number };
+  selectionCount: number;
   onRotate: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
+  onWireColor: (color: string) => void;
+  onWireStraighten: () => void;
 };
 
-export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, onDuplicate, onDelete }: InspectorProps) {
+/** Jumper colours by convention: red +, black GND, then signal colours. */
+const WIRE_COLORS: { color: string; name: string }[] = [
+  { color: "#e11d48", name: "قرمز (+)" },
+  { color: "#111111", name: "مشکی (GND)" },
+  { color: "#3b82f6", name: "آبی" },
+  { color: "#22c55e", name: "سبز" },
+  { color: "#eab308", name: "زرد" },
+  { color: "#f97316", name: "نارنجی" },
+  { color: "#a855f7", name: "بنفش" },
+  { color: "#f8fafc", name: "سفید" },
+];
+
+export function Inspector({
+  part, def, lit, wire, wireEnds, summary, selectionCount, onRotate, onDuplicate, onDelete, onWireColor, onWireStraighten,
+}: InspectorProps) {
+  if (selectionCount > 1) {
+    return (
+      <div className="space-y-4 p-4 text-sm">
+        <Heading kicker="SELECTION" title={`${selectionCount.toLocaleString("fa-IR")} مورد انتخاب شده`} />
+        <p className="text-xs leading-6 text-on-surface-variant">
+          با کشیدن هر کدام، همه با هم جابه‌جا می‌شوند. کلیدهای جهت‌نما یک سوراخ جابه‌جا می‌کنند (با Shift پنج سوراخ).
+        </p>
+        <div className="flex gap-2">
+          <button type="button" onClick={onRotate} className={iconBtn} title="چرخش ۹۰ درجه (R)">
+            <Icon name="rotate_right" className="h-4 w-4" />
+            چرخش
+          </button>
+          <button type="button" onClick={onDuplicate} className={iconBtn} title="کپی (Ctrl+D)">
+            <Icon name="content_copy" className="h-4 w-4" />
+            کپی
+          </button>
+          <button type="button" onClick={onDelete} className={`${iconBtn} hover:border-error hover:text-error`} title="حذف (Del)">
+            <Icon name="delete" className="h-4 w-4" />
+            حذف
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (wire && wireEnds) {
     return (
       <div className="space-y-4 p-4 text-sm">
@@ -51,6 +93,37 @@ export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, o
           <span className="h-0.5 flex-1" style={{ background: wire.color === "#111111" ? "#52525b" : wire.color }} />
           <span className="truncate text-on-surface">{wireEnds.to}</span>
         </div>
+        <section>
+          <h4 className="mb-2 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-primary-container">
+            <Icon name="palette" className="h-3.5 w-3.5" />
+            رنگ سیم
+          </h4>
+          <div className="grid grid-cols-8 gap-1.5" role="radiogroup" aria-label="رنگ سیم">
+            {WIRE_COLORS.map((c) => (
+              <button
+                key={c.color}
+                type="button"
+                role="radio"
+                aria-checked={wire.color === c.color}
+                aria-label={c.name}
+                title={c.name}
+                onClick={() => onWireColor(c.color)}
+                className={`aspect-square cursor-pointer rounded-full border-2 transition-transform hover:scale-110 ${wire.color === c.color ? "border-primary-container" : "border-outline"}`}
+                style={{ background: c.color === "#111111" ? "#27272a" : c.color }}
+              />
+            ))}
+          </div>
+        </section>
+        <p className="text-[11px] leading-6 text-on-surface-variant">
+          {wire.points?.length
+            ? `${wire.points.length.toLocaleString("fa-IR")} نقطه‌ی خم. دستگیره‌ها را بکشید؛ دوبار کلیک روی خم آن را حذف می‌کند.`
+            : "سیم آزاد (بدون خم). روی دستگیره‌ی + وسط سیم بکشید تا خم بسازید."}
+        </p>
+        {wire.points?.length ? (
+          <button type="button" onClick={onWireStraighten} className={`${iconBtn} w-full`}>
+            حذف همه‌ی خم‌ها
+          </button>
+        ) : null}
         <button type="button" onClick={onDelete} className={`${iconBtn} w-full hover:border-error hover:text-error`}>
           <Icon name="delete" className="h-4 w-4" />
           حذف سیم
@@ -74,10 +147,13 @@ export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, o
           <p className="mb-1 font-bold text-on-surface">راهنمای سریع</p>
           <ul className="list-inside list-disc space-y-0.5">
             <li>قطعه را از فهرست قطعات روی بوم بکشید.</li>
-            <li>روی یک پین و بعد روی پین مقصد بزنید تا سیم کشیده شود.</li>
+            <li>از یک پین تا پین مقصد بکشید (یا روی هر دو بزنید). وسط راه با کلیک خم بسازید.</li>
+            <li>پایه‌ی قطعه را روی سوراخ بردبورد بگذارید تا بدون سیم وصل شود.</li>
+            <li>Shift+کشیدن روی فضای خالی چند قطعه را با هم انتخاب می‌کند.</li>
             <li>قطعه را انتخاب کنید تا مدل سه‌بعدی و پین‌اوتش را ببینید.</li>
             <li>
               میان‌بُرها: <kbd className="font-mono">R</kbd> چرخش، <kbd className="font-mono">Del</kbd> حذف،{" "}
+              <kbd className="font-mono">Ctrl+C/V/D</kbd> کپی، <kbd className="font-mono">←↑→↓</kbd> جابه‌جایی،{" "}
               <kbd className="font-mono">Ctrl+Z</kbd> واگرد.
             </li>
           </ul>
@@ -104,11 +180,11 @@ export function Inspector({ part, def, lit, wire, wireEnds, summary, onRotate, o
 
       <div className="flex gap-2">
         <button type="button" onClick={onRotate} className={iconBtn} title="چرخش ۹۰ درجه (R)">
-          <Icon name="build" className="h-4 w-4" />
+          <Icon name="rotate_right" className="h-4 w-4" />
           چرخش
         </button>
         <button type="button" onClick={onDuplicate} className={iconBtn} title="کپی قطعه">
-          <Icon name="add" className="h-4 w-4" />
+          <Icon name="content_copy" className="h-4 w-4" />
           کپی
         </button>
         <button type="button" onClick={onDelete} className={`${iconBtn} hover:border-error hover:text-error`} title="حذف (Del)">

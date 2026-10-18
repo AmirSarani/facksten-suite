@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import type { ComponentDef, LabProject, WireDef, WiringIssue } from "@/lab/types";
+import type { ComponentDef, LabProject, PlacedPart, WireDef, WiringIssue } from "@/lab/types";
 import type { EngineStatus, SimulationEngine } from "@/lab/engine/types";
 import { LAB_COMPONENTS_SEED } from "@/lab/registry";
 import { LAB_TEMPLATES, templateToProject } from "@/lab/templates";
@@ -90,11 +90,11 @@ function initialState(templateId?: string | null, partSlug?: string | null, shar
 function useIsDesktop() {
   return useSyncExternalStore(
     (cb) => {
-      const mq = window.matchMedia("(min-width: 1024px)");
+      const mq = window.matchMedia("(min-width: 768px)");
       mq.addEventListener("change", cb);
       return () => mq.removeEventListener("change", cb);
     },
-    () => window.matchMedia("(min-width: 1024px)").matches,
+    () => window.matchMedia("(min-width: 768px)").matches,
     () => true,
   );
 }
@@ -117,7 +117,11 @@ export function LabWorkspace({
 
   const [components, setComponents] = useState<ComponentDef[]>(LAB_COMPONENTS_SEED);
   const [project, setProject] = useState<LabProject>(init.project);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  /** Selected part and wire ids; most actions apply to all of them. */
+  const [selection, setSelection] = useState<string[]>([]);
+  const selectedId = selection.length === 1 ? selection[0] : null;
+  const setSelectedId = (id: string | null) => setSelection(id ? [id] : []);
+  const clipboard = useRef<{ parts: PlacedPart[]; wires: WireDef[] } | null>(null);
   const [saved, setSaved] = useState(true);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [serial, setSerial] = useState("");
@@ -127,7 +131,8 @@ export function LabWorkspace({
   const [compiling, setCompiling] = useState(false);
   const [tab, setTab] = useState<BottomTab>("code");
   const [bottomH, setBottomH] = useState(300);
-  const [inspectorOpen, setInspectorOpen] = useState(true);
+  // narrow laptops start with the bench wide; the inspector opens on demand
+  const [inspectorOpen, setInspectorOpen] = useState(() => typeof window === "undefined" || window.innerWidth >= 1280);
   const [sheet, setSheet] = useState<MobileSheet>(null);
   const [highlight, setHighlight] = useState<{ partIds: string[]; wireIds: string[] } | null>(null);
   const [toast, setToast] = useState<Toast>(init.notice ? { text: init.notice, tone: "ok" } : null);
@@ -287,30 +292,83 @@ export function LabWorkspace({
   };
 
   const deleteSelected = () => {
-    if (!selectedId) return;
+    if (!selection.length) return;
+    const gone = new Set(selection);
     commit((p) => ({
       ...p,
-      parts: p.parts.filter((x) => x.instanceId !== selectedId),
-      wires: p.wires.filter((w) => w.id !== selectedId && w.from.instanceId !== selectedId && w.to.instanceId !== selectedId),
+      parts: p.parts.filter((x) => !gone.has(x.instanceId)),
+      wires: p.wires.filter((w) => !gone.has(w.id) && !gone.has(w.from.instanceId) && !gone.has(w.to.instanceId)),
     }));
-    setSelectedId(null);
+    setSelection([]);
   };
 
   const rotateSelected = () => {
-    if (!selectedId || !project.parts.some((p) => p.instanceId === selectedId)) return;
+    const ids = new Set(selection);
+    if (!project.parts.some((p) => ids.has(p.instanceId))) return;
     commit((p) => ({
       ...p,
-      parts: p.parts.map((x) => (x.instanceId === selectedId ? { ...x, rotation: normRotation((x.rotation ?? 0) + 90) } : x)),
+      parts: p.parts.map((x) => (ids.has(x.instanceId) ? { ...x, rotation: normRotation((x.rotation ?? 0) + 90) } : x)),
     }));
   };
 
+  /** Copy the selected parts and the wires running between them. */
+  const copySelection = () => {
+    const ids = new Set(selection);
+    const parts = project.parts.filter((p) => ids.has(p.instanceId));
+    if (!parts.length) return false;
+    const inside = new Set(parts.map((p) => p.instanceId));
+    const wires = project.wires.filter((w) => inside.has(w.from.instanceId) && inside.has(w.to.instanceId));
+    clipboard.current = structuredClone({ parts, wires });
+    return true;
+  };
+
+  /** Paste the clipboard 3 holes down-right, with fresh ids, and select the copy. */
+  const paste = () => {
+    const clip = clipboard.current;
+    if (!clip) return;
+    const d = 30;
+    const ids = new Map(clip.parts.map((p) => [p.instanceId, newId(p.componentId)]));
+    const parts = clip.parts.map((p) => ({ ...p, instanceId: ids.get(p.instanceId)!, x: p.x + d, y: p.y + d }));
+    const wires = clip.wires.map((w) => ({
+      ...w,
+      id: newId("w"),
+      from: { ...w.from, instanceId: ids.get(w.from.instanceId)! },
+      to: { ...w.to, instanceId: ids.get(w.to.instanceId)! },
+      points: w.points?.map((pt) => ({ x: pt.x + d, y: pt.y + d })),
+    }));
+    commit((p) => ({ ...p, parts: [...p.parts, ...parts], wires: [...p.wires, ...wires] }));
+    setSelection([...parts.map((p) => p.instanceId), ...wires.map((w) => w.id)]);
+    // the next paste lands further along
+    clipboard.current = { parts, wires };
+  };
+
   const duplicateSelected = () => {
-    const part = project.parts.find((p) => p.instanceId === selectedId);
-    const def = part && defs.get(part.componentId);
-    if (!part || !def) return;
-    const copy = { ...placeFree(project, def, part.x + 30, part.y + 30), rotation: part.rotation };
-    commit((p) => ({ ...p, parts: [...p.parts, copy] }));
-    setSelectedId(copy.instanceId);
+    if (copySelection()) paste();
+  };
+
+  const nudgeSelected = (dx: number, dy: number) => {
+    const ids = new Set(selection);
+    if (!project.parts.some((p) => ids.has(p.instanceId))) return;
+    commit((p) => ({
+      ...p,
+      parts: p.parts.map((x) => (ids.has(x.instanceId) ? { ...x, x: x.x + dx, y: x.y + dy } : x)),
+      wires: p.wires.map((w) =>
+        w.points && ids.has(w.from.instanceId) && ids.has(w.to.instanceId) ? { ...w, points: w.points.map((pt) => ({ x: pt.x + dx, y: pt.y + dy })) } : w,
+      ),
+    }));
+  };
+
+  const patchWire = (id: string, patch: Partial<WireDef>) => {
+    setProject((p) => ({ ...p, wires: p.wires.map((w) => (w.id === id ? { ...w, ...patch } : w)) }));
+    setSaved(false);
+  };
+
+  /** Snapshot for undo before a live edit (drag of parts, bends or wire ends). */
+  const editStart = () => {
+    history.current.past.push(structuredClone(project));
+    if (history.current.past.length > MAX_HISTORY) history.current.past.shift();
+    history.current.future = [];
+    syncHist();
   };
 
   const replaceProject = (next: LabProject, message: string) => {
@@ -334,7 +392,7 @@ export function LabWorkspace({
     const partIds = issue.partIds ?? [];
     const wireIds = issue.wireIds ?? [];
     setHighlight({ partIds, wireIds });
-    setSelectedId(partIds[0] ?? wireIds[0] ?? null);
+    setSelection(partIds.length ? partIds : wireIds.slice(0, 1));
     if (!isDesktop) setSheet(null);
     if (highlightTimer.current) clearTimeout(highlightTimer.current);
     highlightTimer.current = setTimeout(() => setHighlight(null), 5000);
@@ -488,14 +546,30 @@ export function LabWorkspace({
         e.preventDefault();
         redo();
       } else if (e.key === "Delete" || e.key === "Backspace") {
-        if (selectedId) {
+        if (selection.length) {
           e.preventDefault();
           deleteSelected();
         }
       } else if ((e.key === "r" || e.key === "R" || e.key === "ق") && !mod) {
         rotateSelected();
+      } else if (mod && (e.key.toLowerCase() === "c" || e.key === "ز")) {
+        if (copySelection()) showToast({ text: "کپی شد — Ctrl+V برای چسباندن", tone: "ok" }, 1800);
+      } else if (mod && (e.key.toLowerCase() === "v" || e.key === "ر")) {
+        e.preventDefault();
+        paste();
+      } else if (mod && (e.key.toLowerCase() === "d" || e.key === "ی")) {
+        e.preventDefault();
+        duplicateSelected();
+      } else if (mod && (e.key.toLowerCase() === "a" || e.key === "ش")) {
+        e.preventDefault();
+        setSelection([...project.parts.map((p) => p.instanceId), ...project.wires.map((w) => w.id)]);
+      } else if (e.key.startsWith("Arrow") && selection.length) {
+        e.preventDefault();
+        const step = e.shiftKey ? 50 : 10;
+        const [dx, dy] = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key as "ArrowLeft"] ?? [0, 0];
+        nudgeSelected(dx, dy);
       } else if (e.key === "Escape") {
-        setSelectedId(null);
+        setSelection([]);
       }
     };
   });
@@ -526,9 +600,12 @@ export function LabWorkspace({
       wire={selWire}
       wireEnds={selWire ? { from: endLabel(selWire, "from"), to: endLabel(selWire, "to") } : null}
       summary={{ parts: project.parts.length, wires: project.wires.length, errors, warnings }}
+      selectionCount={selection.length}
       onRotate={rotateSelected}
       onDuplicate={duplicateSelected}
       onDelete={deleteSelected}
+      onWireColor={(color) => selWire && commit((p) => ({ ...p, wires: p.wires.map((w) => (w.id === selWire.id ? { ...w, color } : w)) }))}
+      onWireStraighten={() => selWire && commit((p) => ({ ...p, wires: p.wires.map((w) => (w.id === selWire.id ? { ...w, points: undefined } : w)) }))}
     />
   );
 
@@ -583,22 +660,22 @@ export function LabWorkspace({
       project={project}
       components={components}
       netlist={netlist}
-      selectedId={selectedId}
+      selection={selection}
       simpleMode={simpleMode}
       litLeds={litLeds}
       highlight={highlight}
       emptyState={emptyState}
-      onSelect={setSelectedId}
-      onMoveStart={() => {
-        history.current.past.push(structuredClone(project));
-        if (history.current.past.length > MAX_HISTORY) history.current.past.shift();
-        history.current.future = [];
-        syncHist();
-      }}
-      onMoveParts={(moves) => {
-        setProject((p) => ({ ...p, parts: p.parts.map((part) => (moves.has(part.instanceId) ? { ...part, ...moves.get(part.instanceId)! } : part)) }));
+      onSelect={setSelection}
+      onEditStart={editStart}
+      onMoveParts={(moves, wirePoints) => {
+        setProject((p) => ({
+          ...p,
+          parts: p.parts.map((part) => (moves.has(part.instanceId) ? { ...part, ...moves.get(part.instanceId)! } : part)),
+          wires: wirePoints?.size ? p.wires.map((w) => (wirePoints.has(w.id) ? { ...w, points: wirePoints.get(w.id) } : w)) : p.wires,
+        }));
         setSaved(false);
       }}
+      onPatchWire={patchWire}
       onAddWire={(wire) => commit((p) => ({ ...p, wires: [...p.wires, wire] }))}
       onDropPart={(componentId, x, y) => {
         const def = defs.get(componentId);
@@ -688,7 +765,7 @@ export function LabWorkspace({
 
         {isDesktop ? (
           <div className="flex min-h-0 flex-1">
-            <aside className="flex w-72 shrink-0 flex-col border-e border-outline bg-surface-container-lowest" aria-label="قطعات">
+            <aside className="flex w-56 shrink-0 flex-col border-e border-outline bg-surface-container-lowest xl:w-72" aria-label="قطعات">
               <PartsPanel components={components} onAdd={addPartCentered} />
             </aside>
 
@@ -710,7 +787,7 @@ export function LabWorkspace({
             </section>
 
             {inspectorOpen ? (
-              <aside className="relative flex w-80 shrink-0 flex-col overflow-y-auto border-s border-outline bg-surface-container-lowest" aria-label="جزئیات">
+              <aside className="relative flex w-72 shrink-0 flex-col overflow-y-auto border-s border-outline bg-surface-container-lowest xl:w-80" aria-label="جزئیات">
                 <button
                   type="button"
                   onClick={() => setInspectorOpen(false)}

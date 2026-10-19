@@ -11,7 +11,6 @@ trap 'rm -rf "$fake"' EXIT
 
 # the script fetches by sha: let a local clone do what GitHub allows
 git -C "$repo" config uploadpack.allowAnySHA1InWant true
-git -C "$repo" config uploadpack.allowFilter true
 
 export PUSHRSP_ROOT="$fake" PUSHRSP_REPO="file://$repo" SKIP_BUILD=1 HEALTH=0 SYSTEMCTL=true
 
@@ -32,7 +31,7 @@ echo "// edited on the server" >>"$fake/app/next.config.ts"
 fail() { echo "SELFTEST FAILED: $*" >&2; exit 1; }
 
 echo "== diff"
-out="$(bash "$here/server-deploy.sh" diff "$sha")"
+out="$(bash "$here/server-deploy.sh" diff "$sha" 2>&1)" || { echo "$out"; fail "diff exited with an error"; }
 echo "$out"
 grep -q "SERVER_PATCH.md" <<<"$out" || fail "diff did not list the server-only file"
 grep -q "next.config.ts" <<<"$out" || fail "diff did not list the changed file"

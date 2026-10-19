@@ -51,9 +51,13 @@ rsync_filters() {
 
 fetch_commit() {
   log "fetch $SHA from GitHub"
+  # just that one commit, no history: git init + shallow fetch by sha
   if [ ! -d "$SUITE/.git" ]; then
-    git clone --quiet --filter=blob:none --no-checkout "$REPO_URL" "$SUITE"
+    mkdir -p "$SUITE"
+    git -C "$SUITE" init --quiet
+    git -C "$SUITE" remote add origin "$REPO_URL"
   fi
+  git -C "$SUITE" remote set-url origin "$REPO_URL"
   git -C "$SUITE" fetch --quiet --depth 1 origin "$SHA"
   git -C "$SUITE" -c advice.detachedHead=false checkout --quiet --force FETCH_HEAD
   git -C "$SUITE" clean -qfdx

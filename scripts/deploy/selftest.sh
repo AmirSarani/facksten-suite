@@ -49,7 +49,9 @@ grep -q "LAB_TOOLCHAIN_DIR=" "$fake/app/.env" || fail "LAB_TOOLCHAIN_DIR not add
 [ -f "$fake/portfolio-web/data/uploads/c1" ] || fail "portfolio uploads deleted"
 [ "$(cat "$fake/DEPLOYED_SHA")" = "$sha" ] || fail "DEPLOYED_SHA not written"
 backup="$(find "$fake/backups" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rn | head -1 | cut -d' ' -f2-)"
-tar -tzf "$backup/market.tgz" | grep -q "SERVER_PATCH.md" || fail "backup lacks the pre-deploy state"
+# list to a file first: `tar | grep -q` would SIGPIPE tar and trip pipefail
+tar -tzf "$backup/market.tgz" >"$fake/backup-list"
+grep -q "SERVER_PATCH.md" "$fake/backup-list" || fail "backup lacks the pre-deploy state"
 
 echo "== rollback on a failed restart"
 echo "patched again" >"$fake/app/SERVER_PATCH.md"

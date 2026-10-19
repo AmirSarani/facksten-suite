@@ -113,7 +113,8 @@ backup() {
     # databases with sqlite's online backup when available (consistent while the app runs)
     for db in "$live"/*.db; do
       [ -f "$db" ] || continue
-      if command -v sqlite3 >/dev/null; then sqlite3 "$db" ".backup '$BACKUP_DIR/$app-$(basename "$db")'"; else cp "$db" "$BACKUP_DIR/$app-$(basename "$db")"; fi
+      local dest="$BACKUP_DIR/$app-$(basename "$db")"
+      if ! { command -v sqlite3 >/dev/null && sqlite3 "$db" ".backup '$dest'"; }; then cp "$db" "$dest"; fi
     done
   done
   # keep the newest $KEEP_BACKUPS

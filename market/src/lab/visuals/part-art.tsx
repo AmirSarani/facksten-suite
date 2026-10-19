@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { ComponentDef } from "../types";
+import type { ComponentDef, PlacedPart } from "../types";
+import { LED_COLORS, ledColor, resistorBands, resistorOhms } from "../part-props";
 
 /**
  * Extruded, shaded (pseudo-3D) drawings of every lab part. Each drawing lives in the part's
@@ -45,6 +46,11 @@ export function PartDefs() {
         <stop offset="0" stopColor="#fff" />
         <stop offset=".35" stopColor="#ff8a8a" />
         <stop offset="1" stopColor="#ef2b2b" />
+      </radialGradient>
+      <radialGradient id="lab-dome-shade" cx=".35" cy=".3" r=".9">
+        <stop offset="0" stopColor="#fff" stopOpacity=".55" />
+        <stop offset=".35" stopColor="#fff" stopOpacity="0" />
+        <stop offset="1" stopColor="#000" stopOpacity=".45" />
       </radialGradient>
       <radialGradient id="lab-dome-white" cx=".35" cy=".3" r=".85">
         <stop offset="0" stopColor="#fff" />
@@ -265,21 +271,24 @@ function Breadboard({ def }: { def: ComponentDef }) {
   );
 }
 
-function Led({ def, on, level = on ? 1 : 0 }: { def: ComponentDef; on: boolean; level?: number }) {
+function Led({ def, on, level = on ? 1 : 0, color = "#ef4444" }: { def: ComponentDef; on: boolean; level?: number; color?: string }) {
   const cathode = def.pins.find((p) => p.id === "cathode")!;
   const anode = def.pins.find((p) => p.id === "anode")!;
   const cx = (cathode.x + anode.x) / 2;
   const cy = cathode.y - 11;
   return (
     <g>
-      {level > 0.02 && <circle cx={cx} cy={cy} r={8 + 14 * level} fill="#ef4444" opacity={0.15 + 0.3 * level} />}
+      {level > 0.02 && <circle cx={cx} cy={cy} r={8 + 14 * level} fill={color} opacity={0.15 + 0.3 * level} />}
       {/* leads: anode is the longer, bent one */}
       <path d={`M${cathode.x} ${cathode.y} V${cy + 4}`} stroke="url(#lab-metal)" strokeWidth="1.6" fill="none" />
       <path d={`M${anode.x} ${anode.y} V${cy + 7} L${anode.x - 2} ${cy + 4}`} stroke="url(#lab-metal)" strokeWidth="1.6" fill="none" />
       <circle cx={cx + 1.5} cy={cy + 2} r={9} fill="#000" opacity=".45" />
-      <circle cx={cx} cy={cy} r={9} fill="#7f1d1d" />
-      <circle cx={cx} cy={cy} r={7.6} fill="url(#lab-dome)" />
-      {level > 0.02 && <circle cx={cx} cy={cy} r={7.6} fill="url(#lab-dome-on)" opacity={Math.min(1, 0.25 + level)} />}
+      <circle cx={cx} cy={cy} r={9} fill={color} />
+      <circle cx={cx} cy={cy} r={9} fill="#000" opacity=".45" />
+      {/* tinted epoxy: dim when off, bright with a hot core when lit */}
+      <circle cx={cx} cy={cy} r={7.6} fill={color} opacity={0.55 + 0.45 * Math.min(1, level)} />
+      <circle cx={cx} cy={cy} r={7.6} fill="url(#lab-dome-shade)" />
+      {level > 0.02 && <circle cx={cx} cy={cy} r={4.5} fill="#fff" opacity={0.6 * Math.min(1, level)} />}
       {/* flat edge marks the cathode */}
       <path d={`M${cx - 8.6} ${cy - 3.5} v7`} stroke="#450a0a" strokeWidth="1.4" />
       <ellipse cx={cx - 2.6} cy={cy - 2.8} rx={2} ry={3} fill="#fff" opacity=".6" />
@@ -304,18 +313,9 @@ function LedRgb({ def }: { def: ComponentDef }) {
   );
 }
 
-/** 4-band colour code for the part's resistance. */
-function bandColors(ohms: number) {
-  const colors = ["#111118", "#7a4a1f", "#dc2626", "#f97316", "#facc15", "#16a34a", "#2563eb", "#7c3aed", "#6b7280", "#f8fafc"];
-  const digits = String(Math.round(ohms));
-  const exp = Math.max(0, digits.length - 2);
-  return [colors[Number(digits[0])], colors[Number(digits[1] ?? 0)], colors[exp] ?? colors[0], "#d4af37"];
-}
-
-function Resistor({ def }: { def: ComponentDef }) {
+function Resistor({ def, ohms }: { def: ComponentDef; ohms: number }) {
   const [a, b] = def.pins;
   const y = a.y;
-  const ohms = def.behaviorModel.kind === "resistor" ? def.behaviorModel.ohms : 220;
   const bodyX = a.x + 7;
   const bodyW = b.x - a.x - 14;
   return (
@@ -324,7 +324,7 @@ function Resistor({ def }: { def: ComponentDef }) {
       <rect x={bodyX + 1.5} y={y - 4} width={bodyW} height={9} rx={4} fill="#000" opacity=".4" />
       <rect x={bodyX} y={y - 5} width={bodyW} height={10} rx={4.5} fill="#d9b98a" />
       <rect x={bodyX + 3} y={y - 4.5} width={bodyW - 6} height={2.4} rx={1.2} fill="#fff" opacity=".3" />
-      {bandColors(ohms).map((c, i) => (
+      {resistorBands(ohms).map((c, i) => (
         <rect key={i} x={bodyX + 4 + i * (i === 3 ? 6.5 : 4.6)} y={y - 5} width="2.4" height="10" fill={c} />
       ))}
     </g>
@@ -508,16 +508,28 @@ function Fallback({ def }: { def: ComponentDef }) {
 /** Live state from the simulation, drawn on the part. */
 export type PartVisual = { level?: number; pressed?: boolean; angle?: number; value?: number };
 
-export function PartArt({ def, on = false, state }: { def: ComponentDef; on?: boolean; state?: PartVisual }): ReactNode {
+export function PartArt({
+  def,
+  on = false,
+  state,
+  props,
+}: {
+  def: ComponentDef;
+  on?: boolean;
+  state?: PartVisual;
+  /** Per-instance overrides (resistor value, LED colour). */
+  props?: PlacedPart["props"];
+}): ReactNode {
+  const inst = { props };
   let art: ReactNode;
   switch (def.id) {
     case "arduino-uno": art = <Uno def={def} />; break;
     case "arduino-nano": art = <Nano def={def} />; break;
     case "breadboard": art = <Breadboard def={def} />; break;
-    case "led-red": art = <Led def={def} on={on} level={state?.level} />; break;
+    case "led-red": art = <Led def={def} on={on} level={state?.level} color={LED_COLORS[ledColor(inst, def)].hex} />; break;
     case "led-rgb": art = <LedRgb def={def} />; break;
     case "resistor-220":
-    case "resistor-10k": art = <Resistor def={def} />; break;
+    case "resistor-10k": art = <Resistor def={def} ohms={resistorOhms(inst, def)} />; break;
     case "button": art = <Button def={def} pressed={state?.pressed} />; break;
     case "potentiometer": art = <Pot def={def} value={state?.value} />; break;
     case "buzzer": art = <Buzzer def={def} />; break;

@@ -129,6 +129,8 @@ export type LabProject = {
   code: string;
   boardId: string;
   mode?: "simple" | "pro";
+  /** Id of the copy saved to the user's account, if any. */
+  cloudId?: string;
   updatedAt: string;
   createdAt: string;
 };

@@ -1,30 +1,43 @@
 import { withBasePath } from "./base-path";
+import { LED_COLORS, formatOhms, ledColor, resistorOhms } from "./part-props";
 import type { BomLine, ComponentDef, LabProject } from "./types";
 
+/**
+ * One line per (part, variant). A resistor or LED whose value/colour differs from the catalog
+ * part it was placed as gets its own line and, unless another catalog part has exactly that
+ * value, no product — so "add to cart" never buys a 220Ω resistor for a 330Ω one.
+ */
 export function buildBom(
   project: Pick<LabProject, "parts">,
   components: ComponentDef[],
 ): BomLine[] {
   const byId = new Map(components.map((c) => [c.id, c]));
-  const qty = new Map<string, number>();
+  const lines = new Map<string, BomLine>();
   for (const p of project.parts) {
-    qty.set(p.componentId, (qty.get(p.componentId) ?? 0) + 1);
-  }
-  const lines: BomLine[] = [];
-  for (const [componentId, n] of qty) {
-    const c = byId.get(componentId);
+    const c = byId.get(p.componentId);
     if (!c) continue;
-    lines.push({
-      componentId,
-      slug: c.slug,
-      name: c.name,
-      qty: n,
-      productId: c.productId,
-      price: c.price,
-      stockStatus: c.stockStatus,
-    });
+    let key = c.id;
+    let line: BomLine = { componentId: c.id, slug: c.slug, name: c.name, qty: 0, productId: c.productId, price: c.price, stockStatus: c.stockStatus };
+    if (c.behaviorModel.kind === "resistor") {
+      const ohms = resistorOhms(p, c);
+      // the catalog part with exactly this value, if any
+      const match = components.find((x) => x.behaviorModel.kind === "resistor" && x.behaviorModel.ohms === ohms);
+      key = `resistor:${ohms}`;
+      line = match
+        ? { componentId: match.id, slug: match.slug, name: match.name, qty: 0, productId: match.productId, price: match.price, stockStatus: match.stockStatus }
+        : { ...line, name: `مقاومت ${formatOhms(ohms)}`, productId: null, price: null, stockStatus: "unknown" };
+    } else if (c.behaviorModel.kind === "led" && c.pins.length === 2) {
+      const color = ledColor(p, c);
+      if (color !== (c.properties.color ?? "red")) {
+        key = `${c.id}:${color}`;
+        line = { ...line, name: `LED ${LED_COLORS[color].label} ۵mm`, productId: null, price: null, stockStatus: "unknown" };
+      }
+    }
+    const existing = lines.get(key);
+    if (existing) existing.qty += 1;
+    else lines.set(key, { ...line, qty: 1 });
   }
-  return lines;
+  return [...lines.values()];
 }
 
 export type BomCartResult = {

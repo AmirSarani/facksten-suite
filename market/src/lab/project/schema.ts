@@ -38,6 +38,8 @@ export const labProjectSchema = z.object({
   code: z.string(),
   boardId: z.string().min(1),
   mode: z.enum(["simple", "pro"]).optional(),
+  /** Id of the copy saved to the user's account, if any. */
+  cloudId: z.string().max(64).optional(),
   updatedAt: z.string(),
   createdAt: z.string(),
 });

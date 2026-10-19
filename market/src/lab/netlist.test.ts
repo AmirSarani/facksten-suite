@@ -170,3 +170,14 @@ describe("validateWiring on nets", () => {
     assert.ok(codes(p).includes("no-common-gnd"));
   });
 });
+
+describe("part properties in checks", () => {
+  it("warns when the LED's series resistor is too small, not with the template's 220Ω", () => {
+    const p = template("blink-led");
+    assert.ok(!validateWiring(p, C).some((i) => i.code === "led-overcurrent"));
+    const small = { ...p, parts: p.parts.map((x) => (x.instanceId === "r1" ? { ...x, props: { ohms: 47 } } : x)) };
+    const issue = validateWiring(small, C).find((i) => i.code === "led-overcurrent");
+    assert.ok(issue, "expected an over-current warning");
+    assert.match(issue!.message, /47Ω/);
+  });
+});

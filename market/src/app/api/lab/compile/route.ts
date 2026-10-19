@@ -1,14 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { mkdtemp, writeFile, readFile, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { requireUser } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
-
-const execFileAsync = promisify(execFile);
+import { compileSketch } from "@/lib/lab-compiler";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,28 +12,14 @@ const bodySchema = z.object({
   board: z.enum(["uno", "nano"]).default("uno"),
 });
 
-const SHIM_DIR = join(process.cwd(), "scripts", "lab-shim");
-
-/**
- * Compile Arduino-like sketch with avr-gcc (server-side).
- * Unsupported libraries return a clear Persian error — never fake success.
- */
 const COMPILE_RULE = { limit: 10, windowMs: 60_000 };
 const MAX_CONCURRENT_COMPILES = 2;
 let activeCompiles = 0;
 
-/** Only bare header names (e.g. <avr/io.h>, "Arduino.h"); no traversal or absolute paths. */
-function hasUnsafeInclude(code: string): boolean {
-  const includes = code.matchAll(/^\s*#\s*(?:include|include_next|import)\s*[<"]([^>"\n]*)[>"]?/gm);
-  for (const match of includes) {
-    const target = match[1].trim();
-    if (target.includes("..") || target.startsWith("/") || target.includes("\\") || /^[a-zA-Z]:/.test(target)) {
-      return true;
-    }
-  }
-  return /^\s*#\s*(?:include|include_next|import)\s+(?![<"])/m.test(code);
-}
-
+/**
+ * Compile a sketch for the lab simulator (see src/lib/lab-compiler.ts for the backends).
+ * Unsupported libraries return a clear Persian error — never fake success.
+ */
 export async function POST(req: Request) {
   const user = await requireUser();
   if (!user) {
@@ -68,81 +48,26 @@ export async function POST(req: Request) {
 
   const { code, board } = parsed.data;
 
-  if (hasUnsafeInclude(code)) {
-    return NextResponse.json({ error: "مسیر #include نامعتبر است" }, { status: 422 });
-  }
-
-  // Reject known-unsupported heavy libs early with honesty
-  if (/#\s*include\s*<Wire\.h>/.test(code) || /#\s*include\s*<LiquidCrystal/.test(code)) {
-    return NextResponse.json(
-      {
-        error:
-          "کتابخانه درخواستی در MVP پشتیبانی نمی‌شود. قالب‌های Blink/LED/دکمه را امتحان کنید یا Servo ساده.",
-      },
-      { status: 422 },
-    );
-  }
-
   activeCompiles += 1;
-  const dir = await mkdtemp(join(tmpdir(), "pushrsp-lab-")).catch((e) => {
-    activeCompiles -= 1;
-    throw e;
-  });
   try {
-    let sketch = code;
-    // Wrap Arduino-style sketch into main() if needed
-    if (!/\bint\s+main\s*\(/.test(sketch)) {
-      if (!/#\s*include\s*[<"]Arduino\.h[>"]/.test(sketch)) {
-        sketch = `#include <Arduino.h>\n${sketch}`;
-      }
-      // __lab_init() (scripts/lab-shim/Arduino.h) sets up timers, PWM and the ADC like the real core
-      sketch += `\n\nint main(void) {\n  __lab_init();\n  setup();\n  for(;;) { loop(); }\n  return 0;\n}\n`;
-    }
-
-    const srcPath = join(dir, "sketch.cpp");
-    await writeFile(srcPath, sketch, "utf8");
-
-    const elf = join(dir, "sketch.elf");
-    const hex = join(dir, "sketch.hex");
-    const mcu = "atmega328p";
-
-    try {
-      await execFileAsync(
-        "avr-gcc",
-        [
-          `-mmcu=${mcu}`,
-          "-DF_CPU=16000000UL",
-          "-Os",
-          "-std=gnu++17",
-          `-I${SHIM_DIR}`,
-          "-lm",
-          "-o",
-          elf,
-          srcPath,
-        ],
-        { timeout: 20_000, maxBuffer: 2_000_000 },
-      );
-    } catch (e) {
-      const err = e as { stderr?: string; message?: string };
-      const detail = (err.stderr || err.message || "خطای کامپایل").slice(0, 4000);
+    const result = await compileSketch(code, board);
+    if (!result.ok) {
       return NextResponse.json(
-        { error: "کامپایل ناموفق", detail },
-        { status: 422 },
+        { error: result.error, detail: result.detail, diagnostics: result.diagnostics, backend: result.backend },
+        { status: result.status },
       );
     }
-
-    await execFileAsync("avr-objcopy", ["-O", "ihex", "-R", ".eeprom", elf, hex], {
-      timeout: 10_000,
-    });
-    const hexText = await readFile(hex, "utf8");
     return NextResponse.json({
       ok: true,
       board,
-      hex: hexText,
-      note: "کامپایل با avr-gcc روی سرور — خروجی واقعی برای avr8js",
+      hex: result.hex,
+      backend: result.backend,
+      cached: result.cached,
+      flashBytes: result.flashBytes,
+      warnings: result.warnings,
+      note: result.backend === "arduino-cli" ? "کامپایل با arduino-cli و هسته‌ی رسمی Arduino" : "کامپایل با avr-gcc و هسته‌ی ساده‌ی آزمایشگاه",
     });
   } finally {
     activeCompiles -= 1;
-    await rm(dir, { recursive: true, force: true }).catch(() => undefined);
   }
 }

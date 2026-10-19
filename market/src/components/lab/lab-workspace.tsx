@@ -34,6 +34,7 @@ import { PartsPanel } from "./parts-panel";
 import { BoardCanvas, type CanvasApi } from "./board-canvas";
 import { Inspector } from "./inspector";
 import { BottomPanel, type BottomTab, type LogEntry } from "./bottom-panel";
+import type { EditorDiagnostic } from "./code-editor";
 import { WorkspaceTopbar } from "./workspace-topbar";
 import { OnboardingTour } from "./onboarding-tour";
 
@@ -139,6 +140,9 @@ export function LabWorkspace({
   const [speed, setSpeed] = useState(1);
   const [engineStatus, setEngineStatus] = useState<EngineStatus>("idle");
   const [compiling, setCompiling] = useState(false);
+  /** Compiler errors/warnings shown in the editor, and a counter that scrolls to the first. */
+  const [diagnostics, setDiagnostics] = useState<EditorDiagnostic[]>([]);
+  const [revealToken, setRevealToken] = useState(0);
   const [tab, setTab] = useState<BottomTab>("code");
   const [bottomH, setBottomH] = useState(300);
   // narrow laptops start with the bench wide; the inspector opens on demand
@@ -488,6 +492,18 @@ export function LabWorkspace({
         }, 7000);
         return;
       }
+      if (res.status === 422 && Array.isArray(data.diagnostics)) {
+        // the sketch itself is wrong: show it in the editor, never run something else instead
+        const diags = data.diagnostics as EditorDiagnostic[];
+        setDiagnostics(diags);
+        log("error", data.error ?? "کامپایل ناموفق");
+        if (data.detail) log("error", String(data.detail).slice(0, 1500));
+        setTab("code");
+        if (!isDesktop) setSheet("panel");
+        setRevealToken((t) => t + 1);
+        showToast({ text: data.error ?? "کامپایل ناموفق", tone: "error" }, 7000);
+        return;
+      }
       if (!res.ok || !data.hex) {
         log("error", `کامپایل ناموفق: ${data.error ?? res.status}`);
         if (data.detail) log("error", String(data.detail).slice(0, 1500));
@@ -496,7 +512,10 @@ export function LabWorkspace({
         showToast({ text: ran ? "کامپایل نشد؛ نمونه‌ی Blink اجرا شد. جزئیات در تب «گزارش»." : "کامپایل نشد. جزئیات در تب «گزارش».", tone: "error" });
         return;
       }
-      log("ok", "کامپایل موفق — اجرا در شبیه‌ساز (avr8js).");
+      setDiagnostics((data.warnings as EditorDiagnostic[] | undefined) ?? []);
+      const how = data.backend === "arduino-cli" ? "arduino-cli · هسته‌ی رسمی" : "هسته‌ی ساده";
+      const size = typeof data.flashBytes === "number" ? ` · ${data.flashBytes.toLocaleString("fa-IR")} بایت` : "";
+      log("ok", `کامپایل موفق (${how}${size}${data.cached ? " · از کش" : ""}) — اجرا در شبیه‌ساز.`);
       await runHex(data.hex as string);
       if (/Serial\./.test(project.code)) setTab("serial");
     } catch (e) {
@@ -662,7 +681,10 @@ export function LabWorkspace({
       onCodeChange={(code) => {
         setProject((p) => ({ ...p, code }));
         setSaved(false);
+        if (diagnostics.length) setDiagnostics([]);
       }}
+      diagnostics={diagnostics}
+      revealToken={revealToken}
       serial={serial}
       onClearSerial={() => setSerial("")}
       onSendSerial={powered ? (text) => engineRef.current?.sendSerial(text) : null}

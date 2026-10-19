@@ -98,3 +98,24 @@ describe("AvrRunner melody", () => {
     for (const n of notes) assert.ok(seen.some((f) => Math.abs(f - n) / n < 0.01), `missing ${n} Hz`);
   });
 });
+
+describe("AvrRunner with the official Arduino core", () => {
+  // core-servo.hex: core-servo.ino.txt built by arduino-cli + ArduinoCore-avr 1.8.6 (lab-compiler's arduino-cli backend)
+  it("runs real-core firmware: millis()/delay timing and the real Servo library", () => {
+    const r = new AvrRunner(hex("core-servo"));
+    const edges: number[] = [];
+    let last = r.pinHigh(13);
+    r.frame();
+    for (let t = 0; t < 1600; t++) {
+      r.run(ms(1));
+      const now = r.pinHigh(13);
+      if (now !== last) edges.push(t);
+      last = now;
+    }
+    for (let i = 1; i < edges.length; i++) assert.ok(Math.abs(edges[i] - edges[i - 1] - 500) <= 5, `edges ${edges}`);
+    const f = r.frame();
+    // write(90) with the library's 544–2400 µs range ≈ 1472 µs (the real library rounds a little)
+    assert.ok(Math.abs(f.pulseUs[9] - 1472) < 25, `pulse ${f.pulseUs[9]}`);
+    assert.ok(Math.abs(f.freq[9] - 50) < 3, `servo frame ${f.freq[9]} Hz`);
+  });
+});

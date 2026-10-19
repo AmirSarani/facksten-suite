@@ -1,0 +1,5 @@
+// built with arduino-cli + the official core (real Servo library, real millis())
+#include <Servo.h>
+Servo s;
+void setup() { pinMode(13, OUTPUT); s.attach(9); s.write(90); }
+void loop() { digitalWrite(13, HIGH); delay(500); digitalWrite(13, LOW); delay(500); }

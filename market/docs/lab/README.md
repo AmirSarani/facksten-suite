@@ -45,7 +45,16 @@ systemctl restart pushrsp-market
 
 ## کامپایلر و شبیه‌ساز
 
-- `POST /api/lab/compile` کد Arduino را با `avr-gcc -mmcu=atmega328p` و هسته‌ی کوچک `scripts/lab-shim/` به Intel HEX تبدیل می‌کند. `main()` اول `__lab_init()` را صدا می‌زند تا تایمرها، PWM و ADC مثل هسته‌ی واقعی تنظیم شوند.
+- `POST /api/lab/compile` → `src/lib/lab-compiler.ts` با دو پشتوانه:
+  - **arduino-cli** (اگر `LAB_TOOLCHAIN_DIR` تنظیم شده باشد): هسته‌ی رسمی ArduinoCore-avr 1.8.6 و کتابخانه‌های واقعی (Wire، SPI، EEPROM، SoftwareSerial، Servo، LiquidCrystal، LiquidCrystal_I2C، Stepper، DHT، Adafruit SSD1306/GFX/BusIO/Sensor).
+  - **shim**: در غیر این صورت، avr-gcc خالی با هسته‌ی کوچک `scripts/lab-shim/` (فقط Servo).
+  - نتیجه با کلید (پشتوانه، برد، کد) کش می‌شود.
+  - خطاها با شماره‌ی خط برمی‌گردند (`diagnostics`) و در ویرایشگر علامت می‌خورند. اگر کد کاربر خطا داشته باشد، دیگر Blink جایگزین اجرا نمی‌شود.
+  - **امنیت:** `#include` فقط نام خالی هدر را قبول می‌کند، `.incbin`/`.include`/`#embed` رد می‌شوند، و کامپایلر بدون متغیرهای محیطی سرور اجرا می‌شود (`minimalEnv`).
+- **نصب کامپایلر کامل** (یک بار روی سرور، و دوباره با هر تغییر نسخه): `npx tsx scripts/lab-toolchain/setup.ts --dir /opt/pushrsp/lab-toolchain`
+  - همه چیز فقط از GitHub دانلود می‌شود، چون downloads.arduino.cc از این شبکه 403 می‌دهد: arduino-cli 1.5.1، ctags آردوینو، هسته و کتابخانه‌ها. هر چیزی با checksum یا SHA کامیت سنجاق‌شده بررسی می‌شود.
+  - avr-gcc از PATH برداشته می‌شود (`apt install gcc-avr avr-libc`)، یا با `--download-avr-gcc` نسخه‌ی ZakKemble دانلود می‌شود.
+  - بعد سرویس فروشگاه را با `LAB_TOOLCHAIN_DIR=/opt/pushrsp/lab-toolchain` اجرا کنید. بیلد اول هسته حدود ۱۵ ثانیه طول می‌کشد و بعد از آن ۲ تا ۳ ثانیه.
 - **هسته‌ی shim** (`Arduino.h` و `Servo.h`):
   - زمان و PWM: `millis` و `micros` و `delay` روی Timer0، و `analogWrite` روی D3/D5/D6/D9/D10/D11 با PWM سخت‌افزاری.
   - ورودی و صدا: `analogRead` با ADC، `tone` و `noTone` روی Timer2، و `pulseIn` واقعی.
@@ -61,7 +70,7 @@ systemctl restart pushrsp-market
   - دکمه‌ی فشرده در netlist دو طرفش را به هم وصل می‌کند (`buildNetlist(…, { closed })`).
 - **در حین اجرا:** روی دکمه کلیک کنید و نگه دارید، ولوم را بالا و پایین بکشید (`Alt`+کشیدن قطعه را جابه‌جا می‌کند)، و در Serial Monitor متن بفرستید. صدای بازر با WebAudio پخش می‌شود.
 - **تست با فرم‌ویر واقعی:** `engine/__fixtures__/*.ino` با `npx tsx scripts/lab-build-fixtures.ts` به hex کامپایل و commit می‌شوند (CI به avr-gcc نیاز ندارد). `avr-runner.test.ts` زمان‌بندی، PWM، سروو، tone، ملودی، pull-up، سریال و ADC را روی همین hexها چک می‌کند. بعد از هر تغییر در shim، این اسکریپت را دوباره اجرا کنید.
-- **لوکال روی ویندوز:** avr-gcc را (مثلاً از `ZakKemble/avr-gcc-build`) در PATH سرور dev بگذارید و وارد حساب شوید. بدون avr-gcc فقط فرم‌ویر آماده‌ی Blink اجرا می‌شود.
+- **لوکال روی ویندوز:** همان `setup.ts` را با `--avr-gcc <ریشه‌ی avr-gcc>` اجرا کنید و `LAB_TOOLCHAIN_DIR` را به سرور dev بدهید. بدون آن، shim با avr-gcc روی PATH کار می‌کند، و بدون avr-gcc فقط فرم‌ویر آماده‌ی Blink اجرا می‌شود.
 
 ## همگام‌سازی Adafruit (قدیمی)
 

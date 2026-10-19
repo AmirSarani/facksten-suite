@@ -5,7 +5,7 @@ import type { BomLine, ComponentDef, WiringIssue } from "@/lab/types";
 import { Icon, type IconName } from "@/components/icon";
 import { formatToman } from "@/lib/format";
 import { PartThumb } from "@/lab/visuals/part-art";
-import { CodeEditor } from "./code-editor";
+import { CodeEditor, type EditorDiagnostic } from "./code-editor";
 
 export type BottomTab = "code" | "serial" | "log" | "issues" | "bom";
 export type LogEntry = { id: number; level: "info" | "ok" | "warn" | "error"; text: string };
@@ -15,6 +15,8 @@ type Props = {
   onTab: (t: BottomTab) => void;
   code: string;
   onCodeChange: (code: string) => void;
+  diagnostics: EditorDiagnostic[];
+  revealToken: number;
   serial: string;
   onClearSerial: () => void;
   /** Send text to the board's RX (null while nothing is running). */
@@ -81,7 +83,7 @@ export function BottomPanel(p: Props) {
       )}
 
       <div className="min-h-0 flex-1">
-        {p.tab === "code" && <CodeEditor value={p.code} onChange={p.onCodeChange} />}
+        {p.tab === "code" && <CodeEditor value={p.code} onChange={p.onCodeChange} diagnostics={p.diagnostics} revealToken={p.revealToken} />}
         {p.tab === "serial" && <SerialView text={p.serial} onClear={p.onClearSerial} onSend={p.onSendSerial} />}
         {p.tab === "log" && <LogView logs={p.logs} onClear={p.onClearLogs} />}
         {p.tab === "issues" && <IssuesView issues={p.issues} onFocus={p.onFocusIssue} />}

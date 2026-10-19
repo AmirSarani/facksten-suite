@@ -105,7 +105,8 @@ backup() {
     done
   done
   # keep the newest $KEEP_BACKUPS
-  ls -1dt "$BACKUPS"/*/ 2>/dev/null | tail -n +$((KEEP_BACKUPS + 1)) | xargs -r rm -rf
+  find "$BACKUPS" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p
+' | sort -rn | tail -n +$((KEEP_BACKUPS + 1)) | cut -d' ' -f2- | xargs -r rm -rf
 }
 
 restore() {
@@ -117,9 +118,11 @@ restore() {
     [ -f "$BACKUP_DIR/$app.tgz" ] || continue
     find "$live" -mindepth 1 -maxdepth 1 ! -name node_modules ! -name data ! -name '*.db' ! -name '.env*' -exec rm -rf {} +
     tar -C "$live" -xzf "$BACKUP_DIR/$app.tgz"
-    for db in "$BACKUP_DIR/$app-"*.db; do [ -f "$db" ] && cp "$db" "$live/${db##*/$app-}"; done
+    for db in "$BACKUP_DIR/$app-"*.db; do
+      if [ -f "$db" ]; then cp "$db" "$live/${db##*/"$app"-}"; fi
+    done
     if [ "${SKIP_BUILD:-0}" != 1 ]; then (cd "$live" && npm ci --no-audit --no-fund --loglevel=error) || true; fi
-    [ -n "${UNIT[$app]}" ] && "$SYSTEMCTL" restart "${UNIT[$app]}" || true
+    if [ -n "${UNIT[$app]}" ]; then "$SYSTEMCTL" restart "${UNIT[$app]}" || true; fi
   done
 }
 

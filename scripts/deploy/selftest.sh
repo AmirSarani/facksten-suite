@@ -48,7 +48,8 @@ grep -q "LAB_TOOLCHAIN_DIR=" "$fake/app/.env" || fail "LAB_TOOLCHAIN_DIR not add
 [ -f "$fake/app/public/uploads/products/a.png" ] || fail "shop uploads deleted"
 [ -f "$fake/portfolio-web/data/uploads/c1" ] || fail "portfolio uploads deleted"
 [ "$(cat "$fake/DEPLOYED_SHA")" = "$sha" ] || fail "DEPLOYED_SHA not written"
-backup="$(ls -1dt "$fake"/backups/*/ | head -1)"
+backup="$(find "$fake/backups" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p
+' | sort -rn | head -1 | cut -d' ' -f2-)"
 tar -tzf "$backup/market.tgz" | grep -q "SERVER_PATCH.md" || fail "backup lacks the pre-deploy state"
 
 echo "== rollback on a failed restart"

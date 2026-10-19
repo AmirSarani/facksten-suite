@@ -8,7 +8,6 @@ import { LAB_COMPONENTS_SEED } from "@/lab/registry";
 import { LAB_TEMPLATES, templateToProject } from "@/lab/templates";
 import { validateWiring } from "@/lab/wiring/validate";
 import {
-  createShareToken,
   deserializeProject,
   loadProjectLocal,
   loadShareToken,
@@ -111,10 +110,12 @@ export function LabWorkspace({
   initialPartSlug,
   initialTemplateId,
   initialShareToken,
+  initialProjectId,
 }: {
   initialPartSlug?: string | null;
   initialTemplateId?: string | null;
   initialShareToken?: string | null;
+  initialProjectId?: string | null;
 }) {
   const { refresh } = useCart();
   const isDesktop = useIsDesktop();
@@ -151,6 +152,9 @@ export function LabWorkspace({
   const [highlight, setHighlight] = useState<{ partIds: string[]; wireIds: string[] } | null>(null);
   const [toast, setToast] = useState<Toast>(init.notice ? { text: init.notice, tone: "ok" } : null);
   const [bomBusy, setBomBusy] = useState(false);
+  /** JSON of the project as last saved to the account (to tell if the cloud copy is behind). */
+  const [cloudJson, setCloudJson] = useState<string | null>(null);
+  const [cloudSaving, setCloudSaving] = useState(false);
   const [tourOpen, setTourOpen] = useState(() => {
     try {
       return localStorage.getItem(TOUR_KEY) !== "1";
@@ -552,16 +556,98 @@ export function LabWorkspace({
     }
   };
 
-  const share = () => {
+  /** Saved to the account? Compare without timestamps and the cloud id itself. */
+  const comparable = (p: LabProject) => JSON.stringify({ ...p, updatedAt: undefined, cloudId: undefined });
+  const cloudState: "none" | "saving" | "saved" | "dirty" = cloudSaving
+    ? "saving"
+    : !project.cloudId
+      ? "none"
+      : cloudJson === comparable(project)
+        ? "saved"
+        : "dirty";
+  const workspaceHref = (q: string) => `/lab/workspace${q}`;
+
+  /** Save to the signed-in user's account; returns the cloud id, or null. */
+  const saveToCloud = async (quiet = false): Promise<string | null> => {
+    const snapshot = { ...project, name: project.name.trim() || "پروژه بدون نام" };
+    setCloudSaving(true);
     try {
-      const token = createShareToken({ ...project, name: project.name.trim() || "پروژه" });
-      const url = `${window.location.origin}${window.location.pathname}?share=${token}`;
-      void navigator.clipboard?.writeText(url);
-      showToast({ text: "لینک کپی شد. توجه: فعلاً فقط در همین مرورگر باز می‌شود.", tone: "ok" });
+      const put = async (id: string) =>
+        fetch(withBasePath(`/api/lab/projects/${id}`), {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ project: snapshot }),
+        });
+      let res = snapshot.cloudId ? await put(snapshot.cloudId) : null;
+      // never saved, or deleted from "my projects" meanwhile: create it
+      if (!res || res.status === 404) {
+        res = await fetch(withBasePath("/api/lab/projects"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ project: snapshot }),
+        });
+      }
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        showToast({ text: "برای ذخیره در حساب وارد شوید. پروژه در همین مرورگر هم ذخیره می‌ماند.", tone: "warn", href: `/login?next=${encodeURIComponent(workspaceHref(""))}`, hrefLabel: "ورود" }, 7000);
+        return null;
+      }
+      if (!res.ok || !data.id) {
+        showToast({ text: data.error ?? "ذخیره در حساب ممکن نشد.", tone: "error" });
+        return null;
+      }
+      const id = data.id as string;
+      setProject((p) => ({ ...p, cloudId: id }));
+      setCloudJson(comparable({ ...snapshot, cloudId: id }));
+      if (!quiet) showToast({ text: `«${snapshot.name}» در حساب شما ذخیره شد.`, tone: "ok", href: "/lab/projects", hrefLabel: "پروژه‌های من" }, 4000);
+      return id;
     } catch {
-      showToast({ text: "ساخت لینک ممکن نشد.", tone: "error" });
+      showToast({ text: "اتصال برقرار نشد؛ ذخیره در حساب انجام نشد.", tone: "error" });
+      return null;
+    } finally {
+      setCloudSaving(false);
     }
   };
+
+  /** A public read-only link: saves first, then turns sharing on for the account copy. */
+  const share = async () => {
+    const id = cloudState === "saved" ? project.cloudId! : await saveToCloud(true);
+    if (!id) return;
+    const res = await fetch(withBasePath(`/api/lab/projects/${id}/share`), { method: "POST" });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.token) {
+      showToast({ text: data.error ?? "ساخت لینک اشتراک ممکن نشد.", tone: "error" });
+      return;
+    }
+    const url = `${window.location.origin}${withBasePath(workspaceHref(`?share=${data.token}`))}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast({ text: "لینک اشتراک کپی شد. هر کسی با این لینک یک کپی از مدار را باز می‌کند؛ لغوش از «پروژه‌های من».", tone: "ok" }, 6000);
+    } catch {
+      showToast({ text: `لینک اشتراک: ${url}`, tone: "ok" }, 15000);
+    }
+  };
+
+  // Open an account project (?project=) or a server share link (?share=) once on load.
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current) return;
+    opened.current = true;
+    const serverToken = initialShareToken && /^[A-Za-z0-9_-]{16,64}$/.test(initialShareToken) ? initialShareToken : null;
+    if (!initialProjectId && !serverToken) return;
+    void (async () => {
+      const res = await fetch(withBasePath(initialProjectId ? `/api/lab/projects/${initialProjectId}` : `/api/lab/share/${serverToken}`)).catch(() => null);
+      const data = res ? await res.json().catch(() => ({})) : {};
+      if (!res?.ok || !data.project) {
+        showToast({ text: data.error ?? "پروژه باز نشد.", tone: "error", ...(res?.status === 401 ? { href: `/login?next=${encodeURIComponent(workspaceHref(`?project=${initialProjectId}`))}`, hrefLabel: "ورود" } : {}) }, 7000);
+        return;
+      }
+      const loaded = deserializeProject(JSON.stringify(data.project));
+      replaceProject(loaded, initialProjectId ? `«${loaded.name}» از حساب شما باز شد.` : `«${loaded.name}» باز شد — این یک کپی برای شماست؛ با «ذخیره در حساب» مال خودتان می‌شود.`);
+      if (initialProjectId) setCloudJson(comparable(loaded));
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addBom = async () => {
     setBomBusy(true);
@@ -596,6 +682,11 @@ export function LabWorkspace({
       const el = e.target instanceof Element ? e.target : null;
       const typing = !!el?.closest("input, textarea, select, [contenteditable=true], .monaco-editor");
       const mod = e.ctrlKey || e.metaKey;
+      if (mod && (e.key.toLowerCase() === "s" || e.key === "س")) {
+        e.preventDefault();
+        if (!cloudSaving) void saveToCloud();
+        return;
+      }
       if (mod && e.key === "Enter") {
         e.preventDefault();
         if (engineStatus !== "running") void runSim();
@@ -670,6 +761,13 @@ export function LabWorkspace({
       onDelete={deleteSelected}
       onWireColor={(color) => selWire && commit((p) => ({ ...p, wires: p.wires.map((w) => (w.id === selWire.id ? { ...w, color } : w)) }))}
       onWireStraighten={() => selWire && commit((p) => ({ ...p, wires: p.wires.map((w) => (w.id === selWire.id ? { ...w, points: undefined } : w)) }))}
+      onProps={(patch) =>
+        selPart &&
+        commit((p) => ({
+          ...p,
+          parts: p.parts.map((x) => (x.instanceId === selPart.instanceId ? { ...x, props: { ...x.props, ...patch } } : x)),
+        }))
+      }
     />
   );
 
@@ -849,7 +947,9 @@ export function LabWorkspace({
           onNewProject={() => replaceProject(newEmptyProject("پروژه جدید"), "پروژه‌ی خالی ساخته شد. «واگرد» پروژه‌ی قبلی را برمی‌گرداند.")}
           onExport={exportJson}
           onImport={(f) => void importJson(f)}
-          onShare={share}
+          onShare={() => void share()}
+          cloud={cloudState}
+          onSaveCloud={() => void saveToCloud()}
           onHelp={() => setTourOpen(true)}
         />
 

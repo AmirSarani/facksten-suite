@@ -16,16 +16,19 @@ export function WorkspaceLoader({
   initialPartSlug,
   initialTemplateId,
   initialShareToken,
+  initialProjectId,
 }: {
   initialPartSlug?: string | null;
   initialTemplateId?: string | null;
   initialShareToken?: string | null;
+  initialProjectId?: string | null;
 }) {
   return (
     <LabWorkspace
       initialPartSlug={initialPartSlug}
       initialTemplateId={initialTemplateId}
       initialShareToken={initialShareToken}
+      initialProjectId={initialProjectId}
     />
   );
 }

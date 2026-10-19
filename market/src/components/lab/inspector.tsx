@@ -6,6 +6,8 @@ import type { ComponentDef, PlacedPart, WireDef } from "@/lab/types";
 import { Icon } from "@/components/icon";
 import { formatToman } from "@/lib/format";
 import { SimStatusBadge } from "./sim-status-badge";
+import { LED_COLORS, RESISTOR_PRESETS, formatOhms, ledColor, parseOhms, resistorOhms, type LedColor } from "@/lab/part-props";
+import { useState } from "react";
 
 const ModelViewer = dynamic(() => import("./model-viewer").then((m) => m.ModelViewer), {
   ssr: false,
@@ -42,6 +44,8 @@ export type InspectorProps = {
   onDelete: () => void;
   onWireColor: (color: string) => void;
   onWireStraighten: () => void;
+  /** Merge per-instance properties into the selected part. */
+  onProps: (patch: Record<string, string | number | boolean>) => void;
 };
 
 /** Jumper colours by convention: red +, black GND, then signal colours. */
@@ -57,7 +61,7 @@ const WIRE_COLORS: { color: string; name: string }[] = [
 ];
 
 export function Inspector({
-  part, def, lit, wire, wireEnds, summary, selectionCount, onRotate, onDuplicate, onDelete, onWireColor, onWireStraighten,
+  part, def, lit, wire, wireEnds, summary, selectionCount, onRotate, onDuplicate, onDelete, onWireColor, onWireStraighten, onProps,
 }: InspectorProps) {
   if (selectionCount > 1) {
     return (
@@ -195,6 +199,8 @@ export function Inspector({
 
       <p className="text-xs leading-6 text-on-surface-variant">{def.description}</p>
 
+      <PartProperties key={part.instanceId} part={part} def={def} onProps={onProps} />
+
       <section>
         <h4 className="mb-2 font-mono text-[11px] uppercase tracking-widest text-primary-container">&gt; پین‌اوت</h4>
         {def.pins.some((p) => p.signal === "passive") ? (
@@ -268,5 +274,91 @@ function Stat({ label, value, tone }: { label: string; value: number; tone?: "ok
       <dt className="text-on-surface-variant">{label}</dt>
       <dd className={`font-mono text-lg font-bold ${color}`}>{value.toLocaleString("fa-IR")}</dd>
     </div>
+  );
+}
+
+/** Editable properties of the selected part (resistor value, LED colour). */
+function PartProperties({ part, def, onProps }: { part: PlacedPart; def: ComponentDef; onProps: InspectorProps["onProps"] }) {
+  const kind = def.behaviorModel.kind;
+  const ohms = resistorOhms(part, def);
+  const [text, setText] = useState("");
+  const [bad, setBad] = useState(false);
+  if (kind !== "resistor" && kind !== "led") return null;
+  if (kind === "led" && def.pins.length !== 2) return null;
+
+  const box = "cyber-chamfer-sm border border-outline bg-surface-container-low p-3";
+  if (kind === "resistor") {
+    const apply = () => {
+      const v = parseOhms(text);
+      setBad(v == null);
+      if (v != null) {
+        onProps({ ohms: v });
+        setText("");
+      }
+    };
+    return (
+      <section className={box}>
+        <h4 className="mb-2 font-mono text-[11px] uppercase tracking-widest text-primary-container">&gt; مقدار مقاومت</h4>
+        <div className="flex flex-wrap gap-1.5" dir="ltr">
+          {RESISTOR_PRESETS.map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => onProps({ ohms: v })}
+              aria-pressed={ohms === v}
+              className={`cursor-pointer border px-2 py-1 font-mono text-[11px] ${ohms === v ? "border-primary-container text-primary-container" : "border-outline text-on-surface-variant hover:text-on-surface"}`}
+            >
+              {formatOhms(v)}
+            </button>
+          ))}
+        </div>
+        <form
+          className="mt-2 flex gap-2"
+          dir="ltr"
+          onSubmit={(e) => {
+            e.preventDefault();
+            apply();
+          }}
+        >
+          <input
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+              setBad(false);
+            }}
+            placeholder={`${formatOhms(ohms)} — e.g. 3.3k`}
+            aria-label="مقدار دلخواه مقاومت"
+            aria-invalid={bad}
+            className={`min-w-0 flex-1 border bg-surface-container-lowest px-2 py-1.5 font-mono text-xs outline-none ${bad ? "border-error" : "border-outline focus:border-primary-container"}`}
+          />
+          <button type="submit" className="cursor-pointer border border-outline px-3 font-mono text-xs hover:border-primary-container hover:text-primary-container">
+            OK
+          </button>
+        </form>
+      </section>
+    );
+  }
+
+  const current = ledColor(part, def);
+  return (
+    <section className={box}>
+      <h4 className="mb-2 font-mono text-[11px] uppercase tracking-widest text-primary-container">&gt; رنگ LED</h4>
+      <div className="flex gap-2" role="radiogroup" aria-label="رنگ LED">
+        {(Object.keys(LED_COLORS) as LedColor[]).map((c) => (
+          <button
+            key={c}
+            type="button"
+            role="radio"
+            aria-checked={current === c}
+            title={`${LED_COLORS[c].label} · Vf ≈ ${LED_COLORS[c].forwardVoltage}V`}
+            onClick={() => onProps({ color: c })}
+            className={`flex cursor-pointer flex-col items-center gap-1 text-[10px] ${current === c ? "text-primary-container" : "text-on-surface-variant"}`}
+          >
+            <span className={`size-6 rounded-full border-2 ${current === c ? "border-primary-container" : "border-outline"}`} style={{ background: LED_COLORS[c].hex }} />
+            {LED_COLORS[c].label}
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }

@@ -710,7 +710,7 @@ export function BoardCanvas(props: Props) {
                   : "cursor-grab active:cursor-grabbing"
             }
           >
-            <PartArt def={def} state={visuals.get(part.instanceId)} />
+            <PartArt def={def} state={visuals.get(part.instanceId)} props={part.props} />
           </g>
         </g>
       );

@@ -54,6 +54,7 @@ model User {
   reviews      Review[]
   wishlist     WishlistItem[]
   cartItems    CartItem[]
+  labProjects  LabProject[]
 }
 
 model Address {
@@ -245,4 +246,19 @@ model SiteSetting {
   address  String @default("تهران، خیابان جمهوری")
   faqJson  String @default("[]")
   homeJson String @default("{}")
+}
+
+/// A virtual-lab circuit saved to the user's account. `data` is the serialized LabProject JSON.
+model LabProject {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  data       String
+  /// Random token behind a public read-only share link; null when not shared.
+  shareToken String?  @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId, updatedAt])
 }

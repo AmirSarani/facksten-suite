@@ -109,6 +109,9 @@ export type TopbarProps = {
   onImport: (file: File) => void;
   onShare: () => void;
   onHelp: () => void;
+  /** Account copy: none yet, saving, in sync, or behind local edits. */
+  cloud: "none" | "saving" | "saved" | "dirty";
+  onSaveCloud: () => void;
 };
 
 export function WorkspaceTopbar(p: TopbarProps) {
@@ -136,6 +139,25 @@ export function WorkspaceTopbar(p: TopbarProps) {
           <span className={`size-1.5 rounded-full ${p.saved ? "bg-accent-tertiary" : "bg-amber-400"}`} />
           {p.saved ? "ذخیره شد" : "ذخیره…"}
         </span>
+        <button
+          type="button"
+          onClick={p.onSaveCloud}
+          disabled={p.cloud === "saving"}
+          className={`${ghostBtn} shrink-0 ${p.cloud === "dirty" || p.cloud === "none" ? "text-primary-container" : ""}`}
+          title={
+            p.cloud === "saved"
+              ? "در حساب شما ذخیره است (Ctrl+S)"
+              : p.cloud === "dirty"
+                ? "تغییرات هنوز در حساب ذخیره نشده (Ctrl+S)"
+                : p.cloud === "saving"
+                  ? "در حال ذخیره در حساب…"
+                  : "ذخیره در حساب کاربری (Ctrl+S)"
+          }
+          aria-label="ذخیره در حساب"
+        >
+          <Icon name={p.cloud === "saved" ? "check_circle" : "cloud_upload"} className={`h-4 w-4 ${p.cloud === "saving" ? "animate-pulse" : ""}`} />
+          <span className="hidden xl:inline">{p.cloud === "saved" ? "در حساب" : "ذخیره در حساب"}</span>
+        </button>
       </div>
 
       {/* run controls — centre stage */}
@@ -254,8 +276,11 @@ export function WorkspaceTopbar(p: TopbarProps) {
                 <Icon name="folder_zip" className="h-4 w-4" /> باز کردن فایل پروژه
               </button>
               <button type="button" role="menuitem" className={menuItem} onClick={() => { close(); p.onShare(); }}>
-                <Icon name="link" className="h-4 w-4" /> کپی لینک (فقط همین مرورگر)
+                <Icon name="link" className="h-4 w-4" /> کپی لینک اشتراک
               </button>
+              <Link href="/lab/projects" role="menuitem" className={menuItem} onClick={close}>
+                <Icon name="folder_zip" className="h-4 w-4" /> پروژه‌های من
+              </Link>
               <div className="my-1 h-px bg-outline" />
               <button type="button" role="menuitem" className={menuItem} onClick={() => { close(); p.onHelp(); }}>
                 <Glyph d={G.help} /> راهنمای شروع

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "ویرایشگر مدار و شبیه‌ساز Arduino PushRSP",
 };
 
-type Props = { searchParams: Promise<{ part?: string; template?: string; share?: string }> };
+type Props = { searchParams: Promise<{ part?: string; template?: string; share?: string; project?: string }> };
 
 export default async function LabWorkspacePage({ searchParams }: Props) {
   const sp = await searchParams;
@@ -15,6 +15,7 @@ export default async function LabWorkspacePage({ searchParams }: Props) {
       initialPartSlug={sp.part ?? null}
       initialTemplateId={sp.template ?? null}
       initialShareToken={sp.share ?? null}
+      initialProjectId={sp.project ?? null}
     />
   );
 }

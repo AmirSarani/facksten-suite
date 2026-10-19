@@ -1,5 +1,6 @@
 import type { ComponentDef, LabProject, PlacedPart, WiringIssue } from "../types";
 import { buildNetlist, isConnected, netAt, pinKey, type Net, type Netlist } from "../netlist";
+import { LED_COLORS, formatOhms, ledColor, resistorOhms } from "../part-props";
 
 /** Wire color helpers used by UI */
 export function suggestWireColor(
@@ -123,6 +124,23 @@ export function validateWiring(
         message: `LED «${def.name}» برعکس است: پایه‌ی بلند (آند +) باید سمت خروجی و پایه‌ی کوتاه (کاتد −) سمت GND باشد.`,
         partIds: [part.instanceId],
       });
+    } else if (isConnected(anode) && isConnected(cathode)) {
+      // a series resistor on either leg: is it big enough for ~20 mA at 5 V?
+      const vf = LED_COLORS[ledColor(part, def)].forwardVoltage;
+      const series = [...anode.pins, ...cathode.pins].filter((p) => p.def.behaviorModel.kind === "resistor");
+      const ohms = series.length ? Math.min(...series.map((r) => resistorOhms(r.part, r.def))) : null;
+      const supply = Math.max(5, ...anode.supply);
+      if (ohms != null && ohms > 0) {
+        const ma = ((supply - vf) / ohms) * 1000;
+        if (ma > 25) {
+          issues.push({
+            code: "led-overcurrent",
+            severity: "warning",
+            message: `جریان LED «${def.name}» با مقاومت ${formatOhms(ohms)} حدود ${Math.round(ma).toLocaleString("fa-IR")} میلی‌آمپر است (حداکثر ۲۰). مقاومت بزرگ‌تری بگذارید، مثلاً ${formatOhms(Math.ceil(((supply - vf) / 0.015) / 10) * 10)}.`,
+            partIds: [part.instanceId, ...series.map((r) => r.part.instanceId)],
+          });
+        }
+      }
     } else if (isConnected(anode) !== isConnected(cathode)) {
       issues.push({
         code: "led-open",

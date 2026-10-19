@@ -105,8 +105,7 @@ backup() {
     done
   done
   # keep the newest $KEEP_BACKUPS
-  find "$BACKUPS" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p
-' | sort -rn | tail -n +$((KEEP_BACKUPS + 1)) | cut -d' ' -f2- | xargs -r rm -rf
+  find "$BACKUPS" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rn | tail -n +$((KEEP_BACKUPS + 1)) | cut -d' ' -f2- | xargs -r rm -rf
 }
 
 restore() {

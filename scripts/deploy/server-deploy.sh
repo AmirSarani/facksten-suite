@@ -77,16 +77,24 @@ report_diff() {
     changes="$(rsync -rcn --delete --itemize-changes "${filters[@]}" "$SUITE/$app/" "$live/" | grep -E '^(>f|\*deleting|cd)' || true)"
     if [ -z "$changes" ]; then echo "  identical to GitHub"; continue; fi
     local del upd new
+    # itemize codes: ">f+++++++++" new file, ">fc…" / ">f.st…" changed file, "*deleting" server-only
     del="$(grep -c '^\*deleting' <<<"$changes" || true)"
-    upd="$(grep -c '^>f\.' <<<"$changes" || true)"
+    upd="$(grep -c '^>f[^+]' <<<"$changes" || true)"
     new="$(grep -c '^>f+' <<<"$changes" || true)"
     echo "  would update $upd file(s), add $new, DELETE $del (server-only)"
+    # (each grep may match nothing — keep pipefail from ending the report)
     if [ "$del" -gt 0 ]; then
       echo "  ⚠ files on the server that GitHub doesn't have (un-pushed patches?) — deploy would remove them:"
-      grep '^\*deleting' <<<"$changes" | sed 's/^\*deleting */    - /' | head -60
+      { grep '^\*deleting' <<<"$changes" || true; } | sed 's/^\*deleting */    - /' | head -60
     fi
-    echo "  changed files:"
-    grep '^>f\.' <<<"$changes" | awk '{print "    ~ "$2}' | head -60
+    if [ "$upd" -gt 0 ]; then
+      echo "  changed files:"
+      { grep '^>f[^+]' <<<"$changes" || true; } | awk '{print "    ~ "$2}' | head -60
+    fi
+    if [ "$new" -gt 0 ]; then
+      echo "  new files:"
+      { grep '^>f+' <<<"$changes" || true; } | awk '{print "    + "$2}' | head -60
+    fi
   done
 }
 

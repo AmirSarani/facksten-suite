@@ -161,7 +161,10 @@ restore() {
     for db in "$BACKUP_DIR/$app-"*.db; do
       if [ -f "$db" ]; then cp "$db" "$live/${db##*/"$app"-}"; fi
     done
-    if [ "${SKIP_BUILD:-0}" != 1 ]; then (cd "$live" && npm ci --no-audit --no-fund --loglevel=error) || true; fi
+    # dependencies of the restored code (nothing to install when the backup was an empty first install)
+    if [ "${SKIP_BUILD:-0}" != 1 ] && [ -f "$live/package-lock.json" ]; then
+      (cd "$live" && npm ci --no-audit --no-fund --loglevel=error) || true
+    fi
     if [ -n "${UNIT[$app]}" ]; then svc restart "${UNIT[$app]}" || true; fi
   done
 }

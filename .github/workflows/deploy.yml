@@ -88,9 +88,11 @@ jobs:
           USER: ${{ secrets.DEPLOY_USER }}
           MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'deploy' }}
           SHA: ${{ steps.commit.outputs.sha }}
+          # where the suite lives on the server (repository variable; /opt/pushrsp by default)
+          ROOT: ${{ vars.DEPLOY_ROOT || '/opt/pushrsp' }}
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=20 \
-            "$USER@$HOST" "bash -s -- $MODE $SHA" < scripts/deploy/server-deploy.sh
+            "$USER@$HOST" "bash -s -- $MODE $SHA $ROOT" < scripts/deploy/server-deploy.sh
 
       - name: Clean up key
         if: always()

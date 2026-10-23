@@ -227,9 +227,13 @@ deploy() {
     if [ "${SKIP_BUILD:-0}" = 1 ]; then continue; fi
     log "$app: install + build"
     (
+      # the parent's ERR trap rolls back once; don't run it again inside this subshell
+      trap - ERR
       cd "$live"
       build_run npm ci --no-audit --no-fund --loglevel=error
       if [ -f prisma/schema.prisma ]; then
+        # the seed and the build both import the generated client
+        npx prisma generate
         local db fresh=0
         db="$(db_file "$live")"
         if [ -n "$db" ] && [ ! -s "$db" ]; then fresh=1; fi

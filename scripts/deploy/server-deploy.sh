@@ -228,28 +228,37 @@ proxy_config() {
   cp "$conf" "$conf.prev"
   # rewrite in place: the container bind-mounts this file, a new inode (mv) would not reach it
   printf '%s\n' "$want" >"$conf"
-  if dock exec "$proxy" nginx -t >/dev/null 2>&1 && dock exec "$proxy" nginx -s reload >/dev/null 2>&1 \
-     && proxy_check "$port"; then
-    echo "  ✓ proxy config installed (previous kept as $conf.prev)"
-    return 0
+  if dock exec "$proxy" nginx -t >/dev/null 2>&1; then
+    # a reload hands over to new workers asynchronously; if it still serves the old config, restart
+    # the container (ours alone: nothing else listens through it)
+    if { dock exec "$proxy" nginx -s reload >/dev/null 2>&1 && proxy_check "$port"; } \
+       || { echo "  reload not picked up — restarting $proxy"; dock restart "$proxy" >/dev/null && proxy_check "$port"; }; then
+      echo "  ✓ proxy config installed (previous kept as $conf.prev)"
+      return 0
+    fi
+  else
+    dock exec "$proxy" nginx -t 2>&1 | tail -3 | sed 's/^/    /' || true
   fi
   echo "  ✗ new proxy config failed — putting the previous one back"
   cat "$conf.prev" >"$conf"
-  dock exec "$proxy" nginx -s reload >/dev/null 2>&1 || true
+  dock exec "$proxy" nginx -s reload >/dev/null 2>&1 || dock restart "$proxy" >/dev/null 2>&1 || true
   return 1
 }
 
 proxy_check() {
-  # the page and one of its scripts, through the proxy under the renamed path
+  # the page and one of its scripts through the proxy, under the renamed path (up to ~15 s)
   [ "${HEALTH:-1}" = 1 ] || return 0
-  local base="http://127.0.0.1:$1" page script code
-  sleep 1
-  page="$(curl -s --max-time 10 "$base/pushrsp" || true)"
-  script="$(grep -oE '/pushrsp/_next/static/c/[A-Za-z0-9._~-]+\.js' <<<"$page" | head -1 || true)"
-  [ -n "$script" ] || { echo "  ✗ proxy: no rewritten script URL in /pushrsp"; return 1; }
-  code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$base$script" || true)"
-  [ "$code" = 200 ] || { echo "  ✗ proxy: $script → $code"; return 1; }
-  echo "  ✓ proxy: /pushrsp and $script → 200"
+  local base="http://127.0.0.1:$1" page script="" code=""
+  for _ in $(seq 1 15); do
+    sleep 1
+    page="$(curl -s --max-time 10 "$base/pushrsp" || true)"
+    script="$(grep -oE '/pushrsp/_next/static/c/[A-Za-z0-9._~-]+\.js' <<<"$page" | head -1 || true)"
+    [ -n "$script" ] || continue
+    code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$base$script" || true)"
+    if [ "$code" = 200 ]; then echo "  ✓ proxy: /pushrsp and $script → 200"; return 0; fi
+  done
+  if [ -z "$script" ]; then echo "  ✗ proxy: no rewritten script URL in /pushrsp"; else echo "  ✗ proxy: $script → $code"; fi
+  return 1
 }
 
 health() {

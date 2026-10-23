@@ -39,7 +39,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' && vars.DEPLOY_ENABLED == 'true')
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 80
     environment: production
     steps:
       - name: Resolve commit
@@ -108,7 +108,7 @@ jobs:
           remote "setsid bash -c 'bash $job.sh $MODE $SHA $ROOT > $job.log 2>&1; echo \$? > $job.exit' < /dev/null > /dev/null 2>&1 &"
           echo "started on the server: $job.log"
           shown=0
-          for _ in $(seq 1 240); do          # up to ~40 min
+          for _ in $(seq 1 450); do          # up to ~75 min
             sleep 10
             # the server reports: exit code (if done), log size, then the new part of the log
             out="$(remote "c=\$(cat '$job.exit' 2>/dev/null); n=\$(wc -c < '$job.log' 2>/dev/null || echo 0); echo \"\$c|\$n\"; head -c \"\$n\" '$job.log' 2>/dev/null | tail -c +$((shown + 1))")" || continue
@@ -124,7 +124,7 @@ jobs:
               exit "$code"
             fi
           done
-          echo "::error::no result from the server after 40 minutes (log: $job.log)"
+          echo "::error::no result from the server after 75 minutes (log: $job.log)"
           exit 1
 
       - name: Clean up key

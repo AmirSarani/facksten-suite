@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # PushRSP suite — deploy on the server, run by .github/workflows/deploy.yml over SSH:
 #
-#   ssh deploy@server 'bash -s' -- <mode> <git-sha> < scripts/deploy/server-deploy.sh
+#   ssh deploy@server 'bash -s' -- <mode> <git-sha> [root] < scripts/deploy/server-deploy.sh
 #
 # The server pulls the commit from GitHub itself (public repo, no credentials on the box).
 #   diff    — fetch <sha> and report what a deploy would change in the live directories
@@ -13,21 +13,48 @@
 # Overridable for the CI self-test: PUSHRSP_ROOT, PUSHRSP_REPO, SKIP_BUILD=1, SYSTEMCTL, HEALTH=0.
 set -eEuo pipefail  # -E: the rollback trap also fires inside functions
 
-MODE="${1:?usage: server-deploy.sh diff|deploy <git-sha>}"
+MODE="${1:?usage: server-deploy.sh diff|deploy <git-sha> [root]}"
 SHA="${2:?missing git sha}"
-ROOT="${PUSHRSP_ROOT:-/opt/pushrsp}"
+ROOT="${PUSHRSP_ROOT:-${3:-/opt/pushrsp}}"
 REPO_URL="${PUSHRSP_REPO:-https://github.com/AmirSarani/facksten-suite.git}"
 SUITE="$ROOT/suite"
 BACKUPS="$ROOT/backups"
 TOOLCHAIN="$ROOT/lab-toolchain"
-SYSTEMCTL="${SYSTEMCTL:-systemctl}"
 KEEP_BACKUPS=8
+
+# Per-server settings written by bootstrap.sh (Node location, ports, build limits…).
+NODE_DIR="" BUILD_NICE=1 BUILD_HEAP_MB=1536 LAB_AVR_GCC=""
+MARKET_PORT=13010 PORTFOLIO_PORT=13020
+# shellcheck source=/dev/null
+if [ -f "$ROOT/deploy.env" ]; then . "$ROOT/deploy.env"; fi
+if [ -n "$NODE_DIR" ]; then PATH="$NODE_DIR/bin:$PATH"; fi
 
 # app name → live dir, systemd unit (empty = static build only), health URL
 APPS=(market portfolio-web portfolio-admin)
 declare -A LIVE=([market]="$ROOT/app" [portfolio-web]="$ROOT/portfolio-web" [portfolio-admin]="$ROOT/portfolio-admin")
 declare -A UNIT=([market]="pushrsp-market" [portfolio-web]="pushrsp-portfolio" [portfolio-admin]="")
-declare -A HEALTH_URL=([market]="http://127.0.0.1:13010/pushrsp" [portfolio-web]="http://127.0.0.1:13020/portfolio" [portfolio-admin]="")
+declare -A HEALTH_URL=([market]="http://127.0.0.1:$MARKET_PORT/pushrsp" [portfolio-web]="http://127.0.0.1:$PORTFOLIO_PORT/portfolio" [portfolio-admin]="")
+
+# systemctl as root, through sudo otherwise; SYSTEMCTL overrides it (CI self-test)
+svc() {
+  if [ -n "${SYSTEMCTL:-}" ]; then "$SYSTEMCTL" "$@"
+  elif [ "$(id -u)" = 0 ]; then systemctl "$@"
+  else sudo -n systemctl "$@"; fi
+}
+
+# Builds yield to whatever else runs on the box (CPU/IO priority, bounded Node heap).
+build_run() {
+  if [ "$BUILD_NICE" = 1 ]; then NODE_OPTIONS="--max-old-space-size=$BUILD_HEAP_MB" nice -n 15 ionice -c3 "$@"
+  else "$@"; fi
+}
+
+# sqlite file of an app, from its .env DATABASE_URL (file:…), relative paths from the app dir.
+db_file() {
+  local url
+  url="$(grep -E '^DATABASE_URL=' "$1/.env" 2>/dev/null | head -1 | cut -d= -f2- | tr -d '"' || true)"
+  url="${url#file:}"
+  case "$url" in "") echo "" ;; /*) echo "$url" ;; *) echo "$1/${url#./}" ;; esac
+}
 
 # Kept on the server across deploys (rsync filter rules, relative to each app dir).
 PROTECT=(
@@ -135,7 +162,7 @@ restore() {
       if [ -f "$db" ]; then cp "$db" "$live/${db##*/"$app"-}"; fi
     done
     if [ "${SKIP_BUILD:-0}" != 1 ]; then (cd "$live" && npm ci --no-audit --no-fund --loglevel=error) || true; fi
-    if [ -n "${UNIT[$app]}" ]; then "$SYSTEMCTL" restart "${UNIT[$app]}" || true; fi
+    if [ -n "${UNIT[$app]}" ]; then svc restart "${UNIT[$app]}" || true; fi
   done
 }
 
@@ -161,14 +188,18 @@ lab_toolchain() {
     echo "  lab toolchain up to date"
     return 0
   fi
-  if ! command -v avr-gcc >/dev/null; then
+  local gcc_args=()
+  if [ "$LAB_AVR_GCC" = download ]; then
+    # a private avr-gcc inside $TOOLCHAIN — nothing installed system-wide
+    gcc_args=(--download-avr-gcc)
+  elif ! command -v avr-gcc >/dev/null; then
     if [ "$(id -u)" = 0 ] && command -v apt-get >/dev/null; then
       DEBIAN_FRONTEND=noninteractive apt-get install -y -qq gcc-avr avr-libc >/dev/null
     else
       echo "  ⚠ avr-gcc missing and can't install it (not root) — lab keeps the simple compiler"; return 0
     fi
   fi
-  (cd "${LIVE[market]}" && npx --yes tsx scripts/lab-toolchain/setup.ts --dir "$TOOLCHAIN") && echo "$want" >"$stamp"
+  (cd "${LIVE[market]}" && npx --yes tsx scripts/lab-toolchain/setup.ts --dir "$TOOLCHAIN" "${gcc_args[@]}") && echo "$want" >"$stamp"
 }
 
 health() {
@@ -194,12 +225,20 @@ deploy() {
     log "$app: install + build"
     (
       cd "$live"
-      npm ci --no-audit --no-fund --loglevel=error
+      build_run npm ci --no-audit --no-fund --loglevel=error
       if [ -f prisma/schema.prisma ]; then
+        local db fresh=0
+        db="$(db_file "$live")"
+        if [ -n "$db" ] && [ ! -s "$db" ]; then fresh=1; fi
         # refuses changes that would drop data — then the deploy stops and rolls back
         npx prisma db push
+        # first install only: seed the empty database (the seed wipes, so never on a live one)
+        if [ "$fresh" = 1 ]; then
+          log "$app: first install — seeding the new database"
+          SEED_ALLOW_WIPE=1 npm run db:seed
+        fi
       fi
-      npm run build
+      build_run npm run build
     )
   done
   if [ "${SKIP_BUILD:-0}" != 1 ]; then
@@ -210,7 +249,7 @@ deploy() {
   for app in "${APPS[@]}"; do
     [ -n "${UNIT[$app]}" ] || continue
     log "${UNIT[$app]}: restart"
-    "$SYSTEMCTL" restart "${UNIT[$app]}"
+    svc restart "${UNIT[$app]}"
     health "$app"
   done
   trap - ERR
@@ -219,6 +258,7 @@ deploy() {
 }
 
 command -v rsync >/dev/null || die "rsync is required on the server (apt install rsync)"
+[ -d "$ROOT" ] || die "$ROOT does not exist — run scripts/deploy/bootstrap.sh on this server first"
 exec 9>"$ROOT/.deploy.lock"
 flock -n 9 || die "another deploy is running"
 

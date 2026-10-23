@@ -131,7 +131,9 @@ async function main() {
   });
   const ctagsDir = join(dir, "ctags");
   mkdirSync(ctagsDir, { recursive: true });
-  execFileSync(TAR, ["-xf", ctagsArchive, "-C", ctagsDir, ...(win ? [] : ["--strip-components=1"])]);
+  // both archives hold the bare executable at the top level (no folder to strip)
+  execFileSync(TAR, ["-xf", ctagsArchive, "-C", ctagsDir]);
+  if (!existsSync(join(ctagsDir, win ? "ctags.exe" : "ctags"))) throw new Error(`no ctags executable in ${ctagsDir}`);
 
   // avr-gcc
   let avrGccRoot = arg("avr-gcc");

@@ -12,7 +12,7 @@ trap 'rm -rf "$fake"' EXIT
 # the script fetches by sha: let a local clone do what GitHub allows
 git -C "$repo" config uploadpack.allowAnySHA1InWant true
 
-export PUSHRSP_ROOT="$fake" PUSHRSP_REPO="file://$repo" SKIP_BUILD=1 HEALTH=0 SYSTEMCTL=true
+export PUSHRSP_ROOT="$fake" PUSHRSP_REPO="file://$repo" SKIP_BUILD=1 HEALTH=0 SYSTEMCTL=true DOCKER=true
 
 # a "live" server: an older copy with a server-only patch and runtime data
 for app in market portfolio-web portfolio-admin; do
@@ -22,6 +22,8 @@ for app in market portfolio-web portfolio-admin; do
   echo "SECRET=keep-me" >"$live/.env"
   echo "server-only hotfix" >"$live/SERVER_PATCH.md"
 done
+# the proxy config bootstrap.sh wrote (its listen port is kept)
+mkdir -p "$fake/nginx" && printf 'server {\n    listen 8099;\n}\n' >"$fake/nginx/pushrsp.conf"
 sqlite3 "$fake/app/prod.db" "create table orders(id int); insert into orders values (42);"
 mkdir -p "$fake/app/public/uploads/products" "$fake/portfolio-web/data/uploads"
 echo "img" >"$fake/app/public/uploads/products/a.png"
@@ -48,6 +50,10 @@ grep -q "LAB_TOOLCHAIN_DIR=" "$fake/app/.env" || fail "LAB_TOOLCHAIN_DIR not add
 [ -f "$fake/app/public/uploads/products/a.png" ] || fail "shop uploads deleted"
 [ -f "$fake/portfolio-web/data/uploads/c1" ] || fail "portfolio uploads deleted"
 [ "$(cat "$fake/DEPLOYED_SHA")" = "$sha" ] || fail "DEPLOYED_SHA not written"
+grep -q "listen 8099;" "$fake/nginx/pushrsp.conf" || fail "proxy config lost its port"
+grep -q "proxy_pass http://127.0.0.1:13010;" "$fake/nginx/pushrsp.conf" || fail "proxy config not installed"
+! grep -q "__" "$fake/nginx/pushrsp.conf" || fail "proxy config has unfilled placeholders"
+[ -f "$fake/nginx/pushrsp.conf.prev" ] || fail "previous proxy config not kept"
 backup="$(find "$fake/backups" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' | sort -rn | head -1 | cut -d' ' -f2-)"
 # list to a file first: `tar | grep -q` would SIGPIPE tar and trip pipefail
 tar -tzf "$backup/market.tgz" >"$fake/backup-list"

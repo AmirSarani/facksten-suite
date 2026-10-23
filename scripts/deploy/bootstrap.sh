@@ -67,6 +67,7 @@ cat >"$ROOT/deploy.env" <<EOF
 NODE_DIR=$ROOT/node
 MARKET_PORT=$MARKET_PORT
 PORTFOLIO_PORT=$PORTFOLIO_PORT
+PROXY_PORT=$PORT
 # builds run at low CPU/IO priority with a bounded heap (other services share this box)
 BUILD_NICE=1
 BUILD_HEAP_MB=1536
@@ -134,6 +135,7 @@ $SUDO systemctl daemon-reload
 $SUDO systemctl enable pushrsp-market pushrsp-portfolio >/dev/null 2>&1
 
 log "nginx (container $PROXY on :$PORT only)"
+# first version only — every deploy then installs scripts/deploy/nginx.conf over it
 cat >"$ROOT/nginx/pushrsp.conf" <<EOF
 # PushRSP suite — the only thing this container serves (no default :80 server)
 server {

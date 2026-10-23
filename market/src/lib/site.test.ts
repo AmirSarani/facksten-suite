@@ -20,26 +20,31 @@ describe("getHeaderNav", () => {
     assert.ok(NAV.some((item) => item.href === "/lab" && item.label === "آزمایشگاه مجازی"));
   });
 
-  it("omits the portfolio item when the URL is unset", () => {
+  it("omits the studio menu when the URL is unset", () => {
     const nav = getHeaderNav(null);
     assert.deepEqual(nav, NAV);
     assert.equal(
-      nav.some((item) => item.label === "نمونه کارها"),
+      nav.some((item) => item.label === "استودیو"),
       false,
     );
   });
 
-  it("inserts نمونه کارها after مقالات when the URL is set", () => {
-    const nav = getHeaderNav("http://localhost:3020");
+  it("inserts the studio menu after مقالات, in the home section's order", () => {
+    const nav = getHeaderNav("http://localhost:3020/");
     const articlesIndex = nav.findIndex((item) => item.href === "/articles");
-    const portfolio = nav[articlesIndex + 1];
+    const studio = nav[articlesIndex + 1];
 
     assert.ok(articlesIndex >= 0);
-    assert.deepEqual(portfolio, {
-      href: "http://localhost:3020",
-      label: "نمونه کارها",
-      external: true,
-    });
+    assert.equal(studio?.label, "استودیو");
+    assert.equal(studio?.href, "http://localhost:3020");
+    assert.deepEqual(
+      studio?.children?.map((child) => [child.label, child.href]),
+      [
+        ["خدمات طراحی وب", "http://localhost:3020/services"],
+        ["نمونه کارها", "http://localhost:3020/projects"],
+        ["درخواست مشاوره طراحی", "http://localhost:3020/contact"],
+      ],
+    );
     assert.equal(nav[articlesIndex + 2]?.href, "/about");
   });
 });

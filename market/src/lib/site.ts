@@ -20,6 +20,8 @@ export type NavItem = {
   href: string;
   label: string;
   external?: boolean;
+  /** Header only: shown as a dropdown (desktop) / indented group (mobile menu). */
+  children?: NavItem[];
 };
 
 /** Primary header/footer nav — short and task-focused */
@@ -41,7 +43,25 @@ export function getPortfolioUrl(
 }
 
 /**
- * Header nav only. Portfolio stays out of `NAV` so the footer shop list
+ * The studio menu: same entries, same order as the home page's studio section
+ * (services → portfolio → design consultation), all on the portfolio site.
+ */
+export function getStudioNav(portfolioUrl: string): NavItem {
+  const base = portfolioUrl.replace(/\/+$/, "");
+  return {
+    href: base,
+    label: "استودیو",
+    external: true,
+    children: [
+      { href: `${base}/services`, label: "خدمات طراحی وب", external: true },
+      { href: `${base}/projects`, label: "نمونه کارها", external: true },
+      { href: `${base}/contact`, label: "درخواست مشاوره طراحی", external: true },
+    ],
+  };
+}
+
+/**
+ * Header nav only. The studio stays out of `NAV` so the footer shop list
  * is unchanged. Placed after مقالات: storefront destinations first, then
  * institutional links (درباره ما / تماس با ما).
  * Lab is in NAV so hamburger + desktop both show it.
@@ -50,7 +70,7 @@ export function getHeaderNav(
   portfolioUrl: string | null = getPortfolioUrl(),
 ): NavItem[] {
   if (!portfolioUrl) return NAV;
-  const item: NavItem = { href: portfolioUrl, label: "نمونه کارها", external: true };
+  const item = getStudioNav(portfolioUrl);
   const articlesIndex = NAV.findIndex((navItem) => navItem.href === "/articles");
   if (articlesIndex < 0) return [...NAV, item];
   return [...NAV.slice(0, articlesIndex + 1), item, ...NAV.slice(articlesIndex + 1)];

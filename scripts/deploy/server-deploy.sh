@@ -24,7 +24,7 @@ KEEP_BACKUPS=8
 
 # Per-server settings written by bootstrap.sh (Node location, ports, build limits…).
 NODE_DIR="" BUILD_NICE=1 BUILD_HEAP_MB=1536 LAB_AVR_GCC=""
-MARKET_PORT=13010 PORTFOLIO_PORT=13020
+MARKET_PORT=13010 PORTFOLIO_PORT=13020 PROXY_PORT=""
 # shellcheck source=/dev/null
 if [ -f "$ROOT/deploy.env" ]; then . "$ROOT/deploy.env"; fi
 if [ -n "$NODE_DIR" ]; then PATH="$NODE_DIR/bin:$PATH"; fi
@@ -205,6 +205,53 @@ lab_toolchain() {
   (cd "${LIVE[market]}" && npx --yes tsx scripts/lab-toolchain/setup.ts --dir "$TOOLCHAIN" "${gcc_args[@]}") && echo "$want" >"$stamp"
 }
 
+# docker as root, through sudo otherwise; DOCKER overrides it (CI self-test)
+dock() {
+  if [ -n "${DOCKER:-}" ]; then "$DOCKER" "$@"
+  elif [ "$(id -u)" = 0 ]; then docker "$@"
+  else sudo -n docker "$@"; fi
+}
+
+proxy_config() {
+  # Install scripts/deploy/nginx.conf into the pushrsp-proxy container made by bootstrap.sh.
+  # The new config must pass `nginx -t` and serve the shop through the proxy, else the previous
+  # one is put back (the container itself is never recreated here).
+  local conf="$ROOT/nginx/pushrsp.conf" proxy=pushrsp-proxy port="$PROXY_PORT"
+  [ -f "$conf" ] || { echo "  no $conf — proxy not set up by bootstrap.sh, skipped"; return 0; }
+  dock inspect "$proxy" >/dev/null 2>&1 || { echo "  no $proxy container, skipped"; return 0; }
+  [ -n "$port" ] || port="$(grep -oE 'listen +[0-9]+' "$conf" | head -1 | grep -oE '[0-9]+$' || true)"
+  [ -n "$port" ] || { echo "  ✗ can't tell the proxy port (set PROXY_PORT in deploy.env)"; return 1; }
+  local want
+  want="$(sed -e "s/__PORT__/$port/g" -e "s/__MARKET_PORT__/$MARKET_PORT/g" -e "s/__PORTFOLIO_PORT__/$PORTFOLIO_PORT/g" \
+    "$SUITE/scripts/deploy/nginx.conf")"
+  if [ "$want" = "$(cat "$conf")" ]; then echo "  proxy config up to date"; return 0; fi
+  cp "$conf" "$conf.prev"
+  # rewrite in place: the container bind-mounts this file, a new inode (mv) would not reach it
+  printf '%s\n' "$want" >"$conf"
+  if dock exec "$proxy" nginx -t >/dev/null 2>&1 && dock exec "$proxy" nginx -s reload >/dev/null 2>&1 \
+     && proxy_check "$port"; then
+    echo "  ✓ proxy config installed (previous kept as $conf.prev)"
+    return 0
+  fi
+  echo "  ✗ new proxy config failed — putting the previous one back"
+  cat "$conf.prev" >"$conf"
+  dock exec "$proxy" nginx -s reload >/dev/null 2>&1 || true
+  return 1
+}
+
+proxy_check() {
+  # the page and one of its scripts, through the proxy under the renamed path
+  [ "${HEALTH:-1}" = 1 ] || return 0
+  local base="http://127.0.0.1:$1" page script code
+  sleep 1
+  page="$(curl -s --max-time 10 "$base/pushrsp" || true)"
+  script="$(grep -oE '/pushrsp/_next/static/c/[A-Za-z0-9._~-]+\.js' <<<"$page" | head -1 || true)"
+  [ -n "$script" ] || { echo "  ✗ proxy: no rewritten script URL in /pushrsp"; return 1; }
+  code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$base$script" || true)"
+  [ "$code" = 200 ] || { echo "  ✗ proxy: $script → $code"; return 1; }
+  echo "  ✓ proxy: /pushrsp and $script → 200"
+}
+
 health() {
   local app="$1" url="${HEALTH_URL[$1]}"
   [ -n "$url" ] && [ "${HEALTH:-1}" = 1 ] || return 0
@@ -260,6 +307,9 @@ deploy() {
     health "$app"
   done
   trap - ERR
+  # the apps are fine at this point; a rejected proxy config only keeps the previous one
+  log "proxy (nginx)"
+  proxy_config || die "proxy config not installed — the previous one is still serving"
   echo "$SHA" >"$ROOT/DEPLOYED_SHA"
   log "deployed $SHA ✓ (backup kept in $BACKUP_DIR)"
 }

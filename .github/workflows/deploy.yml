@@ -39,7 +39,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' && vars.DEPLOY_ENABLED == 'true')
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 80
     environment: production
     steps:
       - name: Resolve commit
@@ -90,9 +90,42 @@ jobs:
           SHA: ${{ steps.commit.outputs.sha }}
           # where the suite lives on the server (repository variable; /opt/pushrsp by default)
           ROOT: ${{ vars.DEPLOY_ROOT || '/opt/pushrsp' }}
+        # The deploy runs detached on the server (setsid + log file); this step only starts it and
+        # then follows the log over short SSH calls, so a dropped connection can't kill a build
+        # half-way (it did, on the first deploy to the shared server).
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=20 \
-            "$USER@$HOST" "bash -s -- $MODE $SHA $ROOT" < scripts/deploy/server-deploy.sh
+          remote() {
+            local tries=0
+            until ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -o BatchMode=yes -o ConnectTimeout=20 \
+                -o ServerAliveInterval=15 -o ServerAliveCountMax=4 "$USER@$HOST" "$@"; do
+              tries=$((tries + 1))
+              [ "$tries" -lt 5 ] || return 1
+              sleep $((tries * 5))
+            done
+          }
+          job="$ROOT/.deploy/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          remote "mkdir -p '$ROOT/.deploy' && cat > '$job.sh'" < scripts/deploy/server-deploy.sh
+          remote "setsid bash -c 'bash $job.sh $MODE $SHA $ROOT > $job.log 2>&1; echo \$? > $job.exit' < /dev/null > /dev/null 2>&1 &"
+          echo "started on the server: $job.log"
+          shown=0
+          for _ in $(seq 1 450); do          # up to ~75 min
+            sleep 10
+            # the server reports: exit code (if done), log size, then the new part of the log
+            out="$(remote "c=\$(cat '$job.exit' 2>/dev/null); n=\$(wc -c < '$job.log' 2>/dev/null || echo 0); echo \"\$c|\$n\"; head -c \"\$n\" '$job.log' 2>/dev/null | tail -c +$((shown + 1))")" || continue
+            head_line="${out%%$'\n'*}"
+            code="${head_line%%|*}"
+            size="${head_line##*|}"
+            rest=""
+            [ "$out" = "$head_line" ] || rest="${out#*$'\n'}"
+            [ -z "$rest" ] || printf '%s\n' "$rest"
+            shown="${size:-$shown}"
+            if [ -n "$code" ]; then
+              echo "server deploy finished with exit code $code"
+              exit "$code"
+            fi
+          done
+          echo "::error::no result from the server after 75 minutes (log: $job.log)"
+          exit 1
 
       - name: Clean up key
         if: always()

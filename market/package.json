@@ -27,7 +27,6 @@
     "@prisma/client": "^7.9.1",
     "avr8js": "^0.21.1",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^13.0.3",
     "dotenv": "^17.4.2",
     "iron-session": "^8.0.4",
     "monaco-editor": "^0.56.0",

@@ -1,6 +1,8 @@
 /* Avoid next/font/google + Turbopack bug: @vercel/turbopack-next/internal/font/google/font
    Fonts load via <link> in layout.tsx — CSS @import after Tailwind expand breaks PostCSS. */
-@import "tailwindcss";
+/* Scan only src: on the server the app dir is not a git checkout, so .gitignore (node_modules)
+   would not apply to Tailwind's automatic source detection. */
+@import "tailwindcss" source("../");
 
 :root {
   --font-vazirmatn: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;

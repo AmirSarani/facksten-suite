@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useId, useRef, useState } from "react";
+import { FormEvent, type RefObject, useEffect, useId, useRef, useState } from "react";
 import { AuthNavLinks } from "@/components/auth-nav-links";
 import { BrandLogo } from "@/components/brand-logo";
 import { Icon, resolveIconName } from "@/components/icon";
@@ -52,6 +52,92 @@ function HeaderNavAnchor({
   );
 }
 
+/**
+ * Desktop dropdown for a nav group (the studio menu). The nav row scrolls horizontally, which
+ * would clip a panel positioned inside it, so the panel is placed against the <nav> (`anchorRef`).
+ */
+function HeaderNavMenu({
+  item,
+  anchorRef,
+  itemClassName,
+}: {
+  item: NavItem;
+  anchorRef: RefObject<HTMLElement | null>;
+  itemClassName: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [right, setRight] = useState(0);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelId = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    const place = () => {
+      const anchor = anchorRef.current?.getBoundingClientRect();
+      const button = buttonRef.current?.getBoundingClientRect();
+      if (anchor && button) setRight(Math.max(0, anchor.right - button.right));
+    };
+    const onDoc = (e: MouseEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    place();
+    window.addEventListener("resize", place, { passive: true });
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("resize", place);
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, anchorRef]);
+
+  return (
+    <div ref={wrapRef} className="shrink-0">
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        aria-haspopup="true"
+        onClick={() => setOpen((v) => !v)}
+        className={`inline-flex items-center gap-1 ${itemClassName} ${open ? "bg-surface-container text-primary-container" : ""}`}
+      >
+        {item.label}
+        <Icon name="chevron_left" className={`h-3.5 w-3.5 transition-transform ${open ? "-rotate-90" : "rotate-0"}`} />
+      </button>
+      {open && (
+        <div
+          id={panelId}
+          style={{ right }}
+          className="absolute top-[calc(100%-2px)] z-50 w-64 cyber-chamfer overflow-hidden border border-outline bg-surface-container-lowest p-2 shadow-[var(--box-shadow-neon)]"
+        >
+          <p className="px-3 pt-1 pb-2 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-primary-container" dir="ltr">
+            {"// STUDIO::PORTFOLIO"}
+          </p>
+          <ul className="space-y-0.5">
+            {item.children?.map((child) => (
+              <li key={child.href}>
+                <HeaderNavAnchor
+                  item={child}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 cyber-chamfer-sm px-3 py-2.5 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container hover:text-primary-container"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -66,6 +152,7 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
   const catsRef = useRef<HTMLDivElement>(null);
   const catsPanelId = useId();
   const headerNav = getHeaderNav();
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -262,7 +349,7 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
         data-site-nav-sticky
         className="hidden overflow-x-clip border-t border-outline lg:block"
       >
-        <nav className="mx-auto flex max-w-[1280px] items-center gap-1 px-page py-2">
+        <nav ref={navRef} className="relative mx-auto flex max-w-[1280px] items-center gap-1 px-page py-2">
           <div className="relative shrink-0" ref={catsRef}>
             <button
               type="button"
@@ -368,6 +455,11 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
 
           <div className="flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto no-scrollbar">
             {headerNav.map((item) => {
+              const idle =
+                "shrink-0 cyber-chamfer-sm px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary-container";
+              if (item.children?.length) {
+                return <HeaderNavMenu key={item.label} item={item} anchorRef={navRef} itemClassName={idle} />;
+              }
               const active = !item.external && navActive(pathname, item.href, shopType);
               return (
                 <HeaderNavAnchor
@@ -376,7 +468,7 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
                   className={
                     active
                       ? "shrink-0 cyber-chamfer-sm bg-primary-container/10 px-3 py-1.5 text-sm font-bold whitespace-nowrap text-primary"
-                      : "shrink-0 cyber-chamfer-sm px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary-container"
+                      : idle
                   }
                 />
               );
@@ -416,6 +508,23 @@ export function SiteHeader({ categories = [] }: { categories?: HeaderCategory[] 
                 خانه
               </Link>
               {headerNav.map((item) => {
+                if (item.children?.length) {
+                  return (
+                    <div key={item.label} className="my-1 border-y border-surface-variant py-2">
+                      <p className="px-3 pb-1 text-xs font-bold text-on-surface-variant">{item.label}</p>
+                      <div className="mr-3 space-y-0.5 border-r border-surface-variant pr-3">
+                        {item.children.map((child) => (
+                          <HeaderNavAnchor
+                            key={child.href}
+                            item={child}
+                            className="block cyber-chamfer-sm px-3 py-2.5 text-sm font-semibold text-on-surface hover:bg-surface-container hover:text-primary-container"
+                            onClick={() => setMenuOpen(false)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
                 const active = !item.external && navActive(pathname, item.href, shopType);
                 return (
                   <HeaderNavAnchor
